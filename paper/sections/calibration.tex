@@ -89,3 +89,52 @@ The NVDA fit confirmed that four parameters sufficed to capture the smile shape 
 \includegraphics[width=0.85\textwidth]{sections/figures/iv_residuals.png}
 \caption{IV residuals (model $-$ market) by moneyness across all four tickers. Residuals were concentrated in the wings; near-ATM errors were below 1\% IV.}\label{fig:residuals}
 \end{figure}
+
+\subsection{Multi-expiration term structure calibration}
+
+The single-DTE calibration above required fixing $\beta_1 = 0.20$. To identify the term structure directly from data, we collected NVDA call and put chains at seven expirations on the same date (April 6, 2026): 0, 2, 4, 7, 14, 25, and 46 DTE, with NVDA trading near \$176.70. This cross-sectional snapshot yielded 73 observations after filtering to moneyness $K/S \in [0.90, 1.10]$ with positive volume.
+
+The ATM IV exhibited a U-shaped term structure (Figure~\ref{fig:atm_term}): elevated at 0~DTE ($\sim$45\%) due to gamma compression in expiring options, dropping to a trough near 7--8~DTE ($\sim$32\%), then rising to $\sim$41\% at 46~DTE. A single power-law $\beta_1 \cdot \ln(\text{DTE})$ could not capture this shape. We extended $\psi$ with a quadratic DTE term:
+\begin{equation}\label{eq:psi_extended}
+    \psi = \exp\bigl(\beta_1 \ln \tau + \beta_2 \ln m + \beta_3 \ln \tau \cdot \ln m + \beta_4 (\ln m)^2 + \beta_5 (\ln \tau)^2\bigr)
+\end{equation}
+where $\tau = \max(\text{DTE}, 1)$ and $m = K/S$. The six parameters $(\sigma_{\text{base}}, \beta_1, \ldots, \beta_5)$ were fitted by minimizing mean squared IV error across all seven expirations simultaneously.
+
+\begin{table}[ht]
+\centering
+\caption{Calibrated $\psi$ parameters from the multi-expiration NVDA dataset. The quadratic DTE term $\beta_5$ captured the U-shaped ATM term structure.}\label{tab:term_params}
+\begin{tabular}{llr}
+\toprule
+Parameter & Interpretation & Value \\
+\midrule
+$\sigma_{\text{base}}$ & Base ATM IV level & 45.0\% \\
+$\beta_1$ & DTE decay           & $-0.622$ \\
+$\beta_2$ & Skew (asymmetry)    & $-8.448$ \\
+$\beta_3$ & DTE $\times$ skew   & 1.617 \\
+$\beta_4$ & Smile curvature     & $-1.242$ \\
+$\beta_5$ & DTE curvature       & 0.150 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Table~\ref{tab:term_params} reports the fitted parameters. The negative $\beta_1$ combined with positive $\beta_5$ produced the U-shaped ATM curve: at short maturities the linear term dominated (IV decayed rapidly from the 0~DTE spike), while at longer maturities the quadratic term bent the curve upward. The trough occurred near DTE~$\approx 8$, where IV reached 32.5\%---a 1.38$\times$ ratio between the 0~DTE peak and the trough. The skew parameters ($\beta_2 = -8.45$, $\beta_3 = 1.62$) confirmed that the volatility skew steepened at shorter maturities and flattened as DTE increased, consistent with the concentration of crash risk premia in near-term options.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{sections/figures/atm_term_structure.png}
+\caption{NVDA ATM implied volatility term structure. Blue markers show market ATM IV at each expiration; the red curve shows the fitted model $\sigma_{\text{base}} \cdot \exp\bigl((\beta_1 \ln \tau + \beta_5 (\ln \tau)^2)/2\bigr)$. The U-shape reflects gamma compression at short DTEs and uncertainty premia at longer maturities.}\label{fig:atm_term}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{sections/figures/iv_surface_term_structure.png}
+\caption{NVDA IV surface across seven expirations. Markers show market observations; lines show model-predicted smiles at each DTE. The skew flattened with increasing maturity, consistent with $\beta_3 > 0$.}\label{fig:iv_surface}
+\end{figure}
+
+The overall RMSE was 2.31\% IV. The fit was tightest at intermediate and long maturities (7--46~DTE: RMSE $< 1.3$\%), with the largest residuals at 0~DTE (RMSE = 6.57\%) where the gamma-compressed smile shape deviated from the log-moneyness functional form. The 0~DTE level bias was eliminated ($-0.1$\%), confirming that the U-shaped term structure was captured correctly even though the extreme smile curvature at expiration remained a source of scatter.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{sections/figures/iv_surface_heatmap.png}
+\caption{Model-predicted IV surface as a function of moneyness and DTE. White markers indicate market observations used for calibration.}\label{fig:iv_heatmap}
+\end{figure}

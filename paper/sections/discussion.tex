@@ -1,10 +1,10 @@
 \section{Discussion and Future Work}\label{sec:discussion}
 
-The calibration and scenario results validated the core claim of this study: a modified Heston process with a state-dependent $\theta$-function can produce realistic IV surfaces from structural return dynamics alone. The four-parameter smile function captured the essential features of the NVDA IV smile (RMSE = 1.16\% IV), and the smile shape generalized across semiconductor names with only a scalar level adjustment, at the cost of higher wing residuals for tickers with steeper or flatter skew than NVDA. The equilibrium initialization $v_0 = \theta(t\!=\!0)$ eliminated $v_0$ as a free parameter and produced the smile, skew, and term structure by construction.
+The calibration and scenario results validated the core claim of this study: a modified Heston process with a state-dependent $\theta$-function can produce realistic IV surfaces from structural return dynamics alone. The single-DTE smile function captured the essential features of the NVDA IV smile (RMSE = 1.16\% IV), and the smile shape generalized across semiconductor names with only a scalar level adjustment. The multi-expiration calibration (Section~\ref{sec:calibration}) extended this to the full IV surface: the five-parameter $\psi$ function with quadratic DTE term captured the U-shaped ATM term structure (RMSE = 2.31\% IV across seven expirations), confirming that the term-structure geometry could be identified from a single cross-sectional snapshot. The equilibrium initialization $v_0 = \theta(t\!=\!0)$ eliminated $v_0$ as a free parameter and produced the smile, skew, and term structure by construction.
 
 \subsection{Limitations}
 
-\paragraph{Term-structure calibration.} The parameter $\beta_1$ (term-structure decay) was fixed at 0.20 because the available option chains contained only a single expiration per ticker. Multi-expiration data from the same observation date would allow direct calibration of $\beta_1$ and its interaction with the other smile parameters; whether the contango assumption ($\beta_1 > 0$) holds uniformly across market regimes remains an open question.
+\paragraph{Term-structure calibration.} The multi-expiration calibration resolved the earlier limitation of fixing $\beta_1$, but revealed that the ATM term structure was not a simple power law---the U-shape required a quadratic extension ($\beta_5$). The fitted $\beta_1 < 0$ contradicted the initial contango assumption ($\beta_1 = 0.20$), demonstrating that the dominant short-term effect was IV \emph{decay} from gamma compression rather than contango. Whether this U-shaped structure persists across market regimes or flattens during low-volatility environments remains an open question that time-series calibration could address.
 
 \paragraph{Cross-ticker smile shape.} The shared $(\beta_2, \beta_3, \beta_4)$ from NVDA did not perfectly transfer to all tickers---RMSE increased from 1.2\% (NVDA) to 4.7\% (INTC). The residual analysis (Figure~\ref{fig:residuals}) revealed systematic patterns in the wings, suggesting that per-ticker smile calibration would be necessary for applications requiring sub-2\% IV accuracy across all names.
 
@@ -12,7 +12,7 @@ The calibration and scenario results validated the core claim of this study: a m
 
 \subsection{Future work}
 
-\paragraph{Multi-expiration calibration.} With option chains at 2--3 expirations per ticker on the same date, $\beta_1$ can be identified from data and the interaction between term structure and smile shape can be characterized.
+\paragraph{Cross-ticker term structure.} The multi-expiration calibration used NVDA data only. Collecting cross-sectional snapshots for additional tickers would determine whether the term-structure parameters ($\beta_1$, $\beta_5$) are universal or require per-ticker fitting, analogous to the smile-shape parameters.
 
 \paragraph{Downstream ML applications.} The primary intended use of this framework is generating realistic synthetic training data for machine-learning models in finance. Concrete applications include: training option price predictors, learning delta-hedging policies via reinforcement learning, and augmenting scarce real option data for transfer learning.
 
