@@ -2,7 +2,7 @@
 
 \subsection{Data}
 
-The empirical foundation of this study was a set of option chains for four semiconductor stocks: NVDA, AMD, MU, and INTC. All chains were single-date snapshots sourced from barchart.com (October--November 2025) with DTEs ranging from 41 to 80 days. We filtered each chain to moneyness $K/S \in [0.70, 1.30]$ and IV $< 200\%$ to exclude illiquid deep ITM/OTM contracts with unreliable IV. Table~\ref{tab:data} summarizes the dataset after filtering.
+The empirical foundation of this study was a set of option chains for four semiconductor stocks: NVDA, AMD, MU, and INTC. All chains were single-date snapshots sourced from barchart.com (October--November 2025) with DTEs ranging from 41 to 80 days. We filtered each chain to moneyness $K/S \in [0.70, 1.30]$ and IV $< 200\%$ to exclude illiquid deep ITM/OTM contracts with unreliable IV (Table~\ref{tab:data}).
 
 \begin{table}[ht]
 \centering
@@ -53,7 +53,7 @@ $\theta_{\text{base}}$ & Variance level (NVDA) & 0.084 \\
 
 \subsection{Cross-ticker validation}
 
-To determine whether the smile \emph{shape} generalized across tickers, we applied the $(\beta_1, \beta_2, \beta_3, \beta_4)$ calibrated on NVDA to AMD, MU, and INTC, re-optimizing only the scalar $\theta_{\text{base}}$ per ticker. Table~\ref{tab:rmse} reports the root-mean-square IV error; Figure~\ref{fig:nvda_fit} shows the NVDA calibration fit; and Figure~\ref{fig:all_tickers} compares the model smile to market data across all four tickers by moneyness.
+To determine whether the smile \emph{shape} generalized across tickers, we applied the $(\beta_1, \beta_2, \beta_3, \beta_4)$ calibrated on NVDA to AMD, MU, and INTC, re-optimizing only the scalar $\theta_{\text{base}}$ per ticker.
 
 \begin{table}[ht]
 \centering
@@ -70,7 +70,7 @@ INTC & 35.9\% & 4.65 \\
 \end{tabular}
 \end{table}
 
-The NVDA fit confirmed that four parameters sufficed to capture the smile shape within the tradeable moneyness range (RMSE = 1.16\% IV). The cross-ticker validation revealed that the shared smile shape transferred well to AMD (2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%). The higher RMSE for MU and INTC reflected differences in skew steepness across these names---MU exhibited a steeper put skew than NVDA, while INTC had a flatter OTM call wing---suggesting that per-ticker $\beta$ calibration would further reduce errors when multi-strike data is available. The residual analysis (Figure~\ref{fig:residuals}) confirmed that the errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers.
+The NVDA fit confirmed that four parameters sufficed to capture the smile shape within the tradeable moneyness range (RMSE = 1.16\% IV; Figure~\ref{fig:nvda_fit}). The cross-ticker validation revealed that the shared smile shape transferred well to AMD (2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%; Table~\ref{tab:rmse}; Figure~\ref{fig:all_tickers}). The higher RMSE for MU and INTC reflected differences in skew steepness across these names; MU exhibited a steeper put skew than NVDA, while INTC had a flatter OTM call wing, suggesting that per-ticker $\beta$ calibration would further reduce errors when multi-strike data is available. The residual analysis (Figure~\ref{fig:residuals}) confirmed that the errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers.
 
 \begin{figure}[ht]
 \centering
@@ -92,7 +92,7 @@ The NVDA fit confirmed that four parameters sufficed to capture the smile shape 
 
 \subsection{Multi-expiration term structure calibration}
 
-The single-DTE calibration above required fixing $\beta_1 = 0.20$. To identify the term structure directly from data, we collected NVDA call and put chains at seven expirations on the same date (April 6, 2026): 0, 2, 4, 7, 14, 25, and 46 DTE, with NVDA trading near \$176.70. This cross-sectional snapshot yielded 73 observations after filtering to moneyness $K/S \in [0.90, 1.10]$ with positive volume.
+Having validated the smile shape across tickers, we next addressed the term-structure limitation by collecting NVDA call and put chains at seven expirations on the same date (April 6, 2026): 0, 2, 4, 7, 14, 25, and 46 DTE, with NVDA trading near \$176.70. The single-DTE calibration above required fixing $\beta_1 = 0.20$; this cross-sectional snapshot provided the multi-expiration data needed to identify $\beta_1$ directly, yielding 73 observations after filtering to moneyness $K/S \in [0.90, 1.10]$ with positive volume.
 
 The ATM IV exhibited a U-shaped term structure (Figure~\ref{fig:atm_term}): elevated at 0~DTE ($\sim$45\%) due to gamma compression in expiring options, dropping to a trough near 7--8~DTE ($\sim$32\%), then rising to $\sim$41\% at 46~DTE. A single power-law $\beta_1 \cdot \ln(\text{DTE})$ could not capture this shape. We extended $\psi$ with a quadratic DTE term:
 \begin{equation}\label{eq:psi_extended}
@@ -117,7 +117,7 @@ $\beta_5$ & DTE curvature       & 0.150 \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:term_params} reports the fitted parameters. The negative $\beta_1$ combined with positive $\beta_5$ produced the U-shaped ATM curve: at short maturities the linear term dominated (IV decayed rapidly from the 0~DTE spike), while at longer maturities the quadratic term bent the curve upward. The trough occurred near DTE~$\approx 8$, where IV reached 32.5\%---a 1.38$\times$ ratio between the 0~DTE peak and the trough. The skew parameters ($\beta_2 = -8.45$, $\beta_3 = 1.62$) confirmed that the volatility skew steepened at shorter maturities and flattened as DTE increased, consistent with the concentration of crash risk premia in near-term options.
+The negative $\beta_1$ combined with positive $\beta_5$ produced the U-shaped ATM curve (Table~\ref{tab:term_params}): at short maturities the linear term dominated (IV decayed rapidly from the 0~DTE spike), while at longer maturities the quadratic term bent the curve upward. The trough occurred near DTE~$\approx 8$, where IV reached 32.5\%, a 1.38$\times$ ratio between the 0~DTE peak and the trough (Figure~\ref{fig:atm_term}). The skew parameters ($\beta_2 = -8.45$, $\beta_3 = 1.62$) confirmed that the volatility skew steepened at shorter maturities and flattened as DTE increased, consistent with the concentration of crash risk premia in near-term options (Figure~\ref{fig:iv_surface}). The overall fit achieved an RMSE of 2.31\% IV across all seven expirations. The fit was tightest at intermediate and long maturities (7--46~DTE: RMSE $< 1.3$\%), with the largest residuals at 0~DTE (RMSE = 6.57\%) where the gamma-compressed smile shape deviated from the log-moneyness functional form. The 0~DTE level bias was eliminated ($-0.1$\%), confirming that the U-shaped term structure was captured correctly even though the extreme smile curvature at expiration remained a source of scatter (Figure~\ref{fig:iv_heatmap}).
 
 \begin{figure}[ht]
 \centering
@@ -130,8 +130,6 @@ Table~\ref{tab:term_params} reports the fitted parameters. The negative $\beta_1
 \includegraphics[width=0.85\textwidth]{sections/figures/iv_surface_term_structure.png}
 \caption{NVDA IV surface across seven expirations. Markers show market observations; lines show model-predicted smiles at each DTE. The skew flattened with increasing maturity, consistent with $\beta_3 > 0$.}\label{fig:iv_surface}
 \end{figure}
-
-The overall RMSE was 2.31\% IV. The fit was tightest at intermediate and long maturities (7--46~DTE: RMSE $< 1.3$\%), with the largest residuals at 0~DTE (RMSE = 6.57\%) where the gamma-compressed smile shape deviated from the log-moneyness functional form. The 0~DTE level bias was eliminated ($-0.1$\%), confirming that the U-shaped term structure was captured correctly even though the extreme smile curvature at expiration remained a source of scatter.
 
 \begin{figure}[ht]
 \centering

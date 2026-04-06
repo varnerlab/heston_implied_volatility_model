@@ -82,13 +82,17 @@ end
 
 # Use calls primarily (more liquid near ATM for most DTEs)
 # Filter: moneyness in [0.90, 1.10], IV > 0, Volume > 0
+# Exclude 0DTE: gamma-compressed smile has fundamentally different shape
+# that distorts β₄ (curvature) when fit jointly. Treat 0DTE as a separate regime.
 calls = all_data[(all_data.Type .== "Call") .&
+                 (all_data.DTE .> 0) .&
                  (all_data.Moneyness .>= 0.90) .&
                  (all_data.Moneyness .<= 1.10) .&
                  (all_data.IV .> 0.0) .&
                  (all_data.Volume .> 0), :]
 
 puts = all_data[(all_data.Type .== "Put") .&
+                (all_data.DTE .> 0) .&
                 (all_data.Moneyness .>= 0.90) .&
                 (all_data.Moneyness .<= 1.10) .&
                 (all_data.IV .> 0.0) .&
