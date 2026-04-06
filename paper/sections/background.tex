@@ -1,0 +1,17 @@
+\section{Background}\label{sec:background}
+
+\subsection{Jump Hidden Markov Model}
+
+The Jump Hidden Markov Model (JumpHMM)~\cite{jumphmm2025} was developed for generating synthetic equity time series that simultaneously preserve three stylized facts of financial returns: heavy tails, negligible linear autocorrelation, and persistent volatility clustering. The model discretizes continuous excess growth rates into $N$ states via equal-probability quantile bins of a fitted Laplace distribution. Each state $k$ emitted observations from a location-scale Student-$t$ distribution: $G_t \mid S_t\!=\!k \;\sim\; \mu_k + \sigma_k \cdot t_\nu$. At each timestep, with probability $\epsilon$ a Poisson$(\lambda)$-distributed jump forced the chain into tail states (bottom or top $N_{\text{tail}}$ states), creating sustained dwell periods in extreme-volatility regimes. For multi-asset generation, cross-asset dependence was imposed via a Student-$t$ copula that preserved each asset's marginal distribution while introducing realistic tail dependence.
+
+\subsection{Heston stochastic variance model}
+
+The Heston model~\cite{heston1993} specifies the variance of the underlying asset as a mean-reverting square-root process:
+\begin{equation}\label{eq:heston_standard}
+    dv = \kappa(\theta - v)\,dt + \sigma_v \sqrt{v}\,dW_v
+\end{equation}
+where $\kappa$ is the mean-reversion speed, $\theta$ is the long-run variance, and $\sigma_v$ is the vol-of-vol. In the standard formulation, $\theta$ is a constant; our modification made $\theta$ time-varying and state-dependent (Section~\ref{sec:theta_function}).
+
+\subsection{CRR binomial tree}
+
+The CRR model~\cite{cox1979} prices options on a recombining binomial lattice with up/down factors $u = e^{\sigma\sqrt{\Delta t}}$, $d = 1/u$ and risk-neutral probability $p = (e^{r\Delta t} - d)/(u - d)$. American options are priced by backward induction with an early-exercise check at each node. The CRR tree is a natural choice when IV is provided exogenously, as it requires only a single volatility input per contract and handles early exercise without closed-form solutions.

@@ -1,0 +1,40 @@
+\begin{thebibliography}{5}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Alswaidan and Varner(2025)]{jumphmm2025}
+A.~Alswaidan and J.~D. Varner.
+\newblock Jump hidden markov models for synthetic equity time series
+  generation.
+\newblock \emph{arXiv preprint arXiv:2603.10202}, 2025.
+
+\bibitem[Andersen(2008)]{andersen2008}
+L.~Andersen.
+\newblock Simple and efficient simulation of the {H}eston stochastic volatility
+  model.
+\newblock \emph{Journal of Computational Finance}, 11\penalty0 (3):\penalty0
+  1--42, 2008.
+
+\bibitem[Black and Scholes(1973)]{black1973}
+F.~Black and M.~Scholes.
+\newblock The pricing of options and corporate liabilities.
+\newblock \emph{Journal of Political Economy}, 81\penalty0 (3):\penalty0
+  637--654, 1973.
+
+\bibitem[Cox et~al.(1979)Cox, Ross, and Rubinstein]{cox1979}
+J.~C. Cox, S.~A. Ross, and M.~Rubinstein.
+\newblock Option pricing: A simplified approach.
+\newblock \emph{Journal of Financial Economics}, 7\penalty0 (3):\penalty0
+  229--263, 1979.
+
+\bibitem[Heston(1993)]{heston1993}
+S.~L. Heston.
+\newblock A closed-form solution for options with stochastic volatility with
+  applications to bond and currency options.
+\newblock \emph{The Review of Financial Studies}, 6\penalty0 (2):\penalty0
+  327--343, 1993.
+
+\end{thebibliography}

@@ -1,0 +1,20 @@
+\section{Introduction}\label{sec:introduction}
+
+Pricing American-style options requires implied volatility (IV) as an input, yet IV itself is an empirical quantity extracted from observed option prices~\cite{black1973}. This circularity poses a practical problem for synthetic data generation: existing approaches either take IV from the market and feed it into a pricing model, or generate price paths without a consistent IV surface. The result is a scarcity of realistic synthetic option data for training machine-learning models, backtesting trading strategies, and conducting scenario-based risk analysis.
+
+In this study, we addressed this gap by developing a framework in which IV is an \emph{output} of a structural model of equity returns, not an input. The pipeline chained three stages:
+\begin{enumerate}
+    \item \textbf{Synthetic price generation.} A Jump Hidden Markov Model (JumpHMM)~\cite{jumphmm2025} produced multi-asset price paths with realistic heavy tails, negligible linear autocorrelation, and persistent volatility clustering. Cross-asset dependence was imposed via a Student-$t$ copula.
+    \item \textbf{Implied volatility generation.} A modified Heston stochastic variance process~\cite{heston1993} converted those price paths into IV paths. The mean-reversion target $\theta$ was a function of the HMM regime state, days to expiration (DTE), moneyness, and an aggregate market mood indicator.
+    \item \textbf{Option pricing.} A Cox--Ross--Rubinstein (CRR) binomial tree~\cite{cox1979} converted the pre-computed IV into American option prices with early exercise.
+\end{enumerate}
+
+The key contributions of this study were:
+\begin{itemize}
+    \item A \emph{hybrid $\theta$-function} that linked the Heston mean-reversion target to the JumpHMM regime state, producing regime-dependent volatility dynamics (Section~\ref{sec:theta_function}).
+    \item An \emph{equilibrium initialization} $v_0 = \theta(t\!=\!0)$ that gave each (ticker, strike, DTE) triple its own initial IV, so the smile, skew, and term structure emerged automatically without external IV data (Section~\ref{sec:initialization}).
+    \item An \emph{endogenous market mood} signal---the fraction of tickers in tail HMM states---that modulated IV without introducing circularity (Section~\ref{sec:mood}).
+    \item Calibration on real option chains demonstrating that a four-parameter smile function generalized across tickers with only a scalar level adjustment (Section~\ref{sec:calibration}).
+\end{itemize}
+
+The framework is implemented as an open-source Julia package and is designed to serve as a synthetic option market generator for downstream applications.

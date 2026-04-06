@@ -1,0 +1,37 @@
+\section{Scenario Generation}\label{sec:scenarios}
+
+To demonstrate the framework as a synthetic data generator, we simulated 500 forward paths for NVDA over 80 trading days using the calibrated parameters from Section~\ref{sec:calibration} and a JumpHMM marginal model with 50 states and tuned jump parameters. The tail states were assigned elevated $\theta$ values ($2\times$ baseline for bearish tail states, $1.5\times$ for bullish tail states), and the mood sensitivity was set to $\gamma = 0.5$.
+
+\subsection{Forward IV dynamics}
+
+Figure~\ref{fig:iv_paths} shows the evolution of implied volatility across the 500 scenarios. The mean IV started near the calibrated ATM level and exhibited gentle term-structure decay as the contract approached expiration---consistent with the positive $\beta_1 = 0.20$ (contango). Individual paths showed stochastic fluctuations driven by the vol-of-vol parameter $\sigma_v$, with occasional spikes when the HMM transitioned into tail states. The 5th--95th percentile envelope widened over time, reflecting the accumulation of variance process noise. The market ATM IV of 44.6\% sat within the model's distributional range, confirming that the calibrated parameters produced IV dynamics centered on the observed level.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{sections/figures/nvda_iv_paths.png}
+\caption{Forward IV paths for NVDA (500 scenarios, DTE = 80). Black line: mean IV; dashed red/green lines: 5th/95th percentiles; orange dotted line: market ATM IV (44.6\%). Individual paths (blue, $\alpha = 0.08$) show stochastic fluctuations and occasional tail-state-driven spikes.}\label{fig:iv_paths}
+\end{figure}
+
+\subsection{Option price distributions}
+
+Table~\ref{tab:prices} reports the distribution of American option prices across scenarios, evaluated at day 5 of the forward simulation. The price distributions exhibited realistic properties: OTM puts (strike $= 0.90S$) had a mean price of \$12.59 with a 90\% confidence interval of [\$5.6, \$21.1]; ATM calls were approximately $2\times$ more expensive than 10\%-OTM calls; and the confidence intervals widened for contracts farther from the money. These properties are consistent with the behavior of real option markets.
+
+\begin{table}[ht]
+\centering
+\caption{American option price distributions from 500 forward scenarios (NVDA, evaluated at $t = 5$). Strike levels are expressed relative to the spot price $S = \$207$.}\label{tab:prices}
+\begin{tabular}{llrrrr}
+\toprule
+Type & Strike & DTE & Mean (\$) & Std (\$) & 90\% CI (\$) \\
+\midrule
+Put  & 186 ($0.90S$) & 80 & 12.59 & 4.99 & [5.6, 21.1] \\
+Put  & 197 ($0.95S$) & 80 & 16.69 & 5.56 & [8.5, 26.2] \\
+Call & 207 (ATM)      & 80 & 25.59 & 6.64 & [15.5, 37.0] \\
+Call & 217 ($1.05S$) & 80 & 20.94 & 6.29 & [11.4, 31.7] \\
+Call & 228 ($1.10S$) & 80 & 16.72 & 5.81 & [8.1, 26.6] \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Tail event analysis}
+
+The market mood mechanism produced a natural partition of scenarios into calm ($M_t = 0$) and stressed ($M_t > 0$) paths. In multi-asset simulations with five tickers, stressed scenarios---where multiple tickers simultaneously occupied tail HMM states---produced systematically higher option prices. OTM puts were $1.83\times$ more expensive in stressed vs.\ calm scenarios (strike $= 0.95S$: \$6.42 vs.\ \$3.51), while deep OTM weekly puts showed a $4.33\times$ stress premium. This asymmetry---puts repricing more sharply than calls under stress---is consistent with the crash-protection premium observed in equity options markets and emerged naturally from the JumpHMM's negative jump bias ($p_{\text{neg}} = 0.52$) propagating through the $\theta$-function.

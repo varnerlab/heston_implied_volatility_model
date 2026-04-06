@@ -1,0 +1,91 @@
+\section{Calibration and Validation}\label{sec:calibration}
+
+\subsection{Data}
+
+The empirical foundation of this study was a set of option chains for four semiconductor stocks: NVDA, AMD, MU, and INTC. All chains were single-date snapshots sourced from barchart.com (October--November 2025) with DTEs ranging from 41 to 80 days. We filtered each chain to moneyness $K/S \in [0.70, 1.30]$ and IV $< 200\%$ to exclude illiquid deep ITM/OTM contracts with unreliable IV. Table~\ref{tab:data} summarizes the dataset after filtering.
+
+\begin{table}[ht]
+\centering
+\caption{Option chain summary. Contract counts are reported after filtering to the tradeable moneyness range.}\label{tab:data}
+\begin{tabular}{lrrrr}
+\toprule
+Ticker & Spot (\$) & DTE & ATM IV (\%) & Contracts \\
+\midrule
+NVDA & 207.04 & 80 & 44.6 & 142 \\
+AMD  & 225.78 & 58 & 59.0 & 36 \\
+MU   & 237.02 & 41 & 72.4 & 34 \\
+INTC &  37.78 & 65 & 53.6 & 46 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Calibration procedure}
+
+Since each chain was a single-date snapshot, all observations shared one HMM state $s_0$ and market mood $M_0$. The model IV at a given strike reduced to:
+\begin{equation}\label{eq:calibration_iv}
+    \sigma_{\text{model}}(K) = \sqrt{\theta_{\text{base}} \cdot \psi(\text{DTE},\; K/S)}
+\end{equation}
+where $\theta_{\text{base}} = \theta_{s_0} \cdot (1 + \gamma M_0)$ absorbed the state and mood into a single scalar. We fixed $\beta_1 = 0.20$ (term-structure slope) because single-DTE snapshots cannot identify it; multi-expiration data from the same observation date would allow direct calibration of $\beta_1$ (Section~\ref{sec:discussion}). The remaining parameters $(\theta_{\text{base}}, \beta_2, \beta_3, \beta_4)$ were fitted by minimizing the mean squared IV error on NVDA:
+\begin{equation}\label{eq:objective}
+    \min_{\theta_{\text{base}}, \beta_2, \beta_3, \beta_4} \;\frac{1}{n} \sum_{i=1}^{n} \bigl(\sigma_{\text{model}}(K_i) - \text{IV}_{\text{market},i}\bigr)^2
+\end{equation}
+using Nelder--Mead optimization. We chose NVDA as the calibration ticker because it had the richest chain (142 contracts after filtering).
+
+\subsection{Results}
+
+The calibrated parameters are reported in Table~\ref{tab:params}. The negative $\beta_2$ produced put skew; the positive $\beta_4$ produced smile curvature; and the interaction term $\beta_3$ captured how the skew flattened at longer maturities. The calibration achieved an RMSE of 1.16\% IV on NVDA.
+
+\begin{table}[ht]
+\centering
+\caption{Calibrated smile parameters (fitted on NVDA, DTE = 80).}\label{tab:params}
+\begin{tabular}{llr}
+\toprule
+Parameter & Interpretation & Value \\
+\midrule
+$\beta_1$ & Term-structure decay (fixed) & 0.20 \\
+$\beta_2$ & Skew (asymmetry)             & $-2.07$ \\
+$\beta_3$ & DTE $\times$ skew interaction & 0.34 \\
+$\beta_4$ & Smile curvature              & 1.43 \\
+$\theta_{\text{base}}$ & Variance level (NVDA) & 0.084 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Cross-ticker validation}
+
+To determine whether the smile \emph{shape} generalized across tickers, we applied the $(\beta_1, \beta_2, \beta_3, \beta_4)$ calibrated on NVDA to AMD, MU, and INTC, re-optimizing only the scalar $\theta_{\text{base}}$ per ticker. Table~\ref{tab:rmse} reports the root-mean-square IV error; Figure~\ref{fig:nvda_fit} shows the NVDA calibration fit; and Figure~\ref{fig:all_tickers} compares the model smile to market data across all four tickers by moneyness.
+
+\begin{table}[ht]
+\centering
+\caption{Cross-ticker RMSE (\% IV). The smile shape $(\beta_2, \beta_3, \beta_4)$ was shared from NVDA; only $\theta_{\text{base}}$ was re-fitted per ticker.}\label{tab:rmse}
+\begin{tabular}{lrr}
+\toprule
+Ticker & $\theta_{\text{base}}$ (IV level) & RMSE (\% IV) \\
+\midrule
+NVDA (calibration) & 28.9\% & 1.16 \\
+AMD  & 38.7\% & 2.34 \\
+MU   & 49.0\% & 3.99 \\
+INTC & 35.9\% & 4.65 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The NVDA fit confirmed that four parameters sufficed to capture the smile shape within the tradeable moneyness range (RMSE = 1.16\% IV). The cross-ticker validation revealed that the shared smile shape transferred well to AMD (2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%). The higher RMSE for MU and INTC reflected differences in skew steepness across these names---MU exhibited a steeper put skew than NVDA, while INTC had a flatter OTM call wing---suggesting that per-ticker $\beta$ calibration would further reduce errors when multi-strike data is available. The residual analysis (Figure~\ref{fig:residuals}) confirmed that the errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers.
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{sections/figures/nvda_calibration.png}
+\caption{NVDA implied volatility smile: model (crosses) vs.\ market (circles) for calls and puts. The dashed vertical line marks the spot price (\$207). DTE = 80.}\label{fig:nvda_fit}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{sections/figures/all_tickers_smile.png}
+\caption{IV smile fit across all four tickers as a function of moneyness ($K/S$). The smile shape $(\beta_2, \beta_3, \beta_4)$ was shared from NVDA; only the level $\theta_{\text{base}}$ varied per ticker. Lines show model predictions; markers show market data.}\label{fig:all_tickers}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=0.85\textwidth]{sections/figures/iv_residuals.png}
+\caption{IV residuals (model $-$ market) by moneyness across all four tickers. Residuals were concentrated in the wings; near-ATM errors were below 1\% IV.}\label{fig:residuals}
+\end{figure}
