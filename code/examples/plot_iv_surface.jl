@@ -251,5 +251,5 @@ for dte in sort(unique(scatter_data.DTE))
     end
 end
 
-savefig(fig, joinpath(PLOT_DIR, "iv_surface_market_vs_model.png"))
-println("Saved → code/figures/iv_surface_market_vs_model.png")
+savefig(fig, joinpath(PLOT_DIR, "iv_surface_market_vs_model.pdf"))
+println("Saved → code/figures/iv_surface_market_vs_model.pdf")

@@ -204,6 +204,6 @@ for dte in sort(unique(fit_data.DTE))
              alpha             = 0.72)
 end
 
-out = joinpath(PLOT_DIR, "iv_residuals_by_dte.png")
+out = joinpath(PLOT_DIR, "iv_residuals_by_dte.pdf")
 savefig(p, out)
 println("Saved → $out")

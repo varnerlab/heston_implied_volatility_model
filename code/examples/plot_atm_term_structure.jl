@@ -245,7 +245,7 @@ scatter!(fig, atm_dtes, atm_ivs_market;
          markerstrokecolor = :black,
          markerstrokewidth = 0.8)
 
-out_path = joinpath(PLOT_DIR, "atm_term_structure.png")
+out_path = joinpath(PLOT_DIR, "atm_term_structure.pdf")
 savefig(fig, out_path)
 println("Saved → $out_path")
 @printf("  Trough: DTE=%.0f, ATM IV=%.1f%%\n", trough_dte, trough_iv)

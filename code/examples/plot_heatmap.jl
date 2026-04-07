@@ -236,6 +236,6 @@ scatter!(fig,
     label         = false,
 )
 
-out_path = joinpath(PLOT_DIR, "iv_surface_heatmap.png")
+out_path = joinpath(PLOT_DIR, "iv_surface_heatmap.pdf")
 savefig(fig, out_path)
 println("Saved → $out_path")

@@ -26,15 +26,15 @@ The mean-reversion target decomposed into a regime-dependent base level, a marke
 \begin{equation}\label{eq:theta}
     \theta(t) = \theta_{s_t} \cdot \bigl(1 + \gamma \cdot M_t\bigr) \cdot \psi(\mathrm{DTE}_t,\; K/S_t)
 \end{equation}
-where $\theta_{s_t}$ is a learned variance level for HMM state $s_t$ (one value per state, $s_t \in \{1, \ldots, N\}$); $\gamma$ is the market mood sensitivity; $M_t \in [0, 1]$ is the aggregate market mood (Section~\ref{sec:mood}); and $\psi(\mathrm{DTE}, K/S)$ is the smile--term-structure adjustment (Section~\ref{sec:psi}). The regime-dependent base $\theta_{s_t}$ linked the Heston process directly to the JumpHMM state sequence: when the HMM transitioned into a tail state (via a Poisson jump or an extreme Markov transition), $\theta_{s_t}$ increased, elevating the IV target. This mechanism produced the leverage effect---large negative returns drove the HMM into low-numbered tail states with $p_{\text{neg}} \approx 0.52$, which in turn elevated $\theta$---as an emergent property of the return dynamics rather than as a separate model component.
+where $\theta_{s_t}$ is a learned variance level for HMM state $s_t$ (one value per state, $s_t \in \{1, \ldots, N\}$); $\gamma$ is the market mood sensitivity; $M_t \in [0, 1]$ is the aggregate market mood (Section~\ref{sec:mood}); and $\psi(\mathrm{DTE}, K/S)$ is the smile--term-structure adjustment (Section~\ref{sec:psi}). The regime-dependent base $\theta_{s_t}$ linked the Heston process directly to the JumpHMM state sequence: when the HMM transitioned into a tail state (via a Poisson jump or an extreme Markov transition), $\theta_{s_t}$ increased, elevating the IV target. This mechanism produced the leverage effect as an emergent property of the return dynamics rather than as a separate model component: large negative returns drove the HMM into low-numbered tail states with $p_{\text{neg}} \approx 0.52$, which in turn elevated $\theta$.
 
 \subsubsection{Smile and term-structure function $\psi$}\label{sec:psi}
 
-The function $\psi$ captured the shape of the IV surface with four parameters:
+The function $\psi$ captured the shape of the IV surface with five parameters:
 \begin{equation}\label{eq:psi}
-    \psi(\mathrm{DTE},\; K/S) = \exp\!\Big(\beta_1 \ln(\mathrm{DTE}) + \beta_2 \ln(K/S) + \beta_3 \ln(\mathrm{DTE})\ln(K/S) + \beta_4 \bigl[\ln(K/S)\bigr]^2\Big)
+    \psi(\tau,\; m) = \exp\!\Big(\beta_1 \ln\tau + \beta_2 \ln m + \beta_3 \ln\tau\,\ln m + \beta_4 (\ln m)^2 + \beta_5 (\ln\tau)^2\Big)
 \end{equation}
-where $\beta_1$ controlled the term-structure decay (positive values produced contango---IV decreased as expiration approached); $\beta_2$ controlled the skew (negative values produced put skew, with OTM puts having higher IV than OTM calls); $\beta_3$ captured the DTE--skew interaction (the skew flattened at longer maturities); and $\beta_4$ controlled the smile curvature (positive values produced the U-shaped vol smile, with both wings elevated relative to ATM).
+where $\tau = \max(\mathrm{DTE}, 1)$ and $m = K/S$. The parameter $\beta_1$ controlled the linear term-structure decay; $\beta_2$ controlled the skew (negative values produced put skew, with OTM puts having higher IV than OTM calls); $\beta_3$ captured the DTE-skew interaction (the skew flattened at longer maturities); $\beta_4$ controlled the smile curvature; and $\beta_5$ controlled the DTE curvature, capturing the U-shaped ATM term structure where short-dated and long-dated IV were both elevated relative to intermediate maturities.
 
 \subsubsection{Equilibrium initialization}\label{sec:initialization}
 
@@ -50,7 +50,7 @@ The market mood $M_t$ was defined as the fraction of tickers currently occupying
 \begin{equation}\label{eq:mood}
     M_t = \frac{1}{N_{\text{tickers}}} \sum_{i=1}^{N_{\text{tickers}}} \mathbf{1}\!\left\{s_t^{(i)} \leq N_{\text{tail}} \;\text{or}\; s_t^{(i)} > N - N_{\text{tail}}\right\}
 \end{equation}
-This signal was fully endogenous to the JumpHMM copula model---it required no external data (e.g., VIX) and introduced no circularity. When multiple tickers simultaneously occupied tail states, the mood rose, elevating $\theta$ and thus IV across all contracts. This mechanism produced correlated IV spikes during market stress events by construction.
+This signal was fully endogenous to the JumpHMM copula model; it required no external data (e.g., VIX) and introduced no circularity. When multiple tickers simultaneously occupied tail states, the mood rose, elevating $\theta$ and thus IV across all contracts. This mechanism produced correlated IV spikes during market stress events by construction.
 
 \subsubsection{Discretization}
 
