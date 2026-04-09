@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  3 APR 2026 12:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  9 APR 2026 04:50
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main
+**main.tex
 (./main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -199,34 +199,200 @@ File: pdftex.def 2024/04/13 v1.2c Graphics/color driver for pdftex
 \Gin@req@height=\dimen173
 \Gin@req@width=\dimen174
 )
-LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 1
-7.
+(/usr/local/texlive/2025/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd
+(/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen175
+\captionmargin=\dimen176
+\caption@leftmargin=\dimen177
+\caption@rightmargin=\dimen178
+\caption@width=\dimen179
+\caption@indent=\dimen180
+\caption@parindent=\dimen181
+\caption@hangindent=\dimen182
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count292
+\c@continuedfloat=\count293
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count294
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count295
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdfescape/pdfescape.sty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/ltxcmds/ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/pdftexcmds/pdftexcmds.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/infwarerr/infwarerr.sty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+))
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hycolor/hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/nameref.sty
+Package: nameref 2023-11-26 v2.56 Cross-referencing by name of section
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/refcount/refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/gettitlestring/gettitlestring.s
+ty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/kvoptions/kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count296
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2025/02/11 v2.5l e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count297
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/stringenc/stringenc.sty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
+)
+)
+\@linkdim=\dimen183
+\Hy@linkcounter=\count298
+\Hy@pagecounter=\count299
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/pd1enc.def
+File: pd1enc.def 2024-11-05 v7.01l Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+)
+(/usr/local/texlive/2025/texmf-dist/tex/generic/intcalc/intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count300
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/puenc.def
+File: puenc.def 2024-11-05 v7.01l Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Option `colorlinks' set `true' on input line 4040.
+Package hyperref Info: Hyper figures OFF on input line 4157.
+Package hyperref Info: Link nesting OFF on input line 4162.
+Package hyperref Info: Hyper index ON on input line 4165.
+Package hyperref Info: Plain pages OFF on input line 4172.
+Package hyperref Info: Backreferencing OFF on input line 4177.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4424.
+\c@Hy@tempcnt=\count301
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip18
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4763.
+\XeTeXLinkMargin=\dimen184
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bitset/bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/bigintcalc/bigintcalc.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count302
+\Field@Width=\dimen185
+\Fld@charsize=\dimen186
+Package hyperref Info: Hyper figures OFF on input line 6042.
+Package hyperref Info: Link nesting OFF on input line 6047.
+Package hyperref Info: Hyper index ON on input line 6050.
+Package hyperref Info: backreferencing OFF on input line 6057.
+Package hyperref Info: Link coloring ON on input line 6060.
+Package hyperref Info: Link coloring with OCG OFF on input line 6067.
+Package hyperref Info: PDF/A mode OFF on input line 6072.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atbegshi-ltx.sty
+Package: atbegshi-ltx 2021/01/10 v1.0c Emulation of the original atbegshi
+package with kernel methods
+)
+\Hy@abspage=\count303
+\c@Item=\count304
+\c@Hfootnote=\count305
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hpdftex.def
+File: hpdftex.def 2024-11-05 v7.01l Hyperref driver for pdfTeX
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/base/atveryend-ltx.sty
+Package: atveryend-ltx 2020/08/19 v1.0a Emulation of the original atveryend pac
+kage
+with kernel methods
+)
+\Fld@listcount=\count306
+\c@bookmark@seq@number=\count307
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/rerunfilecheck/rerunfilecheck.sty
+Package: rerunfilecheck 2022-07-10 v1.10 Rerun checks for auxiliary files (HO)
+
+(/usr/local/texlive/2025/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+85.
+)
+\Hy@SectionHShift=\skip59
+)
+LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 1
+9.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
 (/usr/local/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count292
+\l__color_backend_stack_int=\count308
 \l__pdf_internal_box=\box55
 )
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -296,16 +462,16 @@ LaTeX Font Info:    ... okay on input line 17.
 
 (/usr/local/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count293
-\scratchdimen=\dimen175
+\scratchcounter=\count309
+\scratchdimen=\dimen187
 \scratchbox=\box56
-\nofMPsegments=\count294
-\nofMParguments=\count295
+\nofMPsegments=\count310
+\nofMParguments=\count311
 \everyMPshowfont=\toks26
-\MPscratchCnt=\count296
-\MPscratchDim=\dimen176
-\MPnumerator=\count297
-\makeMPintoPDFobject=\count298
+\MPscratchCnt=\count312
+\MPscratchDim=\dimen188
+\MPnumerator=\count313
+\makeMPintoPDFobject=\count314
 \everyMPtoPDFconversion=\toks27
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
@@ -316,13 +482,32 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-LaTeX Font Info:    Trying to load font information for U+msa on input line 19.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: hyperref package is loaded.
+Package caption Info: End \AtBeginDocument code.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/color.sty
+Package: color 2024/06/23 v1.3e Standard LaTeX Color (DPC)
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package color Info: Driver file: pdftex.def on input line 149.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
+Package hyperref Info: Link coloring ON on input line 19.
+
+(./main.out) (./main.out)
+\@outlinefile=\write3
+\openout3 = `main.out'.
+
+LaTeX Font Info:    Trying to load font information for U+msa on input line 22.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 19.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 22.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -334,93 +519,109 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
-4.
+al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}])
+(./sections/background.tex
 
-(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-))
-(./sections/background.tex) (./sections/methods.tex
-Underfull \vbox (badness 1406) has occurred while \output is active []
-
-
-
-[2]
+[2]) (./sections/methods.tex
 
 [3]) (./sections/calibration.tex
 
 [4]
-<sections/figures/nvda_calibration.png, id=29, 1204.5pt x 752.8125pt>
-File: sections/figures/nvda_calibration.png Graphic file (type png)
-<use sections/figures/nvda_calibration.png>
-Package pdftex.def Info: sections/figures/nvda_calibration.png  used on input l
-ine 77.
-(pdftex.def)             Requested size: 337.86465pt x 211.16513pt.
-<sections/figures/all_tickers_smile.png, id=30, 1204.5pt x 752.8125pt>
-File: sections/figures/all_tickers_smile.png Graphic file (type png)
-<use sections/figures/all_tickers_smile.png>
-Package pdftex.def Info: sections/figures/all_tickers_smile.png  used on input 
-line 83.
-(pdftex.def)             Requested size: 337.86465pt x 211.16513pt.
-<sections/figures/iv_residuals.png, id=31, 1204.5pt x 602.25pt>
-File: sections/figures/iv_residuals.png Graphic file (type png)
-<use sections/figures/iv_residuals.png>
-Package pdftex.def Info: sections/figures/iv_residuals.png  used on input line 
-89.
-(pdftex.def)             Requested size: 337.86465pt x 168.9321pt.
-) (./sections/scenarios.tex
-<sections/figures/nvda_iv_paths.png, id=32, 1204.5pt x 752.8125pt>
-File: sections/figures/nvda_iv_paths.png Graphic file (type png)
-<use sections/figures/nvda_iv_paths.png>
-Package pdftex.def Info: sections/figures/nvda_iv_paths.png  used on input line
- 11.
-(pdftex.def)             Requested size: 337.86465pt x 211.16513pt.
-
-
-[5]) (./sections/discussion.tex
-
-[6 <./sections/figures/nvda_calibration.png> <./sections/figures/all_tickers_sm
-ile.png>]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[7 <./sections/figures/iv_residuals.png> <./sections/figures/nvda_iv_paths.png>
-]) (./sections/conclusion.tex
-
-[8]
-! Undefined control sequence.
-l.7 ...urce Julia package and is available at \url
-                                                  {https://github.com/varner...
-The control sequence at the end of the top line
-of your error message was never \def'ed. If you have
-misspelled it (e.g., `\hobx'), type `I' and the correct
-spelling (e.g., `I\hbox'). Otherwise just continue,
-and I'll forget about whatever was undefined.
-
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
+7.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-Underfull \hbox (badness 5203) in paragraph at lines 7--32
-[]\OT1/ptm/m/n/10 The frame-work is im-ple-mented as an open-source Ju-lia pack
--age and is avail-able at
- []
+<sections/figures/nvda_iv_smile.pdf, id=153, 602.25pt x 401.5pt>
+File: sections/figures/nvda_iv_smile.pdf Graphic file (type pdf)
+<use sections/figures/nvda_iv_smile.pdf>
+Package pdftex.def Info: sections/figures/nvda_iv_smile.pdf  used on input line
+ 64.
+(pdftex.def)             Requested size: 127.1981pt x 84.79533pt.
+<sections/figures/iv_smile_all_tickers.pdf, id=154, 702.625pt x 451.6875pt>
+File: sections/figures/iv_smile_all_tickers.pdf Graphic file (type pdf)
+<use sections/figures/iv_smile_all_tickers.pdf>
+Package pdftex.def Info: sections/figures/iv_smile_all_tickers.pdf  used on inp
+ut line 70.
+(pdftex.def)             Requested size: 127.1981pt x 81.7689pt.
+<sections/figures/iv_residuals_cross_ticker.pdf, id=155, 702.625pt x 351.3125pt
+>
+File: sections/figures/iv_residuals_cross_ticker.pdf Graphic file (type pdf)
+<use sections/figures/iv_residuals_cross_ticker.pdf>
+Package pdftex.def Info: sections/figures/iv_residuals_cross_ticker.pdf  used o
+n input line 76.
+(pdftex.def)             Requested size: 127.1981pt x 63.59804pt.
 
-(./main.bbl)
 
-[9] (./main.aux)
+[5]
+<sections/figures/atm_term_structure.pdf, id=173, 602.25pt x 401.5pt>
+File: sections/figures/atm_term_structure.pdf Graphic file (type pdf)
+<use sections/figures/atm_term_structure.pdf>
+Package pdftex.def Info: sections/figures/atm_term_structure.pdf  used on input
+ line 111.
+(pdftex.def)             Requested size: 190.79109pt x 127.19608pt.
+<sections/figures/iv_surface_market_vs_model.pdf, id=174, 823.075pt x 441.65pt>
+
+File: sections/figures/iv_surface_market_vs_model.pdf Graphic file (type pdf)
+<use sections/figures/iv_surface_market_vs_model.pdf>
+Package pdftex.def Info: sections/figures/iv_surface_market_vs_model.pdf  used 
+on input line 117.
+(pdftex.def)             Requested size: 190.79109pt x 102.37256pt.
+<sections/figures/iv_residuals_by_dte.pdf, id=175, 702.625pt x 361.35pt>
+File: sections/figures/iv_residuals_by_dte.pdf Graphic file (type pdf)
+<use sections/figures/iv_residuals_by_dte.pdf>
+Package pdftex.def Info: sections/figures/iv_residuals_by_dte.pdf  used on inpu
+t line 124.
+(pdftex.def)             Requested size: 190.79109pt x 98.12268pt.
+<sections/figures/iv_surface_heatmap.pdf, id=176, 622.325pt x 451.6875pt>
+File: sections/figures/iv_surface_heatmap.pdf Graphic file (type pdf)
+<use sections/figures/iv_surface_heatmap.pdf>
+Package pdftex.def Info: sections/figures/iv_surface_heatmap.pdf  used on input
+ line 130.
+(pdftex.def)             Requested size: 190.79109pt x 138.47781pt.
+) (./sections/scenarios.tex
+Underfull \vbox (badness 1796) has occurred while \output is active []
+
+
+
+[6 <./sections/figures/nvda_iv_smile.pdf> <./sections/figures/iv_smile_all_tick
+ers.pdf> <./sections/figures/iv_residuals_cross_ticker.pdf>]
+<sections/figures/forward_iv_paths.pdf, id=194, 702.625pt x 451.6875pt>
+File: sections/figures/forward_iv_paths.pdf Graphic file (type pdf)
+<use sections/figures/forward_iv_paths.pdf>
+Package pdftex.def Info: sections/figures/forward_iv_paths.pdf  used on input l
+ine 7.
+(pdftex.def)             Requested size: 337.86465pt x 217.20728pt.
+
+Underfull \vbox (badness 1033) has occurred while \output is active []
+
+
+
+[7 <./sections/figures/atm_term_structure.pdf> <./sections/figures/iv_surface_m
+arket_vs_model.pdf> <./sections/figures/iv_residuals_by_dte.pdf> <./sections/fi
+gures/iv_surface_heatmap.pdf>]) (./sections/discussion.tex
+
+[8 <./sections/figures/forward_iv_paths.pdf>]) (./sections/conclusion.tex)
+(./main.bbl
+
+[9])
+
+[10] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: C18DD3A9B3AB55F06551908C2ADD8FEE;1803.
  ) 
 Here is how much of TeX's memory you used:
- 4206 strings out of 473190
- 63870 string characters out of 5715801
- 467591 words of memory out of 5000000
- 27386 multiletter control sequences out of 15000+600000
+ 12859 strings out of 473190
+ 204645 string characters out of 5715801
+ 616951 words of memory out of 5000000
+ 35867 multiletter control sequences out of 15000+600000
  575861 words of font info for 67 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 72i,18n,79p,1017b,231s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,18n,79p,1957b,550s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
@@ -435,10 +636,10 @@ ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (9 pages, 676617 bytes).
+Output written on main.pdf (10 pages, 394985 bytes).
 PDF statistics:
- 109 PDF objects out of 1000 (max. 8388607)
- 65 compressed objects within 1 object stream
- 0 named destinations out of 1000 (max. 500000)
- 21 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 320 PDF objects out of 1000 (max. 8388607)
+ 267 compressed objects within 3 object streams
+ 58 named destinations out of 1000 (max. 500000)
+ 137 words of extra memory for PDF output out of 10000 (max. 10000000)
 
