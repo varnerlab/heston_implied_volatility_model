@@ -11,51 +11,40 @@ The generator produced synthetic American option prices through a three-stage pi
     &\quad\to\; \underbrace{\text{CRR}(S_t,\, \sigma_{\text{imp}},\, K,\, \text{DTE},\, r_f)}_{\text{Stage 3}}
     \;\to\; P_{\text{american}}
 \end{align}
-Stage~1 produced correlated multi-asset price paths $S_t$, hidden state sequences $s_t$, and jump indicators via the JumpHMM. Stage~2 simulated the modified Heston variance process to obtain implied volatility. Stage~3 priced each contract via the CRR binomial tree.
+This ordering was dictated by data flow: the JumpHMM produced the price paths and regime-state sequences that the Heston process required as inputs, and the Heston process produced the IV values that the CRR tree required for pricing. Each stage was self-contained, so the pipeline could be run forward without iteration or feedback from downstream stages.
 
-\subsection{Modified Heston variance process}
+\subsection{Modified Heston variance process}\label{sec:theta_function}
 
 We modified the standard Heston process~\eqref{eq:heston_standard} by making the mean-reversion target time-varying:
 \begin{equation}\label{eq:heston_modified}
     dv = \kappa\bigl(\theta(t) - v\bigr)\,dt + \sigma_v \sqrt{v}\,dW_v
 \end{equation}
-
-\subsubsection{Hybrid $\theta$-function}\label{sec:theta_function}
-
-The mean-reversion target decomposed into a regime-dependent base level, a market mood modulator, and a contract-specific adjustment:
+The mean-reversion target decomposed into a regime-dependent base level, a market mood modulator, and a contract-specific smile and term-structure adjustment:
 \begin{equation}\label{eq:theta}
     \theta(t) = \theta_{s_t} \cdot \bigl(1 + \gamma \cdot M_t\bigr) \cdot \psi(\mathrm{DTE}_t,\; K/S_t)
 \end{equation}
-where $\theta_{s_t}$ is a learned variance level for HMM state $s_t$ (one value per state, $s_t \in \{1, \ldots, N\}$); $\gamma$ is the market mood sensitivity; $M_t \in [0, 1]$ is the aggregate market mood (Section~\ref{sec:mood}); and $\psi(\mathrm{DTE}, K/S)$ is the smile--term-structure adjustment (Section~\ref{sec:psi}). The regime-dependent base $\theta_{s_t}$ linked the Heston process directly to the JumpHMM state sequence: when the HMM transitioned into a tail state (via a Poisson jump or an extreme Markov transition), $\theta_{s_t}$ increased, elevating the IV target. This mechanism produced the leverage effect as an emergent property of the return dynamics rather than as a separate model component: large negative returns drove the HMM into low-numbered tail states with $p_{\text{neg}} \approx 0.52$, which in turn elevated $\theta$.
+where $\theta_{s_t}$ was a learned variance level for HMM state $s_t$ (one value per state, $s_t \in \{1, \ldots, N\}$); $\gamma \geq 0$ was the market mood sensitivity controlling how strongly aggregate stress elevated IV; $M_t \in [0, 1]$ was the aggregate market mood; and $\psi(\mathrm{DTE}, K/S)$ was the smile and term-structure adjustment. The regime-dependent base $\theta_{s_t}$ linked the Heston process directly to the JumpHMM state sequence: when the HMM transitioned into a tail state (via a Poisson jump or an extreme Markov transition), $\theta_{s_t}$ increased, elevating the IV target. This mechanism produced the leverage effect as an emergent property of the return dynamics rather than as a separate model component: large negative returns drove the HMM into low-numbered tail states with $p_{\text{neg}} \approx 0.52$, which in turn elevated $\theta$.
 
-\subsubsection{Smile and term-structure function $\psi$}\label{sec:psi}
-
-The function $\psi$ captured the shape of the IV surface with five parameters:
+The function $\psi$ captured the shape of the IV surface with five parameters:\label{sec:psi}
 \begin{equation}\label{eq:psi}
     \psi(\tau,\; m) = \exp\!\Big(\beta_1 \ln\tau + \beta_2 \ln m + \beta_3 \ln\tau\,\ln m + \beta_4 (\ln m)^2 + \beta_5 (\ln\tau)^2\Big)
 \end{equation}
 where $\tau = \max(\mathrm{DTE}, 1)$ and $m = K/S$. The parameter $\beta_1$ controlled the linear term-structure decay; $\beta_2$ controlled the skew (negative values produced put skew, with OTM puts having higher IV than OTM calls); $\beta_3$ captured the DTE-skew interaction (the skew flattened at longer maturities); $\beta_4$ controlled the smile curvature; and $\beta_5$ controlled the DTE curvature, capturing the U-shaped ATM term structure where short-dated and long-dated IV were both elevated relative to intermediate maturities.
 
-\subsubsection{Equilibrium initialization}\label{sec:initialization}
-
-Rather than specifying a separate initial variance $v_0$, we initialized the variance process at its mean-reversion target:
+Rather than specifying a separate initial variance $v_0$, we initialized the variance process at its mean-reversion target:\label{sec:initialization}
 \begin{equation}\label{eq:v0}
     v_0 = \theta(s_0,\; \mathrm{DTE},\; K/S_0,\; M_0)
 \end{equation}
 This ensured that each (ticker, strike, DTE) triple started at its own equilibrium implied volatility. The initial IV surface inherited the smile, skew, and term structure encoded in $\psi$ without requiring any external IV data. Different contracts on the same underlying received different $v_0$ values, and the variance process immediately began mean-reverting around its local $\theta(t)$. The value of this design choice lay in eliminating $v_0$ as a free parameter: the model did not require a separate calibration of the initial IV surface, as it was determined by construction from $\theta$.
 
-\subsubsection{Market mood}\label{sec:mood}
-
-The market mood $M_t$ was defined as the fraction of tickers currently occupying tail HMM states:
+The market mood $M_t$ was defined as the fraction of tickers currently occupying tail HMM states, where $N_{\text{tail}}$ denoted the number of extreme states at each end of the state space (inherited from the JumpHMM fit):\label{sec:mood}
 \begin{equation}\label{eq:mood}
     M_t = \frac{1}{N_{\text{tickers}}} \sum_{i=1}^{N_{\text{tickers}}} \mathbf{1}\!\left\{s_t^{(i)} \leq N_{\text{tail}} \;\text{or}\; s_t^{(i)} > N - N_{\text{tail}}\right\}
 \end{equation}
 This signal was fully endogenous to the JumpHMM copula model; it required no external data (e.g., VIX) and introduced no circularity. When multiple tickers simultaneously occupied tail states, the mood rose, elevating $\theta$ and thus IV across all contracts. This mechanism produced correlated IV spikes during market stress events by construction.
 
-\subsubsection{Discretization}
-
-The variance process was discretized via Euler--Maruyama with a reflecting boundary at zero:
+The variance process was discretized via Euler-Maruyama with a reflecting boundary at zero and a daily time step $\Delta t = 1/252$:
 \begin{equation}\label{eq:euler}
     v_{t+1} = \left| v_t + \kappa\bigl(\theta_t - v_t\bigr)\Delta t + \sigma_v \sqrt{\max(v_t, 0)}\,\sqrt{\Delta t}\, Z_t \right|, \quad Z_t \sim \mathcal{N}(0, 1)
 \end{equation}
-The reflecting boundary allowed $\theta$ to vary freely across HMM states without requiring the Feller condition $2\kappa\theta > \sigma_v^2$ to hold at every timestep~\cite{andersen2008}. This was a practical necessity, as tail states could drive $\theta$ to values where the Feller condition would otherwise be violated.
+The reflecting boundary allowed $\theta$ to vary freely across HMM states without requiring the Feller condition $2\kappa\theta > \sigma_v^2$ to hold at every timestep~\cite{andersen2008}. This was a practical necessity, as tail states could drive $\theta$ to values where the Feller condition would otherwise be violated. American option prices were computed from the resulting IV using a CRR binomial tree with 200 steps per contract, which provided sufficient convergence for the DTE range considered.

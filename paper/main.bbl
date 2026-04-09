@@ -1,4 +1,4 @@
-\begin{thebibliography}{5}
+\begin{thebibliography}{14}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -18,17 +18,68 @@ L.~Andersen.
 \newblock \emph{Journal of Computational Finance}, 11\penalty0 (3):\penalty0
   1--42, 2008.
 
+\bibitem[Bates(2000)]{bates2000}
+D.~S. Bates.
+\newblock Post-'87 crash fears in the {S\&P} 500 futures option market.
+\newblock \emph{Journal of Econometrics}, 94\penalty0 (1--2):\penalty0
+  181--238, 2000.
+
 \bibitem[Black and Scholes(1973)]{black1973}
 F.~Black and M.~Scholes.
 \newblock The pricing of options and corporate liabilities.
 \newblock \emph{Journal of Political Economy}, 81\penalty0 (3):\penalty0
   637--654, 1973.
 
+\bibitem[Buehler et~al.(2019)Buehler, Gonon, Teichmann, and Wood]{buehler2019}
+H.~Buehler, L.~Gonon, J.~Teichmann, and B.~Wood.
+\newblock Deep hedging.
+\newblock \emph{Quantitative Finance}, 19\penalty0 (8):\penalty0 1271--1291,
+  2019.
+
+\bibitem[Cont(2001)]{cont2001}
+R.~Cont.
+\newblock Empirical properties of asset returns: stylized facts and statistical
+  issues.
+\newblock \emph{Quantitative Finance}, 1\penalty0 (2):\penalty0 223--236, 2001.
+
+\bibitem[Cont and da~Fonseca(2002)]{cont2002}
+R.~Cont and J.~da~Fonseca.
+\newblock Dynamics of implied volatility surfaces.
+\newblock \emph{Quantitative Finance}, 2\penalty0 (1):\penalty0 45--60, 2002.
+
 \bibitem[Cox et~al.(1979)Cox, Ross, and Rubinstein]{cox1979}
 J.~C. Cox, S.~A. Ross, and M.~Rubinstein.
 \newblock Option pricing: A simplified approach.
 \newblock \emph{Journal of Financial Economics}, 7\penalty0 (3):\penalty0
   229--263, 1979.
+
+\bibitem[Demarta and McNeil(2005)]{demarta2005}
+S.~Demarta and A.~J. McNeil.
+\newblock The $t$ copula and related copulas.
+\newblock \emph{International Statistical Review}, 73\penalty0 (1):\penalty0
+  111--129, 2005.
+
+\bibitem[Derman and Kani(1994)]{derman1994}
+E.~Derman and I.~Kani.
+\newblock Riding on a smile.
+\newblock \emph{Risk}, 7\penalty0 (2):\penalty0 32--39, 1994.
+
+\bibitem[Dupire(1994)]{dupire1994}
+B.~Dupire.
+\newblock Pricing with a smile.
+\newblock \emph{Risk}, 7\penalty0 (1):\penalty0 18--20, 1994.
+
+\bibitem[Gatheral(2004)]{gatheral2004}
+J.~Gatheral.
+\newblock A parsimonious arbitrage-free implied volatility parameterization
+  with application to the valuation of volatility derivatives.
+\newblock \emph{Presentation at Global Derivatives \& Risk Management, Madrid},
+  2004.
+
+\bibitem[Hagan et~al.(2002)Hagan, Kumar, Lesniewski, and Woodward]{hagan2002}
+P.~S. Hagan, D.~Kumar, A.~S. Lesniewski, and D.~E. Woodward.
+\newblock Managing smile risk.
+\newblock \emph{Wilmott Magazine}, pages 84--108, 2002.
 
 \bibitem[Heston(1993)]{heston1993}
 S.~L. Heston.
