@@ -38,7 +38,7 @@ export HestonParameters, ThetaHybrid, OptionContract, IVPoint, ScenarioResult
 export CalibrationData
 
 # θ-function
-export compute_theta, ψ, compute_mood, compute_mood_path
+export compute_theta, ψ, compute_mood, compute_mood_path, auto_calibrate_theta_states
 
 # Heston variance
 export simulate_variance, simulate_variance_ensemble

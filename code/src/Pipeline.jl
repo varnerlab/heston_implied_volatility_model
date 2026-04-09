@@ -51,59 +51,93 @@ function run_scenario(portfolio, heston_params::HestonParameters,
     ticker_result = sim_result.results[ticker]
     n_actual_paths = length(ticker_result.paths)
 
-    # Get N_tail from the marginal model for mood computation
-    marginal = portfolio.marginals[ticker]
-    N_states = marginal.partition.N
-    N_tail = marginal.jump.N_tail
-    rf_model = marginal.rf
-    dt_model = marginal.dt
+    # Detect HybridSIM vs legacy portfolio
+    is_hybrid = hasproperty(portfolio, :market_ticker) &&
+                portfolio.dependence isa JumpHMM.HybridSingleIndexModel
+
+    if is_hybrid
+        # HybridSIM: use market model for states, N_states, N_tail, rf, dt
+        market_model = portfolio.dependence.market_model
+        N_states = market_model.partition.N
+        N_tail = market_model.jump.N_tail
+        rf_model = market_model.rf
+        dt_model = market_model.dt
+
+        # Simulate market model separately to get HMM states
+        market_seed = seed !== nothing ? seed + 7 : nothing
+        market_result = JumpHMM.simulate(market_model, n_sim_steps + 1;
+                                          n_paths=n_actual_paths, seed=market_seed)
+    else
+        # Legacy: use marginal model for states and parameters
+        marginal = portfolio.marginals[ticker]
+        N_states = marginal.partition.N
+        N_tail = marginal.jump.N_tail
+        rf_model = marginal.rf
+        dt_model = marginal.dt
+    end
+
+    # Determine effective timesteps (HybridSIM trims first observation)
+    n_obs = length(ticker_result.paths[1].observations)
+    n_eff = min(n_obs, n_sim_steps)
 
     # Build matrices from SimulationPath objects
-    states_matrix = Matrix{Int}(undef, n_actual_paths, n_sim_steps)
-    obs_matrix = Matrix{Float64}(undef, n_actual_paths, n_sim_steps)
-    price_matrix = Matrix{Float64}(undef, n_actual_paths, n_sim_steps + 1)
+    states_matrix = Matrix{Int}(undef, n_actual_paths, n_eff)
+    price_matrix = Matrix{Float64}(undef, n_actual_paths, n_eff + 1)
 
     for i in 1:n_actual_paths
         path = ticker_result.paths[i]
-        states_matrix[i, :] .= path.states
-        obs_matrix[i, :] .= path.observations
+
+        if is_hybrid
+            # Market states: trim to match ticker observation length
+            mkt_states = market_result.paths[i].states
+            # Drop the first state to align with HybridSIM's trimmed observations
+            trimmed_states = mkt_states[2:end]
+            states_matrix[i, :] .= trimmed_states[1:n_eff]
+        else
+            states_matrix[i, :] .= path.states[1:n_eff]
+        end
 
         # Reconstruct prices from growth rates
-        prices_i = JumpHMM.prices_from_growth_rates(path.observations, P0;
+        prices_i = JumpHMM.prices_from_growth_rates(path.observations[1:n_eff], P0;
                                                      rf=rf_model, dt=dt_model)
         price_matrix[i, :] .= prices_i
     end
 
     # Step 2: Compute market mood at each timestep
-    # For multi-asset mood, collect states across all tickers
-    all_tickers = sim_result.tickers
-    n_tickers = length(all_tickers)
+    mood_paths = Matrix{Float64}(undef, n_actual_paths, n_eff)
 
-    if n_tickers > 1
-        # Multi-asset: mood is fraction of tickers in tail states (averaged across paths)
-        # For each path, compute mood using all tickers' states at each timestep
-        # Use per-path mood for the first ticker's paths as representative
-        mood_paths = Matrix{Float64}(undef, n_actual_paths, n_sim_steps)
+    if is_hybrid
+        # HybridSIM: binary mood from market state
         for p in 1:n_actual_paths
-            for t in 1:n_sim_steps
-                tail_count = 0
-                for tk in all_tickers
-                    tk_path = sim_result.results[tk].paths[p]
-                    s = tk_path.states[t]
-                    if s <= N_tail || s > N_states - N_tail
-                        tail_count += 1
-                    end
-                end
-                mood_paths[p, t] = tail_count / n_tickers
+            for t in 1:n_eff
+                s = states_matrix[p, t]
+                mood_paths[p, t] = (s <= N_tail || s > N_states - N_tail) ? 1.0 : 0.0
             end
         end
     else
-        # Single-asset: mood based on own state
-        mood_paths = Matrix{Float64}(undef, n_actual_paths, n_sim_steps)
-        for p in 1:n_actual_paths
-            for t in 1:n_sim_steps
-                s = states_matrix[p, t]
-                mood_paths[p, t] = (s <= N_tail || s > N_states - N_tail) ? 1.0 : 0.0
+        # Legacy: fractional mood across all tickers' states
+        all_tickers = sim_result.tickers
+        n_tickers = length(all_tickers)
+        if n_tickers > 1
+            for p in 1:n_actual_paths
+                for t in 1:n_eff
+                    tail_count = 0
+                    for tk in all_tickers
+                        tk_path = sim_result.results[tk].paths[p]
+                        s = tk_path.states[t]
+                        if s <= N_tail || s > N_states - N_tail
+                            tail_count += 1
+                        end
+                    end
+                    mood_paths[p, t] = tail_count / n_tickers
+                end
+            end
+        else
+            for p in 1:n_actual_paths
+                for t in 1:n_eff
+                    s = states_matrix[p, t]
+                    mood_paths[p, t] = (s <= N_tail || s > N_states - N_tail) ? 1.0 : 0.0
+                end
             end
         end
     end
@@ -114,14 +148,14 @@ function run_scenario(portfolio, heston_params::HestonParameters,
     option_prices = Matrix{Float64}(undef, n_actual_paths, n_contracts)
 
     # Store per-contract variance/IV paths (use first contract for the result matrices)
-    variance_paths_all = Array{Float64}(undef, n_actual_paths, n_sim_steps, n_contracts)
-    iv_paths_all = Array{Float64}(undef, n_actual_paths, n_sim_steps, n_contracts)
+    variance_paths_all = Array{Float64}(undef, n_actual_paths, n_eff, n_contracts)
+    iv_paths_all = Array{Float64}(undef, n_actual_paths, n_eff, n_contracts)
 
     rng = seed !== nothing ? Random.MersenneTwister(seed + 42) : Random.default_rng()
 
     for p in 1:n_actual_paths
         states_p = states_matrix[p, :]
-        S_p = price_matrix[p, 1:n_sim_steps]
+        S_p = price_matrix[p, 1:n_eff]
         mood_p = mood_paths[p, :]
         S_eval = price_matrix[p, eval_step]
 
@@ -141,7 +175,7 @@ function run_scenario(portfolio, heston_params::HestonParameters,
     end
 
     return ScenarioResult(
-        price_matrix[:, 1:n_sim_steps],
+        price_matrix[:, 1:n_eff],
         variance_paths_all[:, :, 1],   # first contract's variance for diagnostics
         iv_paths_all[:, :, 1],         # first contract's IV for diagnostics
         states_matrix,

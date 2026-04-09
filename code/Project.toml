@@ -17,6 +17,7 @@ TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
 
 [compat]
 CSV = "0.10.16"
+DataFrames = "1.8.1"
 JLD2 = "0.6.4"
 JumpHMM = "0.1.0"
 Plots = "1.41.6"

@@ -86,3 +86,51 @@ function compute_mood_path(state_matrix::Matrix{Int}, n_states::Int, n_tail::Int
     end
     return mood
 end
+
+"""
+    auto_calibrate_theta_states(market_model, prices; rf, dt) → Vector{Float64}
+
+Compute θ_states from the empirical variance of returns in each HMM state.
+
+Decodes the historical price series into HMM states using the market model's partition,
+then computes mean(G²) for each state. States with no observations fall back to the
+unconditional variance.
+
+# Arguments
+- `market_model`: a fitted JumpHiddenMarkovModel (e.g., the SPY market model)
+- `prices::AbstractVector{Float64}`: historical close prices for the market ticker
+
+# Keyword Arguments
+- `rf::Float64`: risk-free rate (default: market_model.rf)
+- `dt::Float64`: time step in years (default: market_model.dt)
+
+# Returns
+Vector of length N_states, where θ_states[s] = annualized realized variance when market
+is in state s (suitable for IV = √θ). Converted from growth-rate units via multiplication
+by dt.
+"""
+function auto_calibrate_theta_states(market_model, prices::AbstractVector{Float64};
+                                     rf::Union{Float64,Nothing}=nothing,
+                                     dt::Union{Float64,Nothing}=nothing)::Vector{Float64}
+    rf_val = rf !== nothing ? rf : market_model.rf
+    dt_val = dt !== nothing ? dt : market_model.dt
+
+    G = JumpHMM.excess_growth_rates(prices; rf=rf_val, dt=dt_val)
+    states = JumpHMM.assign_states(market_model.partition, G)
+
+    N_states = market_model.partition.N
+    unconditional_var = sum(G .^ 2) / length(G) * dt_val
+
+    θ_states = Vector{Float64}(undef, N_states)
+    for s in 1:N_states
+        mask = states .== s
+        n_obs = sum(mask)
+        if n_obs > 0
+            θ_states[s] = sum(G[mask] .^ 2) / n_obs * dt_val
+        else
+            θ_states[s] = unconditional_var
+        end
+    end
+
+    return θ_states
+end
