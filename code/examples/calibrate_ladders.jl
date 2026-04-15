@@ -27,19 +27,21 @@ using Printf
 # Step 1: Load and filter ladder data
 # ============================================================================
 
-const LADDER_DIR = joinpath(@__DIR__, "..", "data", "ladders")
+const LADDER_DIR = joinpath(@__DIR__, "..", "data", "ladder")
 const PLOT_DIR = joinpath(@__DIR__, "..", "figures")
 mkpath(PLOT_DIR)
 
 # Sector classification for analysis
 const SECTORS = Dict(
-    "AAPL" => "Tech", "AMD" => "Tech", "INTC" => "Tech", "MSFT" => "Tech",
-    "MU" => "Tech", "NVDA" => "Tech",
+    "AAPL" => "Tech", "AMD" => "Tech", "AVGO" => "Tech", "GOOG" => "Tech",
+    "INTC" => "Tech", "META" => "Tech", "MSFT" => "Tech", "MU" => "Tech",
+    "NVDA" => "Tech", "QCOM" => "Tech",
     "BAC" => "Financials", "GS" => "Financials", "JPM" => "Financials",
     "WFC" => "Financials",
     "CVX" => "Energy", "OXY" => "Energy", "XOM" => "Energy",
-    "ABBV" => "Healthcare", "JNJ" => "Healthcare", "LLY" => "Healthcare",
-    "MRNA" => "Healthcare",
+    "ABBV" => "Healthcare", "AMGN" => "Healthcare", "BMY" => "Healthcare",
+    "JNJ" => "Healthcare", "LLY" => "Healthcare", "MRNA" => "Healthcare",
+    "PFE" => "Healthcare", "UNH" => "Healthcare",
     "TGT" => "Retail", "UPS" => "Retail", "WMT" => "Retail",
     "IWM" => "ETF", "QQQ" => "ETF", "SPY" => "ETF",
 )
@@ -76,7 +78,12 @@ end
 
 """Load all ladder CSVs from a directory."""
 function load_all_ladders(dir::String)
-    files = filter(f -> endswith(f, ".csv"), readdir(dir; join=true))
+    files = String[]
+    for (root, _, fs) in walkdir(dir)
+        for f in fs
+            endswith(f, ".csv") && push!(files, joinpath(root, f))
+        end
+    end
     frames = DataFrame[]
     for f in files
         df = load_ladder(f)

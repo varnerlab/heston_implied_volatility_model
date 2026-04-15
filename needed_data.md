@@ -1,81 +1,90 @@
-# Data Needed to Improve Sector NN IV Model
+# Data Needed for Per-Ticker NN IV Models
 
 Current model: sector-specific neural network psi with per-ticker theta_base.
-Trained on 23 tickers, 18,250 observations from a single capture (2026-04-14).
-Overall RMSE: 6.38% IV. Worst sectors: Healthcare (9.16%), Tech (9.51%).
+Trained on 31 tickers, 35,961 observations from two captures (2026-04-14,
+2026-04-15). Overall RMSE: 6.76% IV. Worst sectors: Tech (9.16%),
+Healthcare (8.83%).
 
-## Priority 1: Daily ladder pulls for data-thin tickers (3-5 days)
+The 2026-04-15 pull executed most of the Priority 1-3 items from the
+previous version of this file (added AMGN, AVGO, BMY, GOOG, META, PFE, QCOM,
+UNH and doubled observations for the original 23). Next focus: enable
+**per-ticker NNs** and **out-of-sample validation**.
 
-Pull daily close ladders for the tickers below. Same format and naming
-convention as the existing files (drop into code/data/ladders/). The loader
-reads everything in the directory automatically.
+## Priority 1: One more full-coverage ladder pull (all 31 tickers)
 
-3 additional days gets every ticker above 700 obs (enough for per-ticker NNs).
-5 days gets everyone above 1,100 and enables temporal out-of-sample validation.
+Pull daily close ladders for all 31 current tickers. Drop into
+`code/data/ladder/options-MM-DD-YYYY/`; the loader now recurses into any
+day-folder under `code/data/ladder/`.
 
-### Tickers to pull (current obs count):
+One more day gets ~24 of 31 tickers above 1000 obs (comfortable for a
+per-ticker 2->8->8->1 NN, ~89 params) and enables a clean temporal holdout
+(train on two days, test on the third). This is the single highest-leverage
+pull remaining.
 
-**Under 300 obs (most urgent):**
-- ABBV (232)
-- JNJ (241)
-- CVX (271)
-- BAC (276)
-- OXY (281)
-- XOM (290)
+### Current obs counts (04-14 + 04-15 pooled):
 
-**300-500 obs:**
-- INTC (309)
-- MRNA (310)
-- WFC (335)
-- UPS (360)
-- AMD (370)
-- WMT (406)
-- JPM (416)
-- TGT (428)
+**Tickers with only 04-15 data — need a second day most (the 8 additions):**
+- PFE (101)  -- still too thin, see Priority 2
+- BMY (~160) -- still too thin, see Priority 2
+- QCOM (299)
+- UNH (304)
+- AMGN (~380)
+- GOOG (~400)
+- AVGO (~780)
+- META (~1500)
 
-**500-750 obs (would benefit but less urgent):**
-- NVDA (536)
-- AAPL (540)
-- MU (587)
-- MSFT (722)
+**Already have 2 days, another pull would break 1000:**
+- ABBV (~505), JNJ (~529), CVX (~493), BAC (~363), OXY (~459), XOM (~498)
+- INTC (~637), MRNA (~529), WFC (~565), UPS (~608)
+- AMD (~897), WMT (~676), JPM (~733), TGT (~705)
+- NVDA (~903), AAPL (~1177), MU (~1721), MSFT (~1301)
 
-**Already sufficient (1000+ obs, pull if convenient):**
-- LLY (958)
-- GS (1047)
-- IWM (1812)
-- QQQ (3315)
-- SPY (4208)
+**Already sufficient for per-ticker NN:**
+- LLY (~1313), GS (~1549), IWM (~2353), QQQ (~6386), SPY (~7748)
 
-## Priority 2: More Healthcare tickers (4+)
+## Priority 2: Second day for PFE and BMY, or drop to sector-pooled only
 
-Healthcare has the worst RMSE (9.16%) and widest intra-sector dispersion:
-ABBV at 16% vs LLY at 5.5%. The sector mixes large-cap pharma (JNJ, ABBV)
-with high-growth biotech (LLY, MRNA), which have fundamentally different
-smile shapes. Adding PFE, UNH, BMY, AMGN (or similar) would either support
-splitting into Pharma vs Biotech sub-sectors or give the NN enough variation
-to learn the distinction.
+PFE (101 obs) and BMY (~160 obs) are too thin for per-ticker NNs even after
+several additional pulls. Two options:
+1. Pull PFE/BMY specifically for 3-5 more days to reach ~400+ obs
+2. Accept they stay sector-pooled (Healthcare sector NN) and skip per-ticker
+   models for them
 
-## Priority 3: More Tech tickers (4+)
+Recommended: option 2 unless they become high-priority underlyings for the
+paper. PFE currently has the worst per-ticker RMSE (13.33%) — its thin
+sample is also the noisiest.
 
-Tech at 9.51% mixes mega-cap stable names (AAPL, MSFT) with semiconductor
-cyclicals (INTC, MU, AMD, NVDA). INTC alone (11.2% RMSE) is an outlier.
-Adding GOOG, META, AVGO, QCOM would help separate these sub-groups and
-improve the sector NN's ability to generalize.
+## Priority 3: Third day enables temporal out-of-sample validation
 
-## Priority 4: Denser short-DTE coverage
+With three capture days, hold out one day entirely and train on the other
+two. This is the cleanest test of whether the NN generalizes across time
+(as opposed to just interpolating within a single snapshot). Essential
+before any paper-quality claim about model accuracy.
 
-DTE 2-4 still has 10-11% RMSE even with sector NNs. The smile geometry
-changes rapidly near expiration (gamma compression). Capturing 0DTE, 1DTE,
-2DTE, 3DTE separately rather than lumping into target_dte=4 would give the
-NNs more resolution in the hardest regime.
+## Priority 4: Split Tech sub-sectors (mega-cap vs semi)
 
-## Priority 5: Volume/open interest (nice to have)
+Tech remains the worst sector (9.16%). With 10 Tech tickers now, we can
+split into:
+- Mega-cap stable: AAPL, MSFT, GOOG, META
+- Semiconductor cyclicals: NVDA, AMD, INTC, MU, AVGO, QCOM
 
-Would allow weighting the loss by liquidity. A tight-spread ATM option is
-far more reliable than a wide-spread deep OTM quote. Currently all
-observations are weighted equally.
+Two separate Tech NNs instead of one shared should reduce RMSE meaningfully.
+Worth trying before collecting more Tech data.
 
-## Priority 6: Intraday snapshots (nice to have)
+## Priority 5: Split Healthcare sub-sectors (pharma vs biotech)
 
-Two captures per day (open + close) would double the dataset and reveal
-intraday smile dynamics without waiting for additional trading days.
+Similar story — 8 Healthcare tickers now enable:
+- Large-cap pharma: JNJ, ABBV, PFE, BMY, AMGN, UNH
+- High-growth biotech: LLY, MRNA
+
+## Priority 6: Denser short-DTE coverage (still open)
+
+DTE 1-4 still has 7-12% RMSE. Capturing 0DTE, 1DTE, 2DTE, 3DTE separately
+rather than lumping into target_dte=4 would give the NNs more resolution in
+the hardest regime.
+
+## Priority 7: Volume/open interest, intraday snapshots (nice to have)
+
+Unchanged from previous list. Liquidity-weighted loss and intraday
+(open + close) captures would each be valuable once the per-ticker NN
+baseline is in place.
