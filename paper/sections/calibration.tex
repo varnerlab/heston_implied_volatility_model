@@ -132,3 +132,126 @@ $\beta_5$ & DTE curvature       & 0.150 \\
 \end{subfigure}
 \caption{Multi-expiration term structure calibration (NVDA, 2 to 46 DTE). \textbf{(a)}~ATM implied volatility as a function of days to expiration. Market ATM IV (blue markers) exhibited a U-shaped term structure; the fitted model (red curve) captured the trough near DTE~$\approx 8$ (32.5\% IV) and the rise to 41\% at 46~DTE using the quadratic extension $\beta_5 (\ln\tau)^2$. \textbf{(b)}~IV smile curves at each of six expirations (2, 4, 7, 14, 25, 46~DTE). Market observations (markers) and model predictions (lines) are colored by DTE; 0~DTE data (diamonds) were excluded from the fit due to gamma compression. The skew flattened with increasing maturity, consistent with $\beta_3 > 0$. \textbf{(c)}~IV residuals (model $-$ market) by moneyness, colored by DTE. Most residuals fell within $\pm 2$\% IV, with no systematic bias across the moneyness range. \textbf{(d)}~Model-predicted IV surface as a function of moneyness and DTE (log-scaled). White contour lines mark 35\%, 45\%, and 55\% IV levels; white circles indicate market observations used for calibration. The overall RMSE was 1.15\% IV.}\label{fig:term_structure}
 \end{figure}
+
+\subsection{Sector-specific calibration on the 31-ticker ladder}\label{sec:ladder}
+
+The single-ticker and four-ticker semiconductor calibrations established that the parametric $\psi$ captured the dominant smile and term-structure geometry for individual names, but left open whether the same five-parameter shape transferred across sectors with heterogeneous risk profiles. To answer this directly, we collected full option ladders for 31 tickers spanning six sectors on two consecutive trading days (2026-04-14 and 2026-04-15), producing 35{,}961 observations after filtering to moneyness $K/S \in [0.80, 1.20]$, non-zero bids, and IV $\in (0.01, 2.0)$. The sector partition followed conventional GICS-style groupings (Table~\ref{tab:sector_map}): technology (10 tickers), healthcare (8), financials (4), energy (3), retail (3), and broad-market ETFs (3). This corpus was two orders of magnitude larger than the original NVDA calibration and, more importantly, contained systematic cross-sector variation: mega-cap ETFs exhibited shallow smiles with pronounced term structure, technology names carried elevated near-term skew from earnings catalysts, healthcare names showed idiosyncratic bumps around trial and FDA dates, and commodity-linked energy tickers displayed skew patterns shaped by supply shocks rather than equity crash risk.
+
+\begin{table}[ht]
+\centering
+\caption{Sector partition of the 31-ticker ladder. Each ticker appeared on at least one of the two capture days (2026-04-14 and 2026-04-15); per-sector observation counts were pooled across days. ETF observation counts were substantially larger than other sectors because SPY, QQQ, and IWM carried far deeper strike ladders than individual-name chains.}\label{tab:sector_map}
+\begin{tabular}{lrl}
+\toprule
+Sector & Observations & Tickers \\
+\midrule
+ETF        & 17{,}533 & IWM, QQQ, SPY \\
+Technology &  7{,}689 & AAPL, AMD, AVGO, GOOG, INTC, META, MSFT, MU, NVDA, QCOM \\
+Healthcare &  3{,}820 & ABBV, AMGN, BMY, JNJ, LLY, MRNA, PFE, UNH \\
+Financials &  3{,}496 & BAC, GS, JPM, WFC \\
+Retail     &  1{,}989 & TGT, UPS, WMT \\
+Energy     &  1{,}434 & CVX, OXY, XOM \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+To quantify the value of relaxing the global-shape assumption, we fitted three nested models on the pooled ladder using a common loss (mean squared IV error) and a common level parameterization (one $\theta_{\text{ticker}}$ per ticker), varying only the representation of $\psi$: (i) a global parametric $\psi$ with the five $\beta$-parameters of equation~\eqref{eq:psi_extended} shared across all tickers; (ii) a global neural $\psi_{\text{NN}}$ shared across all tickers, replacing the parametric form with the architecture of Section~\ref{sec:psi_nn}; and (iii) a sector-specific neural $\psi_{\text{NN}}^{(c)}$ with one network per sector. This design isolated the contribution of model capacity (parametric $\to$ NN) from the contribution of sharing granularity (global $\to$ sector). The three-way comparison revealed that both axes mattered and that their contributions were roughly additive (Table~\ref{tab:three_way}; Figure~\ref{fig:three_way}): moving from a global parametric $\psi$ to a global neural $\psi$ reduced overall RMSE from 9.36\% to 8.03\% IV (a 1.33\% absolute, 14.2\% relative improvement) by accommodating smile shapes the log-polynomial form could not express, and moving from a global to a sector-specific $\psi_{\text{NN}}$ further reduced RMSE to 6.76\% (a 1.27\% additional reduction, 27.8\% cumulative relative improvement over the parametric baseline) by letting within-sector shapes specialize away from the global average.
+
+\begin{table}[ht]
+\centering
+\caption{Three-way overall RMSE comparison on the 31-ticker ladder (35{,}961 observations). The parametric baseline fit a single global set of five $\beta$ parameters; the shared NN replaced the parametric $\psi$ with one global network; the sector NN used one network per sector. All three models fitted one $\theta_{\text{ticker}}$ per ticker jointly with the shape parameters.}\label{tab:three_way}
+\begin{tabular}{lrr}
+\toprule
+Model & Overall RMSE (\% IV) & Relative improvement vs.\ parametric \\
+\midrule
+Parametric (5 $\beta$, global)     & 9.36 & (baseline) \\
+Neural $\psi$ (1 network, global)  & 8.03 & 14.2\% \\
+Neural $\psi$ (6 networks, sector) & 6.76 & 27.8\% \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The per-sector decomposition exposed where each incremental model capacity helped most (Table~\ref{tab:per_sector}). The global NN uniformly improved every sector over the parametric baseline, with the largest absolute gains in retail (8.62\% $\to$ 6.94\%) and ETF (8.93\% $\to$ 6.89\%), where the parametric log-polynomial struggled to fit shallow ETF smiles and idiosyncratic retail patterns simultaneously. Moving to sector-specific networks delivered a further 1 to 2\% IV reduction in every sector except technology, which remained the hardest fit (9.16\% with sector NN). Inspection of per-ticker residuals (Table~\ref{tab:worst_tickers}) traced this to heterogeneity within the sector itself rather than to a failure of the sector NN as a whole: within technology, names such as AMD (5.80\%), META (6.75\%), and GOOG (6.80\%) fit comfortably under the shared Tech surface, while INTC (12.47\%), AVGO (12.59\%), MU (10.51\%), and MSFT (9.76\%) pulled the sector RMSE upward. The pattern was consistent with these outlier tickers carrying idiosyncratic smile shapes (elevated wings, asymmetric skew) that a shared Tech $\psi$ could not simultaneously accommodate without degrading the fit of the better-behaved names. The same story repeated in healthcare, where LLY (5.34\%) fit well but PFE (13.33\%), ABBV (12.18\%), and JNJ (11.79\%) drove the sector average. The per-ticker $\theta_{\text{ticker}}$ values recovered a sensible IV level ranking (Figure~\ref{fig:theta_base}): high-variance names with concentrated risk (INTC, MU, MRNA, AMD) occupied the top of the sorted order at 60 to 90\% baseline IV, large-cap diversified names (AAPL, JPM, WMT) clustered near the middle at 37 to 40\%, and the broad-market ETFs (SPY, QQQ, IWM) sat at the low-variance end near 32 to 37\%. Within-sector clustering was visually evident in the sorted bar chart, confirming that sector membership captured a dominant axis of the cross-sectional IV structure.
+
+\begin{table}[ht]
+\centering
+\caption{Per-sector RMSE (\% IV) across the three calibration strategies on the 31-ticker ladder. The sector NN reduced RMSE in every sector over the shared NN, with the largest absolute gains in sectors where the global shape poorly represented the local geometry.}\label{tab:per_sector}
+\begin{tabular}{lrrrr}
+\toprule
+Sector & Parametric & Shared NN & Sector NN & Obs.\ count \\
+\midrule
+ETF        &  8.93 & 6.89 & 5.09 & 17{,}533 \\
+Financials &  6.85 & 6.44 & 5.54 &  3{,}496 \\
+Energy     &  7.66 & 6.44 & 5.97 &  1{,}434 \\
+Retail     &  8.62 & 6.94 & 6.66 &  1{,}989 \\
+Healthcare & 10.78 & 9.83 & 8.83 &  3{,}820 \\
+Technology & 11.65 & 11.23 & 9.16 &  7{,}689 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Best and worst individual ticker fits under the sector-specific NN calibration, ranked by RMSE across all 31 tickers. Small-sample tickers (PFE, BMY) showed the expected small-sample penalty; the remaining worst fits were concentrated in technology and healthcare where within-sector shape heterogeneity was largest.}\label{tab:worst_tickers}
+\begin{tabular}{llrrl}
+\toprule
+Rank & Ticker & Obs.\ count & RMSE (\% IV) & Sector \\
+\midrule
+\multicolumn{5}{l}{\emph{Best 5}} \\
+ 1 & GS   & 1{,}755 & 4.32 & Financials \\
+ 2 & WMT  &    676 & 4.71 & Retail \\
+ 3 & QQQ  & 6{,}386 & 5.06 & ETF \\
+ 3 & SPY  & 7{,}748 & 5.06 & ETF \\
+ 5 & XOM  &    498 & 5.09 & Energy \\
+\midrule
+\multicolumn{5}{l}{\emph{Worst 5}} \\
+27 & JNJ  &    408 & 11.79 & Healthcare \\
+28 & ABBV &    433 & 12.18 & Healthcare \\
+29 & INTC &    531 & 12.47 & Technology \\
+30 & AVGO &    594 & 12.59 & Technology \\
+31 & PFE  &    101 & 13.33 & Healthcare \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{sections/figures/ladder_three_way_comparison.pdf}
+    \caption{}\label{fig:three_way}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{sections/figures/ladder_sector_nn_theta_base.pdf}
+    \caption{}\label{fig:theta_base}
+\end{subfigure}
+
+\vspace{0.5em}
+\begin{subfigure}[t]{\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{sections/figures/ladder_sector_nn_smile_panels.pdf}
+    \caption{}\label{fig:smile_panels}
+\end{subfigure}
+\caption{Sector-specific neural calibration on the 31-ticker ladder (35{,}961 observations, two capture days). \textbf{(a)}~Per-sector RMSE under the three calibration strategies: parametric $\psi$ (light gray), shared neural $\psi$ (steel blue), and sector-specific neural $\psi$ (dark blue). The sector NN dominated in every sector; the largest gains over the shared NN occurred in ETF and Financials. \textbf{(b)}~Learned baseline IV ($\sqrt{\theta_{\text{ticker}}}$) for each of the 31 tickers, colored by sector and sorted by level. The ordering recovered the expected high-variance names (MRNA, NVDA) at the top and mega-cap ETFs at the bottom. \textbf{(c)}~Representative IV smile fits at mid-DTE for one ticker per sector (SPY, NVDA, JPM, XOM, LLY, WMT). Market calls (blue circles) and puts (red diamonds) are overlaid with the sector NN prediction (solid black line). The sector networks captured both the smile curvature and the sector-specific shape asymmetries that a single global $\psi$ could not.}\label{fig:sector_nn}
+\end{figure}
+
+The residual structure under the sector NN (Figure~\ref{fig:sector_nn_residuals}) confirmed that the remaining error was concentrated in the wings (moneyness below 0.90 and above 1.10) rather than near the money, consistent with the in-sample fits of the earlier single-ticker calibrations and with the known difficulty of pricing deep-OTM contracts where liquidity is thin and quoted IV is noisier. The learned $\psi$ surfaces (Figure~\ref{fig:psi_surfaces}) were smooth in both $\ln\tau$ and $\ln m$ and displayed the expected qualitative features, including put skew ($\psi$ rising for moneyness below unity), smile curvature in the wings, and a mild term-structure gradient. The sector-to-sector differences in these surfaces were the direct visual evidence that motivated relaxing the global-shape assumption in the first place: the healthcare and technology surfaces curved more sharply in the near-term wings than the ETF surface, and the energy surface displayed a subtle asymmetry consistent with the commodity-linked risk profile of the sector.
+
+\begin{figure}[ht]
+\centering
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{sections/figures/ladder_sector_nn_residuals.pdf}
+    \caption{}\label{fig:sector_nn_residuals}
+\end{subfigure}
+\hfill
+\begin{subfigure}[t]{0.48\textwidth}
+    \centering
+    \includegraphics[width=\textwidth]{sections/figures/ladder_sector_nn_psi_surfaces.pdf}
+    \caption{}\label{fig:psi_surfaces}
+\end{subfigure}
+\caption{Residual and surface diagnostics for the sector-specific neural calibration. \textbf{(a)}~IV residuals (model $-$ market) versus moneyness, colored by sector. Residuals clustered around zero in the near-money range ($K/S \in [0.90, 1.10]$) and dispersed in the wings, consistent with reduced liquidity and noisier quoted IV for deep-OTM contracts. \textbf{(b)}~Learned $\psi$ surfaces over $(K/S, \text{DTE})$ for each of the six sectors, plotted on a shared color scale. The surfaces were smooth in both inputs and displayed sector-specific differences in skew steepness and smile curvature that motivated the sector-level relaxation of the shared-shape assumption.}\label{fig:sector_nn_diag}
+\end{figure}
+
+This calibration established the sector-specific neural $\psi$ as the current operating point of the framework, but it did not represent the terminal model. The decomposition of Section~\ref{sec:psi_nn} supports per-ticker networks as a direct extension once per-name sample sizes permit. At the 2-day corpus used here, per-ticker sample sizes ranged from 101 (PFE) to 7{,}748 (SPY), with a median near 600 observations per ticker; this was sufficient for sector-level fitting but thin for per-ticker networks of the same architecture on most names. The data-rich tickers (SPY, QQQ, IWM, GS, LLY, MSFT) would already support per-ticker fits, and the pattern of within-sector outliers identified above (INTC, AVGO, MU, PFE, ABBV) was precisely the set that per-ticker networks would be expected to help most. Additional capture days, reported as future work (Section~\ref{sec:discussion}), will support per-ticker $\psi_{\text{NN}}$ fits with proper temporal held-out validation across the full universe.

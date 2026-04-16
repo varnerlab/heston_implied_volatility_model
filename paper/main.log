@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  9 APR 2026 04:50
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  16 APR 2026 16:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main.tex
+**main
 (./main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -524,27 +524,42 @@ al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}])
 
 [2]) (./sections/methods.tex
 
-[3]) (./sections/calibration.tex
+[3]
 
 [4]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 52.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\psi' on input line 52.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 52.
+
+) (./sections/calibration.tex
+
+[5]
 LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
 7.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
-<sections/figures/nvda_iv_smile.pdf, id=153, 602.25pt x 401.5pt>
+<sections/figures/nvda_iv_smile.pdf, id=183, 602.25pt x 401.5pt>
 File: sections/figures/nvda_iv_smile.pdf Graphic file (type pdf)
 <use sections/figures/nvda_iv_smile.pdf>
 Package pdftex.def Info: sections/figures/nvda_iv_smile.pdf  used on input line
  64.
 (pdftex.def)             Requested size: 127.1981pt x 84.79533pt.
-<sections/figures/iv_smile_all_tickers.pdf, id=154, 702.625pt x 451.6875pt>
+<sections/figures/iv_smile_all_tickers.pdf, id=184, 702.625pt x 451.6875pt>
 File: sections/figures/iv_smile_all_tickers.pdf Graphic file (type pdf)
 <use sections/figures/iv_smile_all_tickers.pdf>
 Package pdftex.def Info: sections/figures/iv_smile_all_tickers.pdf  used on inp
 ut line 70.
 (pdftex.def)             Requested size: 127.1981pt x 81.7689pt.
-<sections/figures/iv_residuals_cross_ticker.pdf, id=155, 702.625pt x 351.3125pt
+<sections/figures/iv_residuals_cross_ticker.pdf, id=185, 702.625pt x 351.3125pt
 >
 File: sections/figures/iv_residuals_cross_ticker.pdf Graphic file (type pdf)
 <use sections/figures/iv_residuals_cross_ticker.pdf>
@@ -553,75 +568,130 @@ n input line 76.
 (pdftex.def)             Requested size: 127.1981pt x 63.59804pt.
 
 
-[5]
-<sections/figures/atm_term_structure.pdf, id=173, 602.25pt x 401.5pt>
+[6]
+<sections/figures/atm_term_structure.pdf, id=204, 602.25pt x 401.5pt>
 File: sections/figures/atm_term_structure.pdf Graphic file (type pdf)
 <use sections/figures/atm_term_structure.pdf>
 Package pdftex.def Info: sections/figures/atm_term_structure.pdf  used on input
  line 111.
 (pdftex.def)             Requested size: 190.79109pt x 127.19608pt.
-<sections/figures/iv_surface_market_vs_model.pdf, id=174, 823.075pt x 441.65pt>
+<sections/figures/iv_surface_market_vs_model.pdf, id=205, 823.075pt x 441.65pt>
 
 File: sections/figures/iv_surface_market_vs_model.pdf Graphic file (type pdf)
 <use sections/figures/iv_surface_market_vs_model.pdf>
 Package pdftex.def Info: sections/figures/iv_surface_market_vs_model.pdf  used 
 on input line 117.
 (pdftex.def)             Requested size: 190.79109pt x 102.37256pt.
-<sections/figures/iv_residuals_by_dte.pdf, id=175, 702.625pt x 361.35pt>
+<sections/figures/iv_residuals_by_dte.pdf, id=206, 702.625pt x 361.35pt>
 File: sections/figures/iv_residuals_by_dte.pdf Graphic file (type pdf)
 <use sections/figures/iv_residuals_by_dte.pdf>
 Package pdftex.def Info: sections/figures/iv_residuals_by_dte.pdf  used on inpu
 t line 124.
 (pdftex.def)             Requested size: 190.79109pt x 98.12268pt.
-<sections/figures/iv_surface_heatmap.pdf, id=176, 622.325pt x 451.6875pt>
+<sections/figures/iv_surface_heatmap.pdf, id=207, 622.325pt x 451.6875pt>
 File: sections/figures/iv_surface_heatmap.pdf Graphic file (type pdf)
 <use sections/figures/iv_surface_heatmap.pdf>
 Package pdftex.def Info: sections/figures/iv_surface_heatmap.pdf  used on input
  line 130.
 (pdftex.def)             Requested size: 190.79109pt x 138.47781pt.
-) (./sections/scenarios.tex
-Underfull \vbox (badness 1796) has occurred while \output is active []
 
 
-
-[6 <./sections/figures/nvda_iv_smile.pdf> <./sections/figures/iv_smile_all_tick
+[7 <./sections/figures/nvda_iv_smile.pdf> <./sections/figures/iv_smile_all_tick
 ers.pdf> <./sections/figures/iv_residuals_cross_ticker.pdf>]
-<sections/figures/forward_iv_paths.pdf, id=194, 702.625pt x 451.6875pt>
+Overfull \hbox (39.50288pt too wide) in paragraph at lines 143--155
+ [][] 
+ []
+
+
+
+[8]
+<sections/figures/ladder_three_way_comparison.pdf, id=239, 803.0pt x 451.6875pt
+>
+File: sections/figures/ladder_three_way_comparison.pdf Graphic file (type pdf)
+<use sections/figures/ladder_three_way_comparison.pdf>
+Package pdftex.def Info: sections/figures/ladder_three_way_comparison.pdf  used
+ on input line 220.
+(pdftex.def)             Requested size: 190.79109pt x 107.31824pt.
+<sections/figures/ladder_sector_nn_theta_base.pdf, id=240, 903.375pt x 451.6875
+pt>
+File: sections/figures/ladder_sector_nn_theta_base.pdf Graphic file (type pdf)
+<use sections/figures/ladder_sector_nn_theta_base.pdf>
+Package pdftex.def Info: sections/figures/ladder_sector_nn_theta_base.pdf  used
+ on input line 226.
+(pdftex.def)             Requested size: 190.79109pt x 95.39476pt.
+<sections/figures/ladder_sector_nn_smile_panels.pdf, id=241, 1204.5pt x 702.625
+pt>
+File: sections/figures/ladder_sector_nn_smile_panels.pdf Graphic file (type pdf
+)
+<use sections/figures/ladder_sector_nn_smile_panels.pdf>
+Package pdftex.def Info: sections/figures/ladder_sector_nn_smile_panels.pdf  us
+ed on input line 233.
+(pdftex.def)             Requested size: 397.48499pt x 231.86696pt.
+
+Underfull \vbox (badness 7963) has occurred while \output is active []
+
+
+
+[9 <./sections/figures/atm_term_structure.pdf> <./sections/figures/iv_surface_m
+arket_vs_model.pdf> <./sections/figures/iv_residuals_by_dte.pdf> <./sections/fi
+gures/iv_surface_heatmap.pdf>]
+<sections/figures/ladder_sector_nn_residuals.pdf, id=262, 903.375pt x 451.6875p
+t>
+File: sections/figures/ladder_sector_nn_residuals.pdf Graphic file (type pdf)
+<use sections/figures/ladder_sector_nn_residuals.pdf>
+Package pdftex.def Info: sections/figures/ladder_sector_nn_residuals.pdf  used 
+on input line 245.
+(pdftex.def)             Requested size: 190.79109pt x 95.39476pt.
+<sections/figures/ladder_sector_nn_psi_surfaces.pdf, id=263, 1204.5pt x 702.625
+pt>
+File: sections/figures/ladder_sector_nn_psi_surfaces.pdf Graphic file (type pdf
+)
+<use sections/figures/ladder_sector_nn_psi_surfaces.pdf>
+Package pdftex.def Info: sections/figures/ladder_sector_nn_psi_surfaces.pdf  us
+ed on input line 251.
+(pdftex.def)             Requested size: 190.79109pt x 111.28584pt.
+) (./sections/scenarios.tex
+<sections/figures/forward_iv_paths.pdf, id=268, 702.625pt x 451.6875pt>
 File: sections/figures/forward_iv_paths.pdf Graphic file (type pdf)
 <use sections/figures/forward_iv_paths.pdf>
 Package pdftex.def Info: sections/figures/forward_iv_paths.pdf  used on input l
 ine 7.
 (pdftex.def)             Requested size: 337.86465pt x 217.20728pt.
 
-Underfull \vbox (badness 1033) has occurred while \output is active []
+
+[10]) (./sections/discussion.tex
+
+[11]
+
+[12 <./sections/figures/ladder_three_way_comparison.pdf> <./sections/figures/la
+dder_sector_nn_theta_base.pdf> <./sections/figures/ladder_sector_nn_smile_panel
+s.pdf>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[7 <./sections/figures/atm_term_structure.pdf> <./sections/figures/iv_surface_m
-arket_vs_model.pdf> <./sections/figures/iv_residuals_by_dte.pdf> <./sections/fi
-gures/iv_surface_heatmap.pdf>]) (./sections/discussion.tex
+[13 <./sections/figures/ladder_sector_nn_residuals.pdf> <./sections/figures/lad
+der_sector_nn_psi_surfaces.pdf> <./sections/figures/forward_iv_paths.pdf>])
+(./sections/conclusion.tex) (./main.bbl
 
-[8 <./sections/figures/forward_iv_paths.pdf>]) (./sections/conclusion.tex)
-(./main.bbl
+[14])
 
-[9])
-
-[10] (./main.aux)
+[15] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: C18DD3A9B3AB55F06551908C2ADD8FEE;1803.
+(rerunfilecheck)             Checksum: B39275558B00B022CE524624CE09282A;2659.
  ) 
 Here is how much of TeX's memory you used:
- 12859 strings out of 473190
- 204645 string characters out of 5715801
- 616951 words of memory out of 5000000
- 35867 multiletter control sequences out of 15000+600000
+ 12941 strings out of 473190
+ 207441 string characters out of 5715801
+ 625678 words of memory out of 5000000
+ 35931 multiletter control sequences out of 15000+600000
  575861 words of font info for 67 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,18n,79p,1957b,550s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,18n,79p,2460b,552s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
@@ -636,10 +706,10 @@ ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texli
 ve/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/f
 onts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (10 pages, 394985 bytes).
+Output written on main.pdf (15 pages, 2531748 bytes).
 PDF statistics:
- 320 PDF objects out of 1000 (max. 8388607)
- 267 compressed objects within 3 object streams
- 58 named destinations out of 1000 (max. 500000)
- 137 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 409 PDF objects out of 1000 (max. 8388607)
+ 333 compressed objects within 4 object streams
+ 76 named destinations out of 1000 (max. 500000)
+ 186 words of extra memory for PDF output out of 10000 (max. 10000000)
 

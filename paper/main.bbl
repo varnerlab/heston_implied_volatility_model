@@ -1,4 +1,4 @@
-\begin{thebibliography}{14}
+\begin{thebibliography}{16}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -23,6 +23,11 @@ D.~S. Bates.
 \newblock Post-'87 crash fears in the {S\&P} 500 futures option market.
 \newblock \emph{Journal of Econometrics}, 94\penalty0 (1--2):\penalty0
   181--238, 2000.
+
+\bibitem[Bayer and Stemper(2019)]{bayer2019}
+C.~Bayer and B.~Stemper.
+\newblock Deep calibration of rough stochastic volatility models.
+\newblock \emph{arXiv preprint arXiv:1810.03399}, 2019.
 
 \bibitem[Black and Scholes(1973)]{black1973}
 F.~Black and M.~Scholes.
@@ -87,5 +92,11 @@ S.~L. Heston.
   applications to bond and currency options.
 \newblock \emph{The Review of Financial Studies}, 6\penalty0 (2):\penalty0
   327--343, 1993.
+
+\bibitem[Horvath et~al.(2021)Horvath, Muguruza, and Tomas]{horvath2021}
+B.~Horvath, A.~Muguruza, and M.~Tomas.
+\newblock Deep learning volatility: a deep neural network perspective on
+  pricing and calibration in (rough) volatility models.
+\newblock \emph{Quantitative Finance}, 21\penalty0 (1):\penalty0 11--27, 2021.
 
 \end{thebibliography}

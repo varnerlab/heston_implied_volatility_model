@@ -24,87 +24,120 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Jump Hidden Markov Model}{2}{subsection.2.1}\protected@file@percent }
 \citation{heston1993}
 \citation{cox1979}
+\citation{hagan2002}
+\citation{gatheral2004}
+\citation{horvath2021,bayer2019}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Heston stochastic variance model}{3}{subsection.2.2}\protected@file@percent }
 \newlabel{eq:heston_standard}{{1}{3}{Heston stochastic variance model}{equation.1}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}CRR binomial tree}{3}{subsection.2.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Methods}{3}{section.3}\protected@file@percent }
-\newlabel{sec:methods}{{3}{3}{Methods}{section.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Pipeline overview}{3}{subsection.3.1}\protected@file@percent }
-\newlabel{eq:pipeline}{{2}{3}{Pipeline overview}{equation.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Modified Heston variance process}{3}{subsection.3.2}\protected@file@percent }
-\newlabel{sec:theta_function}{{3.2}{3}{Modified Heston variance process}{subsection.3.2}{}}
-\newlabel{eq:heston_modified}{{3}{3}{Modified Heston variance process}{equation.3}{}}
-\newlabel{eq:theta}{{4}{3}{Modified Heston variance process}{equation.4}{}}
-\citation{andersen2008}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Neural representations of the implied volatility surface}{3}{subsection.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Methods}{4}{section.3}\protected@file@percent }
+\newlabel{sec:methods}{{3}{4}{Methods}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Pipeline overview}{4}{subsection.3.1}\protected@file@percent }
+\newlabel{eq:pipeline}{{2}{4}{Pipeline overview}{equation.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Modified Heston variance process}{4}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:theta_function}{{3.2}{4}{Modified Heston variance process}{subsection.3.2}{}}
+\newlabel{eq:heston_modified}{{3}{4}{Modified Heston variance process}{equation.3}{}}
+\newlabel{eq:theta}{{4}{4}{Modified Heston variance process}{equation.4}{}}
 \newlabel{sec:psi}{{3.2}{4}{Modified Heston variance process}{equation.4}{}}
 \newlabel{eq:psi}{{5}{4}{Modified Heston variance process}{equation.5}{}}
 \newlabel{sec:initialization}{{3.2}{4}{Modified Heston variance process}{equation.5}{}}
 \newlabel{eq:v0}{{6}{4}{Modified Heston variance process}{equation.6}{}}
 \newlabel{sec:mood}{{3.2}{4}{Modified Heston variance process}{equation.6}{}}
 \newlabel{eq:mood}{{7}{4}{Modified Heston variance process}{equation.7}{}}
-\newlabel{eq:euler}{{8}{4}{Modified Heston variance process}{equation.8}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Calibration and Validation}{4}{section.4}\protected@file@percent }
-\newlabel{sec:calibration}{{4}{4}{Calibration and Validation}{section.4}{}}
-\newlabel{eq:calibration_iv}{{9}{5}{Calibration and Validation}{equation.9}{}}
-\newlabel{eq:objective}{{10}{5}{Calibration and Validation}{equation.10}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Option chain summary. Contract counts are reported after filtering to the tradeable moneyness range.}}{5}{table.caption.2}\protected@file@percent }
+\citation{andersen2008}
+\newlabel{eq:euler}{{8}{5}{Modified Heston variance process}{equation.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Neural surrogate for $\psi $}{5}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:psi_nn}{{3.3}{5}{Neural surrogate for $\psi $}{subsection.3.3}{}}
+\newlabel{eq:psi_nn}{{9}{5}{Neural surrogate for $\psi $}{equation.9}{}}
+\newlabel{eq:nn_loss}{{10}{5}{Neural surrogate for $\psi $}{equation.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Calibration and Validation}{6}{section.4}\protected@file@percent }
+\newlabel{sec:calibration}{{4}{6}{Calibration and Validation}{section.4}{}}
+\newlabel{eq:calibration_iv}{{11}{6}{Calibration and Validation}{equation.11}{}}
+\newlabel{eq:objective}{{12}{6}{Calibration and Validation}{equation.12}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Option chain summary. Contract counts are reported after filtering to the tradeable moneyness range.}}{6}{table.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:data}{{1}{5}{Option chain summary. Contract counts are reported after filtering to the tradeable moneyness range}{table.caption.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Calibrated smile parameters (fitted on NVDA, DTE = 80).}}{5}{table.caption.3}\protected@file@percent }
-\newlabel{tab:params}{{2}{5}{Calibrated smile parameters (fitted on NVDA, DTE = 80)}{table.caption.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Cross-ticker RMSE (\% IV). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only $\theta _{\text  {base}}$ was re-fitted per ticker.}}{5}{table.caption.4}\protected@file@percent }
-\newlabel{tab:rmse}{{3}{5}{Cross-ticker RMSE (\% IV). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only $\theta _{\text {base}}$ was re-fitted per ticker}{table.caption.4}{}}
+\newlabel{tab:data}{{1}{6}{Option chain summary. Contract counts are reported after filtering to the tradeable moneyness range}{table.caption.2}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Calibrated smile parameters (fitted on NVDA, DTE = 80).}}{6}{table.caption.3}\protected@file@percent }
+\newlabel{tab:params}{{2}{6}{Calibrated smile parameters (fitted on NVDA, DTE = 80)}{table.caption.3}{}}
 \citation{bates2000}
-\newlabel{fig:nvda_fit}{{1a}{6}{\relax }{figure.caption.5}{}}
-\newlabel{sub@fig:nvda_fit}{{a}{6}{\relax }{figure.caption.5}{}}
-\newlabel{fig:all_tickers}{{1b}{6}{\relax }{figure.caption.5}{}}
-\newlabel{sub@fig:all_tickers}{{b}{6}{\relax }{figure.caption.5}{}}
-\newlabel{fig:residuals}{{1c}{6}{\relax }{figure.caption.5}{}}
-\newlabel{sub@fig:residuals}{{c}{6}{\relax }{figure.caption.5}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Single-DTE calibration and cross-ticker validation. \textbf  {(a)}~NVDA implied volatility smile (DTE~=~80): market calls (blue circles) and puts (coral diamonds) vs.\ the fitted model curve (solid line); the dashed vertical line marks the spot price (\$207). The four-parameter $\psi $ function captured both the put skew and smile curvature with an RMSE of 1.16\% IV. \textbf  {(b)}~IV smile fit across all four semiconductor tickers as a function of moneyness ($K/S$). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only the scalar level $\theta _{\text  {base}}$ was re-fitted per ticker. The shared shape transferred well to AMD (RMSE = 2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%). \textbf  {(c)}~IV residuals (model $-$ market) by moneyness across all four tickers. Errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers.}}{6}{figure.caption.5}\protected@file@percent }
-\newlabel{fig:calibration}{{1}{6}{Single-DTE calibration and cross-ticker validation. \textbf {(a)}~NVDA implied volatility smile (DTE~=~80): market calls (blue circles) and puts (coral diamonds) vs.\ the fitted model curve (solid line); the dashed vertical line marks the spot price (\$207). The four-parameter $\psi $ function captured both the put skew and smile curvature with an RMSE of 1.16\% IV. \textbf {(b)}~IV smile fit across all four semiconductor tickers as a function of moneyness ($K/S$). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only the scalar level $\theta _{\text {base}}$ was re-fitted per ticker. The shared shape transferred well to AMD (RMSE = 2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%). \textbf {(c)}~IV residuals (model $-$ market) by moneyness across all four tickers. Errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers}{figure.caption.5}{}}
-\newlabel{eq:psi_extended}{{11}{6}{Calibration and Validation}{equation.11}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Calibrated $\psi $ parameters from the multi-expiration NVDA dataset. The quadratic DTE term $\beta _5$ captured the U-shaped ATM term structure.}}{6}{table.caption.6}\protected@file@percent }
-\newlabel{tab:term_params}{{4}{6}{Calibrated $\psi $ parameters from the multi-expiration NVDA dataset. The quadratic DTE term $\beta _5$ captured the U-shaped ATM term structure}{table.caption.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Cross-ticker RMSE (\% IV). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only $\theta _{\text  {base}}$ was re-fitted per ticker.}}{7}{table.caption.4}\protected@file@percent }
+\newlabel{tab:rmse}{{3}{7}{Cross-ticker RMSE (\% IV). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only $\theta _{\text {base}}$ was re-fitted per ticker}{table.caption.4}{}}
+\newlabel{fig:nvda_fit}{{1a}{7}{\relax }{figure.caption.5}{}}
+\newlabel{sub@fig:nvda_fit}{{a}{7}{\relax }{figure.caption.5}{}}
+\newlabel{fig:all_tickers}{{1b}{7}{\relax }{figure.caption.5}{}}
+\newlabel{sub@fig:all_tickers}{{b}{7}{\relax }{figure.caption.5}{}}
+\newlabel{fig:residuals}{{1c}{7}{\relax }{figure.caption.5}{}}
+\newlabel{sub@fig:residuals}{{c}{7}{\relax }{figure.caption.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Single-DTE calibration and cross-ticker validation. \textbf  {(a)}~NVDA implied volatility smile (DTE~=~80): market calls (blue circles) and puts (coral diamonds) vs.\ the fitted model curve (solid line); the dashed vertical line marks the spot price (\$207). The four-parameter $\psi $ function captured both the put skew and smile curvature with an RMSE of 1.16\% IV. \textbf  {(b)}~IV smile fit across all four semiconductor tickers as a function of moneyness ($K/S$). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only the scalar level $\theta _{\text  {base}}$ was re-fitted per ticker. The shared shape transferred well to AMD (RMSE = 2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%). \textbf  {(c)}~IV residuals (model $-$ market) by moneyness across all four tickers. Errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers.}}{7}{figure.caption.5}\protected@file@percent }
+\newlabel{fig:calibration}{{1}{7}{Single-DTE calibration and cross-ticker validation. \textbf {(a)}~NVDA implied volatility smile (DTE~=~80): market calls (blue circles) and puts (coral diamonds) vs.\ the fitted model curve (solid line); the dashed vertical line marks the spot price (\$207). The four-parameter $\psi $ function captured both the put skew and smile curvature with an RMSE of 1.16\% IV. \textbf {(b)}~IV smile fit across all four semiconductor tickers as a function of moneyness ($K/S$). The smile shape $(\beta _2, \beta _3, \beta _4)$ was shared from NVDA; only the scalar level $\theta _{\text {base}}$ was re-fitted per ticker. The shared shape transferred well to AMD (RMSE = 2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%). \textbf {(c)}~IV residuals (model $-$ market) by moneyness across all four tickers. Errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers}{figure.caption.5}{}}
+\newlabel{eq:psi_extended}{{13}{7}{Calibration and Validation}{equation.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Sector-specific calibration on the 31-ticker ladder}{7}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:ladder}{{4.1}{7}{Sector-specific calibration on the 31-ticker ladder}{subsection.4.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Calibrated $\psi $ parameters from the multi-expiration NVDA dataset. The quadratic DTE term $\beta _5$ captured the U-shaped ATM term structure.}}{8}{table.caption.6}\protected@file@percent }
+\newlabel{tab:term_params}{{4}{8}{Calibrated $\psi $ parameters from the multi-expiration NVDA dataset. The quadratic DTE term $\beta _5$ captured the U-shaped ATM term structure}{table.caption.6}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Sector partition of the 31-ticker ladder. Each ticker appeared on at least one of the two capture days (2026-04-14 and 2026-04-15); per-sector observation counts were pooled across days. ETF observation counts were substantially larger than other sectors because SPY, QQQ, and IWM carried far deeper strike ladders than individual-name chains.}}{8}{table.caption.8}\protected@file@percent }
+\newlabel{tab:sector_map}{{5}{8}{Sector partition of the 31-ticker ladder. Each ticker appeared on at least one of the two capture days (2026-04-14 and 2026-04-15); per-sector observation counts were pooled across days. ETF observation counts were substantially larger than other sectors because SPY, QQQ, and IWM carried far deeper strike ladders than individual-name chains}{table.caption.8}{}}
+\newlabel{fig:atm_term}{{2a}{9}{\relax }{figure.caption.7}{}}
+\newlabel{sub@fig:atm_term}{{a}{9}{\relax }{figure.caption.7}{}}
+\newlabel{fig:iv_surface}{{2b}{9}{\relax }{figure.caption.7}{}}
+\newlabel{sub@fig:iv_surface}{{b}{9}{\relax }{figure.caption.7}{}}
+\newlabel{fig:term_residuals}{{2c}{9}{\relax }{figure.caption.7}{}}
+\newlabel{sub@fig:term_residuals}{{c}{9}{\relax }{figure.caption.7}{}}
+\newlabel{fig:iv_heatmap}{{2d}{9}{\relax }{figure.caption.7}{}}
+\newlabel{sub@fig:iv_heatmap}{{d}{9}{\relax }{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Multi-expiration term structure calibration (NVDA, 2 to 46 DTE). \textbf  {(a)}~ATM implied volatility as a function of days to expiration. Market ATM IV (blue markers) exhibited a U-shaped term structure; the fitted model (red curve) captured the trough near DTE~$\approx 8$ (32.5\% IV) and the rise to 41\% at 46~DTE using the quadratic extension $\beta _5 (\ln \tau )^2$. \textbf  {(b)}~IV smile curves at each of six expirations (2, 4, 7, 14, 25, 46~DTE). Market observations (markers) and model predictions (lines) are colored by DTE; 0~DTE data (diamonds) were excluded from the fit due to gamma compression. The skew flattened with increasing maturity, consistent with $\beta _3 > 0$. \textbf  {(c)}~IV residuals (model $-$ market) by moneyness, colored by DTE. Most residuals fell within $\pm 2$\% IV, with no systematic bias across the moneyness range. \textbf  {(d)}~Model-predicted IV surface as a function of moneyness and DTE (log-scaled). White contour lines mark 35\%, 45\%, and 55\% IV levels; white circles indicate market observations used for calibration. The overall RMSE was 1.15\% IV.}}{9}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:term_structure}{{2}{9}{Multi-expiration term structure calibration (NVDA, 2 to 46 DTE). \textbf {(a)}~ATM implied volatility as a function of days to expiration. Market ATM IV (blue markers) exhibited a U-shaped term structure; the fitted model (red curve) captured the trough near DTE~$\approx 8$ (32.5\% IV) and the rise to 41\% at 46~DTE using the quadratic extension $\beta _5 (\ln \tau )^2$. \textbf {(b)}~IV smile curves at each of six expirations (2, 4, 7, 14, 25, 46~DTE). Market observations (markers) and model predictions (lines) are colored by DTE; 0~DTE data (diamonds) were excluded from the fit due to gamma compression. The skew flattened with increasing maturity, consistent with $\beta _3 > 0$. \textbf {(c)}~IV residuals (model $-$ market) by moneyness, colored by DTE. Most residuals fell within $\pm 2$\% IV, with no systematic bias across the moneyness range. \textbf {(d)}~Model-predicted IV surface as a function of moneyness and DTE (log-scaled). White contour lines mark 35\%, 45\%, and 55\% IV levels; white circles indicate market observations used for calibration. The overall RMSE was 1.15\% IV}{figure.caption.7}{}}
 \citation{bates2000}
-\newlabel{fig:atm_term}{{2a}{7}{\relax }{figure.caption.7}{}}
-\newlabel{sub@fig:atm_term}{{a}{7}{\relax }{figure.caption.7}{}}
-\newlabel{fig:iv_surface}{{2b}{7}{\relax }{figure.caption.7}{}}
-\newlabel{sub@fig:iv_surface}{{b}{7}{\relax }{figure.caption.7}{}}
-\newlabel{fig:term_residuals}{{2c}{7}{\relax }{figure.caption.7}{}}
-\newlabel{sub@fig:term_residuals}{{c}{7}{\relax }{figure.caption.7}{}}
-\newlabel{fig:iv_heatmap}{{2d}{7}{\relax }{figure.caption.7}{}}
-\newlabel{sub@fig:iv_heatmap}{{d}{7}{\relax }{figure.caption.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Multi-expiration term structure calibration (NVDA, 2 to 46 DTE). \textbf  {(a)}~ATM implied volatility as a function of days to expiration. Market ATM IV (blue markers) exhibited a U-shaped term structure; the fitted model (red curve) captured the trough near DTE~$\approx 8$ (32.5\% IV) and the rise to 41\% at 46~DTE using the quadratic extension $\beta _5 (\ln \tau )^2$. \textbf  {(b)}~IV smile curves at each of six expirations (2, 4, 7, 14, 25, 46~DTE). Market observations (markers) and model predictions (lines) are colored by DTE; 0~DTE data (diamonds) were excluded from the fit due to gamma compression. The skew flattened with increasing maturity, consistent with $\beta _3 > 0$. \textbf  {(c)}~IV residuals (model $-$ market) by moneyness, colored by DTE. Most residuals fell within $\pm 2$\% IV, with no systematic bias across the moneyness range. \textbf  {(d)}~Model-predicted IV surface as a function of moneyness and DTE (log-scaled). White contour lines mark 35\%, 45\%, and 55\% IV levels; white circles indicate market observations used for calibration. The overall RMSE was 1.15\% IV.}}{7}{figure.caption.7}\protected@file@percent }
-\newlabel{fig:term_structure}{{2}{7}{Multi-expiration term structure calibration (NVDA, 2 to 46 DTE). \textbf {(a)}~ATM implied volatility as a function of days to expiration. Market ATM IV (blue markers) exhibited a U-shaped term structure; the fitted model (red curve) captured the trough near DTE~$\approx 8$ (32.5\% IV) and the rise to 41\% at 46~DTE using the quadratic extension $\beta _5 (\ln \tau )^2$. \textbf {(b)}~IV smile curves at each of six expirations (2, 4, 7, 14, 25, 46~DTE). Market observations (markers) and model predictions (lines) are colored by DTE; 0~DTE data (diamonds) were excluded from the fit due to gamma compression. The skew flattened with increasing maturity, consistent with $\beta _3 > 0$. \textbf {(c)}~IV residuals (model $-$ market) by moneyness, colored by DTE. Most residuals fell within $\pm 2$\% IV, with no systematic bias across the moneyness range. \textbf {(d)}~Model-predicted IV surface as a function of moneyness and DTE (log-scaled). White contour lines mark 35\%, 45\%, and 55\% IV levels; white circles indicate market observations used for calibration. The overall RMSE was 1.15\% IV}{figure.caption.7}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Scenario Generation}{7}{section.5}\protected@file@percent }
-\newlabel{sec:scenarios}{{5}{7}{Scenario Generation}{section.5}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces Three-way overall RMSE comparison on the 31-ticker ladder (35{,}961 observations). The parametric baseline fit a single global set of five $\beta $ parameters; the shared NN replaced the parametric $\psi $ with one global network; the sector NN used one network per sector. All three models fitted one $\theta _{\text  {ticker}}$ per ticker jointly with the shape parameters.}}{10}{table.caption.9}\protected@file@percent }
+\newlabel{tab:three_way}{{6}{10}{Three-way overall RMSE comparison on the 31-ticker ladder (35{,}961 observations). The parametric baseline fit a single global set of five $\beta $ parameters; the shared NN replaced the parametric $\psi $ with one global network; the sector NN used one network per sector. All three models fitted one $\theta _{\text {ticker}}$ per ticker jointly with the shape parameters}{table.caption.9}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {7}{\ignorespaces Per-sector RMSE (\% IV) across the three calibration strategies on the 31-ticker ladder. The sector NN reduced RMSE in every sector over the shared NN, with the largest absolute gains in sectors where the global shape poorly represented the local geometry.}}{10}{table.caption.10}\protected@file@percent }
+\newlabel{tab:per_sector}{{7}{10}{Per-sector RMSE (\% IV) across the three calibration strategies on the 31-ticker ladder. The sector NN reduced RMSE in every sector over the shared NN, with the largest absolute gains in sectors where the global shape poorly represented the local geometry}{table.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Scenario Generation}{10}{section.5}\protected@file@percent }
+\newlabel{sec:scenarios}{{5}{10}{Scenario Generation}{section.5}{}}
 \citation{cont2002}
 \citation{gatheral2004}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Forward IV paths for NVDA (500 scenarios, DTE~=~80). The solid black line shows the mean IV; dashed red and green lines mark the 5th and 95th percentiles; the dotted orange line indicates the market ATM IV (44.6\%). Semi-transparent blue paths show individual scenario trajectories with stochastic fluctuations and occasional tail-state-driven spikes.}}{8}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:iv_paths}{{3}{8}{Forward IV paths for NVDA (500 scenarios, DTE~=~80). The solid black line shows the mean IV; dashed red and green lines mark the 5th and 95th percentiles; the dotted orange line indicates the market ATM IV (44.6\%). Semi-transparent blue paths show individual scenario trajectories with stochastic fluctuations and occasional tail-state-driven spikes}{figure.caption.8}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces American option price distributions from 500 forward scenarios (NVDA, evaluated at $t = 5$). Strike levels are expressed relative to the spot price $S = \$207$.}}{8}{table.caption.9}\protected@file@percent }
-\newlabel{tab:prices}{{5}{8}{American option price distributions from 500 forward scenarios (NVDA, evaluated at $t = 5$). Strike levels are expressed relative to the spot price $S = \$207$}{table.caption.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{8}{section.6}\protected@file@percent }
-\newlabel{sec:discussion}{{6}{8}{Discussion and Future Work}{section.6}{}}
-\citation{bates2000}
+\@writefile{lot}{\contentsline {table}{\numberline {8}{\ignorespaces Best and worst individual ticker fits under the sector-specific NN calibration, ranked by RMSE across all 31 tickers. Small-sample tickers (PFE, BMY) showed the expected small-sample penalty; the remaining worst fits were concentrated in technology and healthcare where within-sector shape heterogeneity was largest.}}{11}{table.caption.11}\protected@file@percent }
+\newlabel{tab:worst_tickers}{{8}{11}{Best and worst individual ticker fits under the sector-specific NN calibration, ranked by RMSE across all 31 tickers. Small-sample tickers (PFE, BMY) showed the expected small-sample penalty; the remaining worst fits were concentrated in technology and healthcare where within-sector shape heterogeneity was largest}{table.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {9}{\ignorespaces American option price distributions from 500 forward scenarios (NVDA, evaluated at $t = 5$). Strike levels are expressed relative to the spot price $S = \$207$.}}{11}{table.caption.15}\protected@file@percent }
+\newlabel{tab:prices}{{9}{11}{American option price distributions from 500 forward scenarios (NVDA, evaluated at $t = 5$). Strike levels are expressed relative to the spot price $S = \$207$}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{11}{section.6}\protected@file@percent }
+\newlabel{sec:discussion}{{6}{11}{Discussion and Future Work}{section.6}{}}
+\newlabel{fig:three_way}{{3a}{12}{\relax }{figure.caption.12}{}}
+\newlabel{sub@fig:three_way}{{a}{12}{\relax }{figure.caption.12}{}}
+\newlabel{fig:theta_base}{{3b}{12}{\relax }{figure.caption.12}{}}
+\newlabel{sub@fig:theta_base}{{b}{12}{\relax }{figure.caption.12}{}}
+\newlabel{fig:smile_panels}{{3c}{12}{\relax }{figure.caption.12}{}}
+\newlabel{sub@fig:smile_panels}{{c}{12}{\relax }{figure.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Sector-specific neural calibration on the 31-ticker ladder (35{,}961 observations, two capture days). \textbf  {(a)}~Per-sector RMSE under the three calibration strategies: parametric $\psi $ (light gray), shared neural $\psi $ (steel blue), and sector-specific neural $\psi $ (dark blue). The sector NN dominated in every sector; the largest gains over the shared NN occurred in ETF and Financials. \textbf  {(b)}~Learned baseline IV ($\sqrt  {\theta _{\text  {ticker}}}$) for each of the 31 tickers, colored by sector and sorted by level. The ordering recovered the expected high-variance names (MRNA, NVDA) at the top and mega-cap ETFs at the bottom. \textbf  {(c)}~Representative IV smile fits at mid-DTE for one ticker per sector (SPY, NVDA, JPM, XOM, LLY, WMT). Market calls (blue circles) and puts (red diamonds) are overlaid with the sector NN prediction (solid black line). The sector networks captured both the smile curvature and the sector-specific shape asymmetries that a single global $\psi $ could not.}}{12}{figure.caption.12}\protected@file@percent }
+\newlabel{fig:sector_nn}{{3}{12}{Sector-specific neural calibration on the 31-ticker ladder (35{,}961 observations, two capture days). \textbf {(a)}~Per-sector RMSE under the three calibration strategies: parametric $\psi $ (light gray), shared neural $\psi $ (steel blue), and sector-specific neural $\psi $ (dark blue). The sector NN dominated in every sector; the largest gains over the shared NN occurred in ETF and Financials. \textbf {(b)}~Learned baseline IV ($\sqrt {\theta _{\text {ticker}}}$) for each of the 31 tickers, colored by sector and sorted by level. The ordering recovered the expected high-variance names (MRNA, NVDA) at the top and mega-cap ETFs at the bottom. \textbf {(c)}~Representative IV smile fits at mid-DTE for one ticker per sector (SPY, NVDA, JPM, XOM, LLY, WMT). Market calls (blue circles) and puts (red diamonds) are overlaid with the sector NN prediction (solid black line). The sector networks captured both the smile curvature and the sector-specific shape asymmetries that a single global $\psi $ could not}{figure.caption.12}{}}
+\newlabel{fig:sector_nn_residuals}{{4a}{13}{\relax }{figure.caption.13}{}}
+\newlabel{sub@fig:sector_nn_residuals}{{a}{13}{\relax }{figure.caption.13}{}}
+\newlabel{fig:psi_surfaces}{{4b}{13}{\relax }{figure.caption.13}{}}
+\newlabel{sub@fig:psi_surfaces}{{b}{13}{\relax }{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Residual and surface diagnostics for the sector-specific neural calibration. \textbf  {(a)}~IV residuals (model $-$ market) versus moneyness, colored by sector. Residuals clustered around zero in the near-money range ($K/S \in [0.90, 1.10]$) and dispersed in the wings, consistent with reduced liquidity and noisier quoted IV for deep-OTM contracts. \textbf  {(b)}~Learned $\psi $ surfaces over $(K/S, \text  {DTE})$ for each of the six sectors, plotted on a shared color scale. The surfaces were smooth in both inputs and displayed sector-specific differences in skew steepness and smile curvature that motivated the sector-level relaxation of the shared-shape assumption.}}{13}{figure.caption.13}\protected@file@percent }
+\newlabel{fig:sector_nn_diag}{{4}{13}{Residual and surface diagnostics for the sector-specific neural calibration. \textbf {(a)}~IV residuals (model $-$ market) versus moneyness, colored by sector. Residuals clustered around zero in the near-money range ($K/S \in [0.90, 1.10]$) and dispersed in the wings, consistent with reduced liquidity and noisier quoted IV for deep-OTM contracts. \textbf {(b)}~Learned $\psi $ surfaces over $(K/S, \text {DTE})$ for each of the six sectors, plotted on a shared color scale. The surfaces were smooth in both inputs and displayed sector-specific differences in skew steepness and smile curvature that motivated the sector-level relaxation of the shared-shape assumption}{figure.caption.13}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Forward IV paths for NVDA (500 scenarios, DTE~=~80). The solid black line shows the mean IV; dashed red and green lines mark the 5th and 95th percentiles; the dotted orange line indicates the market ATM IV (44.6\%). Semi-transparent blue paths show individual scenario trajectories with stochastic fluctuations and occasional tail-state-driven spikes.}}{13}{figure.caption.14}\protected@file@percent }
+\newlabel{fig:iv_paths}{{5}{13}{Forward IV paths for NVDA (500 scenarios, DTE~=~80). The solid black line shows the mean IV; dashed red and green lines mark the 5th and 95th percentiles; the dotted orange line indicates the market ATM IV (44.6\%). Semi-transparent blue paths show individual scenario trajectories with stochastic fluctuations and occasional tail-state-driven spikes}{figure.caption.14}{}}
 \citation{buehler2019}
 \bibstyle{abbrvnat}
 \bibdata{references}
 \bibcite{jumphmm2025}{{1}{2025}{{Alswaidan and Varner}}{{}}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{9}{section.7}\protected@file@percent }
-\newlabel{sec:conclusion}{{7}{9}{Conclusion}{section.7}{}}
 \bibcite{andersen2008}{{2}{2008}{{Andersen}}{{}}}
 \bibcite{bates2000}{{3}{2000}{{Bates}}{{}}}
-\bibcite{black1973}{{4}{1973}{{Black and Scholes}}{{}}}
-\bibcite{buehler2019}{{5}{2019}{{Buehler et~al.}}{{Buehler, Gonon, Teichmann, and Wood}}}
-\bibcite{cont2001}{{6}{2001}{{Cont}}{{}}}
-\bibcite{cont2002}{{7}{2002}{{Cont and da~Fonseca}}{{}}}
-\bibcite{cox1979}{{8}{1979}{{Cox et~al.}}{{Cox, Ross, and Rubinstein}}}
-\bibcite{demarta2005}{{9}{2005}{{Demarta and McNeil}}{{}}}
-\bibcite{derman1994}{{10}{1994}{{Derman and Kani}}{{}}}
-\bibcite{dupire1994}{{11}{1994}{{Dupire}}{{}}}
-\bibcite{gatheral2004}{{12}{2004}{{Gatheral}}{{}}}
-\bibcite{hagan2002}{{13}{2002}{{Hagan et~al.}}{{Hagan, Kumar, Lesniewski, and Woodward}}}
-\bibcite{heston1993}{{14}{1993}{{Heston}}{{}}}
-\gdef \@abspage@last{10}
+\bibcite{bayer2019}{{4}{2019}{{Bayer and Stemper}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{14}{section.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{14}{Conclusion}{section.7}{}}
+\bibcite{black1973}{{5}{1973}{{Black and Scholes}}{{}}}
+\bibcite{buehler2019}{{6}{2019}{{Buehler et~al.}}{{Buehler, Gonon, Teichmann, and Wood}}}
+\bibcite{cont2001}{{7}{2001}{{Cont}}{{}}}
+\bibcite{cont2002}{{8}{2002}{{Cont and da~Fonseca}}{{}}}
+\bibcite{cox1979}{{9}{1979}{{Cox et~al.}}{{Cox, Ross, and Rubinstein}}}
+\bibcite{demarta2005}{{10}{2005}{{Demarta and McNeil}}{{}}}
+\bibcite{derman1994}{{11}{1994}{{Derman and Kani}}{{}}}
+\bibcite{dupire1994}{{12}{1994}{{Dupire}}{{}}}
+\bibcite{gatheral2004}{{13}{2004}{{Gatheral}}{{}}}
+\bibcite{hagan2002}{{14}{2002}{{Hagan et~al.}}{{Hagan, Kumar, Lesniewski, and Woodward}}}
+\bibcite{heston1993}{{15}{1993}{{Heston}}{{}}}
+\bibcite{horvath2021}{{16}{2021}{{Horvath et~al.}}{{Horvath, Muguruza, and Tomas}}}
+\gdef \@abspage@last{15}
