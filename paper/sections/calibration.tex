@@ -1,141 +1,18 @@
 \section{Calibration and Validation}\label{sec:calibration}
 
-The empirical foundation of this study was a set of option chains for four semiconductor stocks: NVDA, AMD, MU, and INTC. All chains were single-date snapshots sourced from barchart.com (October to November 2025) with DTEs ranging from 41 to 80 days. We filtered each chain to moneyness $K/S \in [0.70, 1.30]$ and IV $< 200\%$ to exclude illiquid deep ITM/OTM contracts with unreliable IV (Table~\ref{tab:data}). Since each chain was a single-date snapshot, all observations shared one HMM state $s_0$ and market mood $M_0$, so the model IV at a given strike reduced to $\sigma_{\text{model}}(K) = \sqrt{\theta_{\text{base}} \cdot \psi(\text{DTE},\; K/S)}$, where $\theta_{\text{base}} = \theta_{s_0} \cdot (1 + \gamma M_0)$ absorbed the state and mood into a single scalar. We fixed $\beta_1 = 0.20$ (term-structure slope) because single-DTE snapshots could not identify it; multi-expiration data from the same observation date allowed direct calibration of $\beta_1$, as described below. The remaining parameters $(\theta_{\text{base}}, \beta_2, \beta_3, \beta_4)$ were fitted by minimizing the mean squared IV error on NVDA:
-\begin{equation}\label{eq:calibration_iv}
-    \sigma_{\text{model}}(K) = \sqrt{\theta_{\text{base}} \cdot \psi(\text{DTE},\; K/S)}
-\end{equation}
-\begin{equation}\label{eq:objective}
-    \min_{\theta_{\text{base}}, \beta_2, \beta_3, \beta_4} \;\frac{1}{n} \sum_{i=1}^{n} \bigl(\sigma_{\text{model}}(K_i) - \text{IV}_{\text{market},i}\bigr)^2
-\end{equation}
-using Nelder-Mead optimization. We chose NVDA as the calibration ticker because it had the richest chain (142 contracts after filtering).
+\subsection{Parametric baseline on NVDA}\label{sec:parametric_baseline}
 
-\begin{table}[ht]
-\centering
-\caption{Option chain summary. Contract counts are reported after filtering to the tradeable moneyness range.}\label{tab:data}
-\begin{tabular}{lrrrr}
-\toprule
-Ticker & Spot (\$) & DTE & ATM IV (\%) & Contracts \\
-\midrule
-NVDA & 207.04 & 80 & 44.6 & 142 \\
-AMD  & 225.78 & 58 & 59.0 & 36 \\
-MU   & 237.02 & 41 & 72.4 & 34 \\
-INTC &  37.78 & 65 & 53.6 & 46 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-The calibrated parameters (Table~\ref{tab:params}) produced the expected smile features: the negative $\beta_2$ generated put skew, the positive $\beta_4$ generated smile curvature, and the interaction term $\beta_3$ captured how the skew flattened at longer maturities. The calibration achieved an RMSE of 1.16\% IV on NVDA. To determine whether the smile \emph{shape} generalized across tickers, we applied the $(\beta_1, \beta_2, \beta_3, \beta_4)$ calibrated on NVDA to AMD, MU, and INTC, re-optimizing only the scalar $\theta_{\text{base}}$ per ticker. The NVDA fit confirmed that four parameters sufficed to capture the smile shape within the tradeable moneyness range (RMSE = 1.16\% IV; Figure~\ref{fig:nvda_fit}). The cross-ticker validation revealed that the shared smile shape transferred well to AMD (2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%; Table~\ref{tab:rmse}; Figure~\ref{fig:all_tickers}). The higher RMSE for MU and INTC reflected differences in skew steepness across these names; MU exhibited a steeper put skew than NVDA, while INTC had a flatter OTM call wing, suggesting that per-ticker $\beta$ calibration would further reduce errors when multi-strike data is available. The residual analysis confirmed that the errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers (Figure~\ref{fig:residuals}). These results established that the $\psi$-function captured the dominant smile features with a small number of parameters, but also highlighted the term-structure limitation inherent in single-DTE calibration.
-
-\begin{table}[ht]
-\centering
-\caption{Calibrated smile parameters (fitted on NVDA, DTE = 80).}\label{tab:params}
-\begin{tabular}{llr}
-\toprule
-Parameter & Interpretation & Value \\
-\midrule
-$\beta_1$ & Term-structure decay (fixed) & 0.20 \\
-$\beta_2$ & Skew (asymmetry)             & $-2.07$ \\
-$\beta_3$ & DTE $\times$ skew interaction & 0.34 \\
-$\beta_4$ & Smile curvature              & 1.43 \\
-$\theta_{\text{base}}$ & Variance level (NVDA) & 0.084 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{table}[ht]
-\centering
-\caption{Cross-ticker RMSE (\% IV). The smile shape $(\beta_2, \beta_3, \beta_4)$ was shared from NVDA; only $\theta_{\text{base}}$ was re-fitted per ticker.}\label{tab:rmse}
-\begin{tabular}{lrr}
-\toprule
-Ticker & $\theta_{\text{base}}$ (IV level) & RMSE (\% IV) \\
-\midrule
-NVDA (calibration) & 28.9\% & 1.16 \\
-AMD  & 38.7\% & 2.34 \\
-MU   & 49.0\% & 3.99 \\
-INTC & 35.9\% & 4.65 \\
-\bottomrule
-\end{tabular}
-\end{table}
+Before replacing the parametric form of $\psi$ with a neural surrogate, we established the baseline capacity of the five-parameter analytic form on a well-characterized single-ticker dataset. We collected NVDA call and put chains at seven expirations on the same observation date (April 6, 2026): 0, 2, 4, 7, 14, 25, and 46 DTE, with NVDA trading near \$176.70, yielding 73 observations after filtering to moneyness $K/S \in [0.90, 1.10]$ with positive volume. The parametric $\psi$ of equation~\eqref{eq:psi} was fitted by minimizing mean squared IV error across all seven expirations simultaneously. The calibrated form captured the full ATM term structure, including the U-shape driven by gamma compression at short maturities and uncertainty premia at longer horizons (Figure~\ref{fig:atm_term_main}), achieving an RMSE of 1.15\% IV across the 2 to 46 DTE range. The quadratic DTE term $\beta_5$ was the critical degree of freedom: without it the linear $\beta_1 \ln\tau$ term could not bend upward at long maturities, and the U-shape was unreachable; with it the parametric form reproduced the trough near DTE~$\approx 8$ at 32.5\% IV and the subsequent rise to 41\% at 46 DTE that characterized the market data. This ~1\% RMSE on a single well-sampled ticker established the upper bound of what the parametric form could deliver under favorable conditions. Additional parametric calibrations, including a single-DTE cross-ticker validation on four semiconductor names, the per-parameter interpretation table, and full residual diagnostics by moneyness and DTE, are reported in the supplement (Section~\ref{sec:supp_parametric}). Whether the same shape transferred across a broader universe, and how much a more flexible representation could improve the fit when the universe was heterogeneous, motivated the calibration on the full 31-ticker ladder below.
 
 \begin{figure}[ht]
 \centering
-\begin{subfigure}[t]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{sections/figures/nvda_iv_smile.pdf}
-    \caption{}\label{fig:nvda_fit}
-\end{subfigure}
-\hfill
-\begin{subfigure}[t]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{sections/figures/iv_smile_all_tickers.pdf}
-    \caption{}\label{fig:all_tickers}
-\end{subfigure}
-\hfill
-\begin{subfigure}[t]{0.32\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{sections/figures/iv_residuals_cross_ticker.pdf}
-    \caption{}\label{fig:residuals}
-\end{subfigure}
-\caption{Single-DTE calibration and cross-ticker validation. \textbf{(a)}~NVDA implied volatility smile (DTE~=~80): market calls (blue circles) and puts (coral diamonds) vs.\ the fitted model curve (solid line); the dashed vertical line marks the spot price (\$207). The four-parameter $\psi$ function captured both the put skew and smile curvature with an RMSE of 1.16\% IV. \textbf{(b)}~IV smile fit across all four semiconductor tickers as a function of moneyness ($K/S$). The smile shape $(\beta_2, \beta_3, \beta_4)$ was shared from NVDA; only the scalar level $\theta_{\text{base}}$ was re-fitted per ticker. The shared shape transferred well to AMD (RMSE = 2.34\%) and reasonably to MU (3.99\%) and INTC (4.65\%). \textbf{(c)}~IV residuals (model $-$ market) by moneyness across all four tickers. Errors were concentrated in the wings ($K/S < 0.85$ and $K/S > 1.15$), with near-ATM residuals below 1\% IV for all tickers.}\label{fig:calibration}
+\includegraphics[width=0.65\textwidth]{sections/figures/atm_term_structure.pdf}
+\caption{Parametric baseline: ATM implied volatility of NVDA as a function of days to expiration. Market ATM IV (blue markers) exhibited a U-shaped term structure, captured by the five-parameter $\psi$ form (red curve) with a trough near DTE~$\approx 8$ at 32.5\% IV rising to 41\% at 46~DTE. The fit achieved an RMSE of 1.15\% IV across 73 observations spanning 2 to 46 DTE.}\label{fig:atm_term_main}
 \end{figure}
 
-Having validated the smile shape across tickers, we next addressed the term-structure limitation by collecting NVDA call and put chains at seven expirations on the same date (April 6, 2026): 0, 2, 4, 7, 14, 25, and 46 DTE, with NVDA trading near \$176.70. The single-DTE calibration above required fixing $\beta_1 = 0.20$; this cross-sectional snapshot provided the multi-expiration data needed to identify $\beta_1$ directly, yielding 73 observations after filtering to moneyness $K/S \in [0.90, 1.10]$ with positive volume. The ATM IV exhibited a U-shaped term structure (Figure~\ref{fig:atm_term}): elevated at 0~DTE ($\sim$45\%) due to gamma compression in expiring options, dropping to a trough near 7 to 8~DTE ($\sim$32\%), then rising to $\sim$41\% at 46~DTE. A single power-law $\beta_1 \cdot \ln(\text{DTE})$ could not capture this shape. We extended $\psi$ with a quadratic DTE term:
-\begin{equation}\label{eq:psi_extended}
-    \psi = \exp\bigl(\beta_1 \ln \tau + \beta_2 \ln m + \beta_3 \ln \tau \cdot \ln m + \beta_4 (\ln m)^2 + \beta_5 (\ln \tau)^2\bigr)
-\end{equation}
-where $\tau = \max(\text{DTE}, 1)$ and $m = K/S$. The six parameters $(\sigma_{\text{base}}, \beta_1, \ldots, \beta_5)$ were fitted by minimizing mean squared IV error across all seven expirations simultaneously.
+\subsection{Sector-specific neural calibration on the 31-ticker ladder}\label{sec:ladder}
 
-The negative $\beta_1$ combined with positive $\beta_5$ produced the U-shaped ATM curve (Table~\ref{tab:term_params}): at short maturities the linear term dominated (IV decayed rapidly from the 0~DTE spike), while at longer maturities the quadratic term bent the curve upward. The trough occurred near DTE~$\approx 8$, where IV reached 32.5\%, a 1.38$\times$ ratio between the 0~DTE peak and the trough (Figure~\ref{fig:atm_term}). The skew parameters ($\beta_2 = -8.45$, $\beta_3 = 1.62$) confirmed that the volatility skew steepened at shorter maturities and flattened as DTE increased, consistent with the concentration of crash risk premia in near-term options~\cite{bates2000} (Figure~\ref{fig:iv_surface}). The overall fit achieved an RMSE of 2.31\% IV across all seven expirations. The fit was tightest at intermediate and long maturities (7 to 46~DTE: RMSE $< 1.3$\%), with the largest residuals at 0~DTE (RMSE = 6.57\%) where the gamma-compressed smile shape deviated from the log-moneyness functional form. The 0~DTE level bias was eliminated ($-0.1$\%), confirming that the U-shaped term structure was captured correctly even though the extreme smile curvature at expiration remained a source of scatter (Figure~\ref{fig:iv_heatmap}).
-
-\begin{table}[ht]
-\centering
-\caption{Calibrated $\psi$ parameters from the multi-expiration NVDA dataset. The quadratic DTE term $\beta_5$ captured the U-shaped ATM term structure.}\label{tab:term_params}
-\begin{tabular}{llr}
-\toprule
-Parameter & Interpretation & Value \\
-\midrule
-$\sigma_{\text{base}}$ & Base ATM IV level & 45.0\% \\
-$\beta_1$ & DTE decay           & $-0.622$ \\
-$\beta_2$ & Skew (asymmetry)    & $-8.448$ \\
-$\beta_3$ & DTE $\times$ skew   & 1.617 \\
-$\beta_4$ & Smile curvature     & $-1.242$ \\
-$\beta_5$ & DTE curvature       & 0.150 \\
-\bottomrule
-\end{tabular}
-\end{table}
-
-\begin{figure}[ht]
-\centering
-\begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{sections/figures/atm_term_structure.pdf}
-    \caption{}\label{fig:atm_term}
-\end{subfigure}
-\hfill
-\begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{sections/figures/iv_surface_market_vs_model.pdf}
-    \caption{}\label{fig:iv_surface}
-\end{subfigure}
-
-\vspace{0.5em}
-\begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{sections/figures/iv_residuals_by_dte.pdf}
-    \caption{}\label{fig:term_residuals}
-\end{subfigure}
-\hfill
-\begin{subfigure}[t]{0.48\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{sections/figures/iv_surface_heatmap.pdf}
-    \caption{}\label{fig:iv_heatmap}
-\end{subfigure}
-\caption{Multi-expiration term structure calibration (NVDA, 2 to 46 DTE). \textbf{(a)}~ATM implied volatility as a function of days to expiration. Market ATM IV (blue markers) exhibited a U-shaped term structure; the fitted model (red curve) captured the trough near DTE~$\approx 8$ (32.5\% IV) and the rise to 41\% at 46~DTE using the quadratic extension $\beta_5 (\ln\tau)^2$. \textbf{(b)}~IV smile curves at each of six expirations (2, 4, 7, 14, 25, 46~DTE). Market observations (markers) and model predictions (lines) are colored by DTE; 0~DTE data (diamonds) were excluded from the fit due to gamma compression. The skew flattened with increasing maturity, consistent with $\beta_3 > 0$. \textbf{(c)}~IV residuals (model $-$ market) by moneyness, colored by DTE. Most residuals fell within $\pm 2$\% IV, with no systematic bias across the moneyness range. \textbf{(d)}~Model-predicted IV surface as a function of moneyness and DTE (log-scaled). White contour lines mark 35\%, 45\%, and 55\% IV levels; white circles indicate market observations used for calibration. The overall RMSE was 1.15\% IV.}\label{fig:term_structure}
-\end{figure}
-
-\subsection{Sector-specific calibration on the 31-ticker ladder}\label{sec:ladder}
-
-The single-ticker and four-ticker semiconductor calibrations established that the parametric $\psi$ captured the dominant smile and term-structure geometry for individual names, but left open whether the same five-parameter shape transferred across sectors with heterogeneous risk profiles. To answer this directly, we collected full option ladders for 31 tickers spanning six sectors on two consecutive trading days (2026-04-14 and 2026-04-15), producing 35{,}961 observations after filtering to moneyness $K/S \in [0.80, 1.20]$, non-zero bids, and IV $\in (0.01, 2.0)$. The sector partition followed conventional GICS-style groupings (Table~\ref{tab:sector_map}): technology (10 tickers), healthcare (8), financials (4), energy (3), retail (3), and broad-market ETFs (3). This corpus was two orders of magnitude larger than the original NVDA calibration and, more importantly, contained systematic cross-sector variation: mega-cap ETFs exhibited shallow smiles with pronounced term structure, technology names carried elevated near-term skew from earnings catalysts, healthcare names showed idiosyncratic bumps around trial and FDA dates, and commodity-linked energy tickers displayed skew patterns shaped by supply shocks rather than equity crash risk.
+The parametric baseline showed that the five-parameter $\psi$ could reach near-1\% RMSE on a single well-sampled ticker, but left open whether the same shape transferred across sectors with heterogeneous risk profiles. To answer this directly, we collected full option ladders for 31 tickers spanning six sectors on two consecutive trading days (2026-04-14 and 2026-04-15), producing 35{,}961 observations after filtering to moneyness $K/S \in [0.80, 1.20]$, non-zero bids, and IV $\in (0.01, 2.0)$. The sector partition followed conventional GICS-style groupings (Table~\ref{tab:sector_map}): technology (10 tickers), healthcare (8), financials (4), energy (3), retail (3), and broad-market ETFs (3). This corpus was two orders of magnitude larger than the NVDA multi-expiration dataset and, more importantly, contained systematic cross-sector variation: mega-cap ETFs exhibited shallow smiles with pronounced term structure, technology names carried elevated near-term skew from earnings catalysts, healthcare names showed idiosyncratic bumps around trial and FDA dates, and commodity-linked energy tickers displayed skew patterns shaped by supply shocks rather than equity crash risk. Against this partition, we quantified the value of relaxing the global-shape assumption by fitting three nested models on the pooled ladder using a common loss (mean squared IV error) and a common level parameterization (one $\theta_{\text{ticker}}$ per ticker), varying only the representation of $\psi$: (i) a global parametric $\psi$ with the five $\beta$-parameters shared across all tickers; (ii) a global neural $\psi_{\text{NN}}$ shared across all tickers, replacing the parametric form with the architecture of Section~\ref{sec:psi_nn}; and (iii) a sector-specific neural $\psi_{\text{NN}}^{(c)}$ with one network per sector. This design isolated the contribution of model capacity (parametric $\to$ NN) from the contribution of sharing granularity (global $\to$ sector). The three-way comparison revealed that both axes mattered and that their contributions were roughly additive (Table~\ref{tab:three_way}; Figure~\ref{fig:three_way}): moving from the global parametric $\psi$ to the global neural $\psi$ reduced overall RMSE from 9.36\% to 8.03\% IV (a 14.2\% relative improvement) by accommodating smile shapes the log-polynomial form could not express, and moving from the global to the sector-specific $\psi_{\text{NN}}$ further reduced RMSE to 6.76\% (a 27.8\% cumulative relative improvement over the parametric baseline) by letting within-sector shapes specialize away from the global average.
 
 \begin{table}[ht]
 \centering
@@ -153,8 +30,6 @@ Energy     &  1{,}434 & CVX, OXY, XOM \\
 \bottomrule
 \end{tabular}
 \end{table}
-
-To quantify the value of relaxing the global-shape assumption, we fitted three nested models on the pooled ladder using a common loss (mean squared IV error) and a common level parameterization (one $\theta_{\text{ticker}}$ per ticker), varying only the representation of $\psi$: (i) a global parametric $\psi$ with the five $\beta$-parameters of equation~\eqref{eq:psi_extended} shared across all tickers; (ii) a global neural $\psi_{\text{NN}}$ shared across all tickers, replacing the parametric form with the architecture of Section~\ref{sec:psi_nn}; and (iii) a sector-specific neural $\psi_{\text{NN}}^{(c)}$ with one network per sector. This design isolated the contribution of model capacity (parametric $\to$ NN) from the contribution of sharing granularity (global $\to$ sector). The three-way comparison revealed that both axes mattered and that their contributions were roughly additive (Table~\ref{tab:three_way}; Figure~\ref{fig:three_way}): moving from a global parametric $\psi$ to a global neural $\psi$ reduced overall RMSE from 9.36\% to 8.03\% IV (a 1.33\% absolute, 14.2\% relative improvement) by accommodating smile shapes the log-polynomial form could not express, and moving from a global to a sector-specific $\psi_{\text{NN}}$ further reduced RMSE to 6.76\% (a 1.27\% additional reduction, 27.8\% cumulative relative improvement over the parametric baseline) by letting within-sector shapes specialize away from the global average.
 
 \begin{table}[ht]
 \centering
@@ -236,7 +111,7 @@ Rank & Ticker & Obs.\ count & RMSE (\% IV) & Sector \\
 \caption{Sector-specific neural calibration on the 31-ticker ladder (35{,}961 observations, two capture days). \textbf{(a)}~Per-sector RMSE under the three calibration strategies: parametric $\psi$ (light gray), shared neural $\psi$ (steel blue), and sector-specific neural $\psi$ (dark blue). The sector NN dominated in every sector; the largest gains over the shared NN occurred in ETF and Financials. \textbf{(b)}~Learned baseline IV ($\sqrt{\theta_{\text{ticker}}}$) for each of the 31 tickers, colored by sector and sorted by level. The ordering recovered the expected high-variance names (MRNA, NVDA) at the top and mega-cap ETFs at the bottom. \textbf{(c)}~Representative IV smile fits at mid-DTE for one ticker per sector (SPY, NVDA, JPM, XOM, LLY, WMT). Market calls (blue circles) and puts (red diamonds) are overlaid with the sector NN prediction (solid black line). The sector networks captured both the smile curvature and the sector-specific shape asymmetries that a single global $\psi$ could not.}\label{fig:sector_nn}
 \end{figure}
 
-The residual structure under the sector NN (Figure~\ref{fig:sector_nn_residuals}) confirmed that the remaining error was concentrated in the wings (moneyness below 0.90 and above 1.10) rather than near the money, consistent with the in-sample fits of the earlier single-ticker calibrations and with the known difficulty of pricing deep-OTM contracts where liquidity is thin and quoted IV is noisier. The learned $\psi$ surfaces (Figure~\ref{fig:psi_surfaces}) were smooth in both $\ln\tau$ and $\ln m$ and displayed the expected qualitative features, including put skew ($\psi$ rising for moneyness below unity), smile curvature in the wings, and a mild term-structure gradient. The sector-to-sector differences in these surfaces were the direct visual evidence that motivated relaxing the global-shape assumption in the first place: the healthcare and technology surfaces curved more sharply in the near-term wings than the ETF surface, and the energy surface displayed a subtle asymmetry consistent with the commodity-linked risk profile of the sector.
+Beyond the aggregate RMSE comparison, the residual and surface diagnostics confirmed that the sector NN behaved sensibly in regions where it mattered most. The residual structure under the sector NN (Figure~\ref{fig:sector_nn_residuals}) showed that the remaining error was concentrated in the wings (moneyness below 0.90 and above 1.10) rather than near the money, consistent with the in-sample fits of the single-ticker baselines and with the known difficulty of pricing deep-OTM contracts where liquidity is thin and quoted IV is noisier. The learned $\psi$ surfaces (Figure~\ref{fig:psi_surfaces}) were smooth in both $\ln\tau$ and $\ln m$ and displayed the expected qualitative features, including put skew ($\psi$ rising for moneyness below unity), smile curvature in the wings, and a mild term-structure gradient. The sector-to-sector differences in these surfaces were the direct visual evidence that motivated relaxing the global-shape assumption in the first place: the healthcare and technology surfaces curved more sharply in the near-term wings than the ETF surface, and the energy surface displayed a subtle asymmetry consistent with the commodity-linked risk profile of the sector. This calibration established the sector-specific neural $\psi$ as the current operating point of the framework, but it did not represent the terminal model; the decomposition of Section~\ref{sec:psi_nn} supports per-ticker networks as a direct extension once per-name sample sizes permit. At the 2-day corpus used here, per-ticker sample sizes ranged from 101 (PFE) to 7{,}748 (SPY), with a median near 600 observations per ticker, sufficient for sector-level fitting but thin for per-ticker networks of the same architecture on most names. The data-rich tickers (SPY, QQQ, IWM, GS, LLY, MSFT) would already support per-ticker fits, and the pattern of within-sector outliers identified above (INTC, AVGO, MU, PFE, ABBV) was precisely the set that per-ticker networks would be expected to help most; additional capture days, reported as future work (Section~\ref{sec:discussion}), will support per-ticker $\psi_{\text{NN}}$ fits with proper temporal held-out validation across the full universe.
 
 \begin{figure}[ht]
 \centering
@@ -253,5 +128,3 @@ The residual structure under the sector NN (Figure~\ref{fig:sector_nn_residuals}
 \end{subfigure}
 \caption{Residual and surface diagnostics for the sector-specific neural calibration. \textbf{(a)}~IV residuals (model $-$ market) versus moneyness, colored by sector. Residuals clustered around zero in the near-money range ($K/S \in [0.90, 1.10]$) and dispersed in the wings, consistent with reduced liquidity and noisier quoted IV for deep-OTM contracts. \textbf{(b)}~Learned $\psi$ surfaces over $(K/S, \text{DTE})$ for each of the six sectors, plotted on a shared color scale. The surfaces were smooth in both inputs and displayed sector-specific differences in skew steepness and smile curvature that motivated the sector-level relaxation of the shared-shape assumption.}\label{fig:sector_nn_diag}
 \end{figure}
-
-This calibration established the sector-specific neural $\psi$ as the current operating point of the framework, but it did not represent the terminal model. The decomposition of Section~\ref{sec:psi_nn} supports per-ticker networks as a direct extension once per-name sample sizes permit. At the 2-day corpus used here, per-ticker sample sizes ranged from 101 (PFE) to 7{,}748 (SPY), with a median near 600 observations per ticker; this was sufficient for sector-level fitting but thin for per-ticker networks of the same architecture on most names. The data-rich tickers (SPY, QQQ, IWM, GS, LLY, MSFT) would already support per-ticker fits, and the pattern of within-sector outliers identified above (INTC, AVGO, MU, PFE, ABBV) was precisely the set that per-ticker networks would be expected to help most. Additional capture days, reported as future work (Section~\ref{sec:discussion}), will support per-ticker $\psi_{\text{NN}}$ fits with proper temporal held-out validation across the full universe.
