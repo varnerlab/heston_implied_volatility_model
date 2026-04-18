@@ -239,3 +239,6 @@ scatter!(fig,
 out_path = joinpath(PLOT_DIR, "iv_surface_heatmap.pdf")
 savefig(fig, out_path)
 println("Saved → $out_path")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

@@ -207,3 +207,6 @@ mkpath(PLOT_DIR)
 out_path = joinpath(PLOT_DIR, "forward_iv_paths.pdf")
 savefig(p, out_path)
 println("Saved → $out_path")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

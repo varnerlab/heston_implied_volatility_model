@@ -271,3 +271,6 @@ end
 out_path = joinpath(PLOT_DIR, "iv_residuals_cross_ticker.pdf")
 savefig(p, out_path)
 println("\nSaved → $out_path")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

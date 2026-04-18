@@ -253,3 +253,6 @@ end
 
 savefig(fig, joinpath(PLOT_DIR, "iv_surface_market_vs_model.pdf"))
 println("Saved → code/figures/iv_surface_market_vs_model.pdf")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

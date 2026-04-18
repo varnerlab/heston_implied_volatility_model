@@ -582,3 +582,6 @@ println("\n  Three-way comparison:")
 @printf("    Sector NN:     %5.2f%% IV  (%.1f%% improvement vs parametric)\n",
         sector_nn_overall,
         (parametric_overall - sector_nn_overall) / parametric_overall * 100)
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

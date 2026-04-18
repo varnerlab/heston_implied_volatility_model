@@ -249,3 +249,6 @@ end
 
 savefig(fig, joinpath(PLOT_DIR, "iv_smile_all_tickers.pdf"))
 println("\nSaved → code/figures/iv_smile_all_tickers.pdf")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

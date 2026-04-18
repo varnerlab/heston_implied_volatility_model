@@ -210,3 +210,6 @@ annotate!(fig, S + 3.5, 61.0,
 outpath = joinpath(FIGURE_DIR, "nvda_iv_smile.pdf")
 savefig(fig, outpath)
 println("Saved → $outpath")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

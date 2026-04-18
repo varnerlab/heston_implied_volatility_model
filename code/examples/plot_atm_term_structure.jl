@@ -249,3 +249,6 @@ out_path = joinpath(PLOT_DIR, "atm_term_structure.pdf")
 savefig(fig, out_path)
 println("Saved → $out_path")
 @printf("  Trough: DTE=%.0f, ATM IV=%.1f%%\n", trough_dte, trough_iv)
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

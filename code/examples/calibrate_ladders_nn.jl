@@ -541,3 +541,6 @@ println("  Overall RMSE: $(round(overall_rmse * 100, digits=2))% IV")
 println("\n  vs parametric (5 betas): ~$(parametric_rmse)% IV RMSE")
 println("  The learned psi surface captures smile/term-structure geometry")
 println("  without imposing a functional form.")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

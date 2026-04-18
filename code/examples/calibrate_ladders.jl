@@ -487,3 +487,6 @@ for (i, label) in enumerate(labels)
 end
 println("\n  These beta values plug directly into ThetaHybrid for scenario generation.")
 println("  Per-ticker theta_base provides the volatility level for each asset.")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()

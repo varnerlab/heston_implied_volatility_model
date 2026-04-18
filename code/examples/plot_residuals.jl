@@ -207,3 +207,6 @@ end
 out = joinpath(PLOT_DIR, "iv_residuals_by_dte.pdf")
 savefig(p, out)
 println("Saved → $out")
+
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()
