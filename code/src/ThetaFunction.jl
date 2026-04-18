@@ -56,7 +56,7 @@ Compute aggregate market mood as the fraction of tickers currently in tail state
 
 Returns a value in [0, 1] where 0 = no tickers in tail states, 1 = all tickers in tails.
 """
-function compute_mood(states::Vector{Int}, n_states::Int, n_tail::Int)::Float64
+function compute_mood(states::AbstractVector{<:Integer}, n_states::Int, n_tail::Int)::Float64
     n_tickers = length(states)
     n_tickers == 0 && return 0.0
     count = 0
