@@ -1,14 +1,12 @@
 """
 Temporal Holdout Calibration: Out-of-Sample Generalization Test
 
-Trains parametric, shared-NN, and sector-NN psi models on the first two
-capture days (2026-04-14, 2026-04-15) and evaluates on the held-out next
-two days (2026-04-16, 2026-04-17). The held-out days share the same 31
-tickers, so per-ticker theta_base learned in training transfers directly.
-
-This is the experiment the paper flagged as deferred — once a 3rd capture
-day landed, generalization could be measured. With 4 days now available,
-we can split 2-vs-2 for a more stable comparison.
+Trains parametric, shared-NN, and sector-NN psi models on the first six
+capture days (2026-04-14, 04-15, 04-16, 04-17, 04-21, 04-22) and evaluates
+on the held-out next two days (2026-04-23, 04-24). The held-out days share
+the same 31 tickers, so per-ticker theta_base learned in training transfers
+directly. (2026-04-20 was a partial-coverage capture and is excluded from
+the corpus; see code/data/ladder_excluded/.)
 
 Reports for each model:
   - Train RMSE (in-sample)
@@ -33,8 +31,10 @@ using Random
 # ============================================================================
 
 const LADDER_DIR = joinpath(@__DIR__, "..", "data", "ladder")
-const TRAIN_DAYS = ["options-04-14-2026", "options-04-15-2026"]
-const TEST_DAYS  = ["options-04-16-2026", "options-04-17-2026"]
+const TRAIN_DAYS = ["options-04-14-2026", "options-04-15-2026",
+                    "options-04-16-2026", "options-04-17-2026",
+                    "options-04-21-2026", "options-04-22-2026"]
+const TEST_DAYS  = ["options-04-23-2026", "options-04-24-2026"]
 
 const SECTORS = Dict(
     "AAPL" => "Tech", "AMD" => "Tech", "AVGO" => "Tech", "GOOG" => "Tech",
@@ -367,56 +367,145 @@ sector_test_rmse  = rmse(sector_test_pred,  test_iv)
 @printf("  Test  RMSE: %5.2f%%\n", sector_test_rmse  * 100)
 
 # ============================================================================
-# Three-way comparison
+# Model 4: Per-ticker NN (N_train >= 2000) + sector-NN fallback
 # ============================================================================
 
 println("\n" * "="^70)
-println("  TEMPORAL HOLDOUT — THREE-WAY COMPARISON")
+println("  MODEL 4: PER-TICKER NN (N_train >= 2000) + SECTOR-NN FALLBACK")
+println("="^70)
+
+const PT_MIN_OBS = 2000
+const PT_BIG_ARCH = 5000
+
+train_obs_by_ticker = Dict(t => sum(train.ticker .== t) for t in tickers)
+pt_qualified   = sort([t for t in tickers if train_obs_by_ticker[t] >= PT_MIN_OBS])
+pt_unqualified = sort([t for t in tickers if train_obs_by_ticker[t] <  PT_MIN_OBS])
+
+println("  Qualified ($(length(pt_qualified))):   ", join(pt_qualified, ", "))
+println("  Fallback to sector ($(length(pt_unqualified))): ",
+        isempty(pt_unqualified) ? "(none)" : join(pt_unqualified, ", "))
+
+per_ticker_models = Dict{String,Any}()
+
+for t in pt_qualified
+    mask = train.ticker .== t
+    td = train[mask, :]
+    n_obs = nrow(td)
+
+    log_dte_t = Float32.((log.(max.(Float64.(td.actual_dte), 1.0)) .- MU_DTE) ./ SIGMA_DTE)
+    log_m_t   = Float32.((log.(Float64.(td.moneyness)) .- MU_M) ./ SIGMA_M)
+    Xt = hcat(log_dte_t, log_m_t)'
+    yt = Float32.(td.implied_vol)
+
+    Random.seed!(42)
+    psi_nn_t = n_obs >= PT_BIG_ARCH ?
+        Chain(Dense(2 => 16, tanh), Dense(16 => 16, tanh), Dense(16 => 1)) :
+        Chain(Dense(2 => 8, tanh),  Dense(8 => 8, tanh),   Dense(8 => 1))
+    log_theta_t = Float32[Float32(log(mean(Float64.(td.implied_vol))^2))]
+    model_t = (psi_nn = psi_nn_t, log_theta = log_theta_t)
+    opt_t = Flux.setup(Flux.Adam(1f-3), model_t)
+
+    bl, bs, ni = Inf, nothing, 0
+    for epoch in 1:SECTOR_EPOCHS
+        l, g = Flux.withgradient(model_t) do m
+            preds = exp.(Float32(0.5) .* (m.log_theta[1] .+ vec(m.psi_nn(Xt))))
+            Flux.mse(preds, yt)
+        end
+        Flux.update!(opt_t, model_t, g[1])
+        if l < bl; bl, bs, ni = l, Flux.state(model_t), 0; else; ni += 1; end
+        ni >= SECTOR_PATIENCE && break
+        epoch == 500  && Flux.adjust!(opt_t, 5f-4)
+        epoch == 1000 && Flux.adjust!(opt_t, 2f-4)
+        epoch == 1500 && Flux.adjust!(opt_t, 1f-4)
+    end
+    Flux.loadmodel!(model_t, bs)
+    per_ticker_models[t] = model_t
+
+    arch_label = n_obs >= PT_BIG_ARCH ? "2->16->16->1" : "2->8->8->1"
+    @printf("  %-5s  N_train=%5d  arch=%-12s\n", t, n_obs, arch_label)
+end
+
+function predict_per_ticker_combo(df::DataFrame)
+    out = predict_sector_nn(df)
+    for t in pt_qualified
+        mask = df.ticker .== t
+        any(mask) || continue
+        rows = df[mask, :]
+        log_dte_t = Float32.((log.(max.(Float64.(rows.actual_dte), 1.0)) .- MU_DTE) ./ SIGMA_DTE)
+        log_m_t   = Float32.((log.(Float64.(rows.moneyness)) .- MU_M) ./ SIGMA_M)
+        Xt = hcat(log_dte_t, log_m_t)'
+        m = per_ticker_models[t]
+        preds = exp.(Float32(0.5) .* (m.log_theta[1] .+ vec(m.psi_nn(Xt))))
+        out[findall(mask)] .= Float64.(preds)
+    end
+    return out
+end
+
+pt_train_pred = predict_per_ticker_combo(train)
+pt_test_pred  = predict_per_ticker_combo(test)
+pt_train_rmse = rmse(pt_train_pred, train_iv)
+pt_test_rmse  = rmse(pt_test_pred,  test_iv)
+
+@printf("\n  Train RMSE: %5.2f%%\n", pt_train_rmse * 100)
+@printf("  Test  RMSE: %5.2f%%\n", pt_test_rmse  * 100)
+
+# ============================================================================
+# Four-way comparison
+# ============================================================================
+
+println("\n" * "="^70)
+println("  TEMPORAL HOLDOUT — FOUR-WAY COMPARISON")
 println("="^70)
 println("\n  Train: $(TRAIN_DAYS), $(nrow(train)) obs")
 println("  Test:  $(TEST_DAYS), $(nrow(test)) obs\n")
 
-println("  Model                   Train RMSE(%)   Test RMSE(%)   Gen gap(%)")
-println("  " * "-"^70)
-@printf("  Parametric (5 betas)        %5.2f           %5.2f         %+5.2f\n",
+println("  Model                             Train RMSE(%)   Test RMSE(%)   Gen gap(%)")
+println("  " * "-"^80)
+@printf("  Parametric (5 betas)                  %5.2f           %5.2f         %+5.2f\n",
         param_train_rmse*100, param_test_rmse*100, (param_test_rmse - param_train_rmse)*100)
-@printf("  Shared NN (1 network)       %5.2f           %5.2f         %+5.2f\n",
+@printf("  Shared NN (1 network)                 %5.2f           %5.2f         %+5.2f\n",
         shared_train_rmse*100, shared_test_rmse*100, (shared_test_rmse - shared_train_rmse)*100)
-@printf("  Sector NN (6 networks)      %5.2f           %5.2f         %+5.2f\n",
+@printf("  Sector NN (6 networks)                %5.2f           %5.2f         %+5.2f\n",
         sector_train_rmse*100, sector_test_rmse*100, (sector_test_rmse - sector_train_rmse)*100)
+@printf("  Per-ticker NN + sector fallback       %5.2f           %5.2f         %+5.2f\n",
+        pt_train_rmse*100, pt_test_rmse*100, (pt_test_rmse - pt_train_rmse)*100)
 
-# Per-sector test RMSE
 println("\n  Per-sector test RMSE (%):")
-println("  Sector         N_test   Parametric   Shared NN   Sector NN")
-println("  " * "-"^65)
+println("  Sector         N_test   Parametric   Shared NN   Sector NN   Per-ticker")
+println("  " * "-"^75)
 for sector in sectors
     mask = test.sector .== sector
     n = sum(mask)
     n == 0 && continue
-    p = rmse(param_test_pred[mask],  test_iv[mask])
-    s = rmse(shared_test_pred[mask], test_iv[mask])
+    p  = rmse(param_test_pred[mask],  test_iv[mask])
+    s  = rmse(shared_test_pred[mask], test_iv[mask])
     sn = rmse(sector_test_pred[mask], test_iv[mask])
-    @printf("  %-12s   %5d     %5.2f        %5.2f       %5.2f\n",
-            sector, n, p*100, s*100, sn*100)
+    pt = rmse(pt_test_pred[mask],     test_iv[mask])
+    @printf("  %-12s   %5d     %5.2f        %5.2f       %5.2f       %5.2f\n",
+            sector, n, p*100, s*100, sn*100, pt*100)
 end
 
-# Per-ticker test RMSE (sorted by sector NN test RMSE descending)
 println("\n  Per-ticker test RMSE (%):")
-println("  Ticker  N_test   Parametric   Shared NN   Sector NN  Sector")
-println("  " * "-"^65)
-ticker_rows = Tuple{String,Int,Float64,Float64,Float64,String}[]
+println("  Ticker  N_test   Parametric   Shared NN   Sector NN   Per-ticker  Q  Sector")
+println("  " * "-"^85)
+pt_qset = Set(pt_qualified)
+ticker_rows = Tuple{String,Int,Float64,Float64,Float64,Float64,Bool,String}[]
 for t in tickers
     mask = test.ticker .== t
     n = sum(mask)
     n == 0 && continue
-    p = rmse(param_test_pred[mask],  test_iv[mask]) * 100
-    s = rmse(shared_test_pred[mask], test_iv[mask]) * 100
+    p  = rmse(param_test_pred[mask],  test_iv[mask]) * 100
+    s  = rmse(shared_test_pred[mask], test_iv[mask]) * 100
     sn = rmse(sector_test_pred[mask], test_iv[mask]) * 100
-    push!(ticker_rows, (t, n, p, s, sn, get(SECTORS, t, "Other")))
+    pt = rmse(pt_test_pred[mask],     test_iv[mask]) * 100
+    push!(ticker_rows, (t, n, p, s, sn, pt, t in pt_qset, get(SECTORS, t, "Other")))
 end
 sort!(ticker_rows, by=r -> -r[5])
-for (t, n, p, s, sn, sec) in ticker_rows
-    @printf("  %-5s   %5d    %5.2f        %5.2f       %5.2f     %s\n", t, n, p, s, sn, sec)
+for (t, n, p, s, sn, pt, q, sec) in ticker_rows
+    qflag = q ? "*" : " "
+    @printf("  %-5s   %5d    %5.2f        %5.2f       %5.2f       %5.2f     %s  %s\n",
+            t, n, p, s, sn, pt, qflag, sec)
 end
+println("\n  Q column: * = per-ticker NN used; blank = sector NN fallback")
 
 println("\nDone.")
