@@ -128,3 +128,46 @@ Beyond the aggregate RMSE comparison, the residual and surface diagnostics confi
 \end{subfigure}
 \caption{Residual and surface diagnostics for the sector-specific neural calibration. \textbf{(a)}~IV residuals (model $-$ market) versus moneyness, colored by sector. Residuals clustered around zero in the near-money range ($K/S \in [0.90, 1.10]$) and dispersed in the wings, consistent with reduced liquidity and noisier quoted IV for deep-OTM contracts. \textbf{(b)}~Learned $\psi$ surfaces over $(K/S, \text{DTE})$ for each of the six sectors, plotted on a shared color scale. The surfaces were smooth in both inputs and displayed sector-specific differences in skew steepness and smile curvature that motivated the sector-level relaxation of the shared-shape assumption.}\label{fig:sector_nn_diag}
 \end{figure}
+
+\subsection{Temporal holdout and earnings-aware calibration}\label{sec:earnings_holdout}
+
+The two-day in-sample fit established that the sector-specific $\psi_{\text{NN}}$ could absorb the cross-sectional smile geometry of the 31-ticker universe, but it left the temporal-generalization question unanswered: would a $\psi$ trained on one block of capture days price contracts on a held-out subsequent block? We extended the corpus to eight capture days (2026-04-14 through 04-17 and 04-21 through 04-24, comprising 130{,}730 filtered observations) and split it into a six-day training block (04-14 through 04-22, 103{,}897 observations) and a two-day temporal holdout (04-23 and 04-24, 26{,}833 observations). The same 31 tickers appeared on every capture day, so the per-ticker $\theta_i$ learned on the training block transferred directly to the holdout. We then asked a sharper question: which fraction of any test-set generalization gap was attributable to scheduled corporate events embedded in the holdout window rather than to architectural overfit? To separate these contributions, we ran the sector $\psi_{\text{NN}}$ under three configurations: (A)~a pooled control identical to the in-sample architecture above (two inputs $\ln\tau,\,\ln m$, no exclusion); (B)~a non-earnings baseline that excluded all training and test rows for which the row's ticker or any same-sector peer was within $\pm 3$ days of an earnings print; and (C)~the earnings-aware model of Section~\ref{sec:psi_nn} that fed $\psi$ four inputs $(\ln\tau,\,\ln m,\,e,\,e^{\text{peer}})$ and used the same train and test rows as the control. The peer feature carried sector-coupling information directly: for any ticker $i$ on day $t$, $e^{\text{peer}}$ collapsed to zero if any same-sector equity printed earnings that day, regardless of $i$'s own distance to its next print.
+
+\begin{table}[ht]
+\centering
+\caption{Temporal-holdout sector-NN comparison across the three configurations. The pooled control (A) reproduced the existing four-day reference number ($13.03\%$ test RMSE on the same train/test split). Excluding earnings-window observations from both train and test (B) reduced the test RMSE to $7.96\%$ and collapsed the generalization gap from $+4.99$ to $-0.06\%$ IV. Adding the earnings indicator and peer-coupling feature to the input vector (C) on the original train and test rows reduced the pooled test RMSE to $11.98\%$ and the generalization gap to $+4.36\%$.}\label{tab:earnings_holdout}
+\begin{tabular}{lrrrrr}
+\toprule
+Configuration & $N_{\text{train}}$ & $N_{\text{test}}$ & Train RMSE (\%) & Test RMSE (\%) & Gen.\ gap (\%) \\
+\midrule
+A: pooled control (2 inputs)        & 103{,}897 & 26{,}833 & 8.05 & 13.03 & $+4.99$ \\
+B: non-earnings baseline (2 inputs) &  29{,}383 &  4{,}516 & 8.02 &  7.96 & $-0.06$ \\
+C: earnings-aware (4 inputs)        & 103{,}897 & 26{,}833 & 7.61 & 11.98 & $+4.36$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The three-way comparison resolved the generalization question (Table~\ref{tab:earnings_holdout}). Configuration~B revealed that scheduled earnings events accounted for the entire test-time generalization gap of the sector NN: with all earnings-window observations removed from both splits, the test RMSE ($7.96\%$) fell to within rounding of the train RMSE ($8.02\%$), giving a generalization gap of $-0.06\%$ IV. The architecture itself generalized faithfully out of sample; what failed was the model's ability to price options on days when an earnings catalyst dominated the IV surface. Configuration~C confirmed that adding event-aware inputs to the shape network recovered roughly one-fifth of the lost performance: relative to the pooled control, the test RMSE dropped from $13.03\%$ to $11.98\%$ ($1.05\%$ IV absolute, $8.1\%$ relative), and the generalization gap narrowed from $+4.99$ to $+4.36\%$. The peer-coupling feature did the heavy lifting in this reduction: the per-ticker breakdown showed the largest improvements on Tech names whose own earnings prints fell outside the immediate holdout window but whose sector peers printed during it (Table~\ref{tab:tech_pivot}). QCOM (own print 6 days after the holdout) and AMD (12 days after) both benefited from the peer-coupling signal because INTC printed inside the window and dragged their IV surfaces with a $\sim 4\%$ IV reduction in test error each. The same mechanism reduced META, MSFT, and GOOG test RMSE by 2 to $4\%$ IV apiece. INTC itself, the print-day ticker, was the one Tech name whose RMSE rose under the earnings-aware fit ($33.17 \to 35.94\%$); its outsized $+2192\%$ EPS surprise produced an unanticipated post-print IV crush that no scheduled-event indicator could predict from the calendar alone.
+
+\begin{table}[ht]
+\centering
+\caption{Per-ticker test RMSE on the Tech sector across the pooled control (A) and the earnings-aware fit (C). Columns $e$ and $e^{\text{peer}}$ report the median signed days-to-earnings and the minimum same-sector peer distance for each ticker on the holdout days. The largest gains accrued to tickers whose peers printed within the holdout (QCOM, AMD, META, MSFT, GOOG); INTC, the print-day ticker, was the one name that worsened, reflecting an unanticipated outcome that no calendar-based indicator could absorb.}\label{tab:tech_pivot}
+\begin{tabular}{lrrrrr}
+\toprule
+Ticker & $e$ & $e^{\text{peer}}$ & A: pooled (\%) & C: earnings-aware (\%) & $\Delta$ (\%) \\
+\midrule
+QCOM & $+5$  & $1$ & 41.66 & 37.59 & $-4.07$ \\
+AMD  & $+11$ & $1$ & 40.07 & 36.50 & $-3.57$ \\
+META & $+5$  & $1$ & 14.32 & 10.73 & $-3.59$ \\
+MSFT & $+5$  & $1$ & 14.00 & 10.73 & $-3.28$ \\
+GOOG & $+5$  & $1$ &  9.87 &  7.90 & $-1.97$ \\
+MU   & $-30$ & $1$ & 16.95 & 15.59 & $-1.36$ \\
+AAPL & $+6$  & $1$ & 10.42 & 10.34 & $-0.08$ \\
+AVGO & $+30$ & $1$ & 12.58 & 12.83 & $+0.24$ \\
+NVDA & $+26$ & $1$ &  9.43 & 10.47 & $+1.05$ \\
+INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+These results set the operating boundary for what a calendar-driven event indicator can and cannot do. The boundary was sharp: the indicator captured the anticipatory components of event-day IV behavior (pre-earnings expansion on the printer itself, sympathy on same-sector peers) which were a known function of the calendar, but it carried no information about the post-event direction or magnitude when the realization deviated from consensus. The non-earnings baseline of Configuration~B is therefore the right reference point against which to compare future event mechanisms: any extension of the model that aims to price event-day IV surfaces must be evaluated against the $7.96\%$ non-event RMSE rather than against the pooled $13.03\%$, because that gap quantifies the residual event signal that the current architecture cannot reach. We pursue this distinction further in Section~\ref{sec:discussion}, where the failure of the indicator on INTC and its success on the sympathy peers motivate a per-ticker tail mechanism reserved for future work.

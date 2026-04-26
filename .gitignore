@@ -29,3 +29,8 @@ JuliaLocalPreferences.toml
 
 # Unzipped screenshot data (raw source; CSVs in data/time/ are the usable form)
 nvda-options-data/
+
+# Python virtual environment for earnings-calendar fetcher (see SETUP.md)
+code/venv/
+__pycache__/
+*.pyc
