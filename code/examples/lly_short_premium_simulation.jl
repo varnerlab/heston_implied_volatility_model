@@ -4,7 +4,7 @@ Short-premium scenario study for LLY.
 Sells a 30-day 30Δ put and a 30-day 30Δ call today. Forward-simulates 1,000
 LLY price paths from the pretrained JumpHMM marginal, evolves a Heston-style
 CIR variance with leverage coupling (ρ < 0) along each path, and prices both
-contracts via CRR American at every daily step using
+contracts via Leisen–Reimer American at every daily step using
 
     σ²(K, T-t, t) = v_t · ψ_NN((K/S_t)_std, (T-t)_std)
 
@@ -33,7 +33,55 @@ using Printf
 using Random
 using Statistics
 
-using HestonIV  # crr_american_price
+# ============================================================================
+# Leisen–Reimer American option pricer (Peizer–Pratt method 2 inversion).
+#
+# Why not CRR? The recombining CRR lattice has discrete node positions, so
+# bumping σ or S in finite-difference Greek calculations causes the strike
+# K to snap across node boundaries. The resulting V(σ) and V(S) are
+# piecewise-bilinear with kinks, which produces the staircase/diamond-grid
+# aliasing visible in CRR-FD Vega. LR constructs the up/down probabilities
+# from a Peizer–Pratt inversion of the Black–Scholes d_1, d_2 so that K
+# falls at a fixed lattice position by design at every (S, σ) configuration.
+# Greeks are smooth via FD at modest N (LR converges as O(1/N²) vs CRR's
+# oscillatory O(1/√N), so N≈201 here matches CRR accuracy at N≈1500).
+# Requires N odd; we bump even N up by one.
+# ============================================================================
+function _peizer_pratt(z::Float64, n::Int)
+    arg = (z / (n + 1/3 + 0.1/(n+1)))^2 * (n + 1/6)
+    return 0.5 + sign(z) * sqrt(0.25 - 0.25 * exp(-arg))
+end
+
+function lr_american_price(S::Float64, K::Float64, σ::Float64,
+                            r::Float64, T::Float64, N::Int,
+                            otype::Symbol; q::Float64=0.0)
+    N % 2 == 0 && (N += 1)
+    Δt    = T / N
+    disc  = exp(-r * Δt)
+    σsqrtT = σ * sqrt(T)
+    d1 = (log(S/K) + (r - q + 0.5*σ^2)*T) / σsqrtT
+    d2 = d1 - σsqrtT
+    p_bar = _peizer_pratt(d2, N)     # martingale (lattice) probability
+    p     = _peizer_pratt(d1, N)
+    R_over_Q = exp((r - q) * Δt)
+    u = R_over_Q * p / p_bar
+    d = R_over_Q * (1 - p) / (1 - p_bar)
+
+    V = Vector{Float64}(undef, N + 1)
+    @inbounds for j in 0:N
+        S_T = S * u^j * d^(N-j)
+        V[j+1] = otype === :call ? max(S_T - K, 0.0) : max(K - S_T, 0.0)
+    end
+    @inbounds for n in (N-1):-1:0
+        for j in 0:n
+            S_n  = S * u^j * d^(n-j)
+            cont = disc * (p_bar * V[j+2] + (1 - p_bar) * V[j+1])
+            intrinsic = otype === :call ? S_n - K : K - S_n
+            V[j+1] = max(cont, intrinsic)
+        end
+    end
+    return V[1]
+end
 
 # ============================================================================
 # Constants & hyperparameters
@@ -42,7 +90,7 @@ using HestonIV  # crr_american_price
 const TICKER       = "LLY"
 const T_DAYS       = 31           # matches the real 2026-05-29 expiry from the 04-28 capture
 const N_PATHS      = 1000
-const N_STEPS_CRR  = 400      # raised from 200 for cleaner CRR finite-difference Greeks
+const N_STEPS_LR   = 201          # LR with N≈200 is more accurate than CRR with N≈1500
 const SEED         = 20260429
 const R_FREE       = 0.0425
 const Q_DIV        = 0.0
@@ -235,7 +283,7 @@ function simulate_all()
         end
     end
 
-    println("Pricing put + call at every (t, path) via CRR American (n_steps=$N_STEPS_CRR)...")
+    println("Pricing put + call at every (t, path) via Leisen–Reimer American (n_steps=$N_STEPS_LR)...")
     V_put  = Array{Float64}(undef, T_DAYS + 1, n_actual)
     V_call = Array{Float64}(undef, T_DAYS + 1, n_actual)
     for p in 1:n_actual
@@ -250,11 +298,11 @@ function simulate_all()
                 T_rem_yrs = dte_remaining / 365.0
                 σ_put  = heston_smile_iv(v_t, K_PUT,  S_t, dte_remaining)
                 σ_call = heston_smile_iv(v_t, K_CALL, S_t, dte_remaining)
-                V_put[t+1, p]  = crr_american_price(S_t, K_PUT,  σ_put,
-                                                    R_FREE, T_rem_yrs, N_STEPS_CRR,
+                V_put[t+1, p]  = lr_american_price(S_t, K_PUT,  σ_put,
+                                                    R_FREE, T_rem_yrs, N_STEPS_LR,
                                                     :put;  q=Q_DIV)
-                V_call[t+1, p] = crr_american_price(S_t, K_CALL, σ_call,
-                                                    R_FREE, T_rem_yrs, N_STEPS_CRR,
+                V_call[t+1, p] = lr_american_price(S_t, K_CALL, σ_call,
+                                                    R_FREE, T_rem_yrs, N_STEPS_LR,
                                                     :call; q=Q_DIV)
             end
         end
@@ -401,7 +449,7 @@ pA1 = path_panel(t_axis, S_paths, title_share, "Share price (\$)";
                  tail_color = COL_WORST,
                  tail_label = "Worst 5% by terminal price",
                  legend_pos = :topleft)
-hline!(pA1, [K_PUT], color = :black, ls = :dot, lw = 1.2, alpha = 0.7,
+hline!(pA1, [K_PUT], color = RGB(0.90, 0.55, 0.10), ls = :dash, lw = 2.0, alpha = 1.0,
        label = @sprintf("30Δ put strike  K = \$%.2f", K_PUT))
 
 pA2 = path_panel(t_axis, V_put,
@@ -429,7 +477,7 @@ pB1 = path_panel(t_axis, S_paths, title_share, "Share price (\$)";
                  tail_color = COL_BEST,
                  tail_label = "Top 1–5% by terminal price",
                  legend_pos = :topleft)
-hline!(pB1, [K_CALL], color = :black, ls = :dot, lw = 1.2, alpha = 0.7,
+hline!(pB1, [K_CALL], color = RGB(0.90, 0.55, 0.10), ls = :dash, lw = 2.0, alpha = 1.0,
        label = @sprintf("30Δ call strike  K = \$%.2f", K_CALL))
 
 pB2 = path_panel(t_axis, V_call,
@@ -511,14 +559,14 @@ out_C_png = joinpath(PLOT_DIR, "lly_short_pnl_distributions.png")
 savefig(p_C, out_C_pdf); savefig(p_C, out_C_png)
 
 # --- Figure D: implied-volatility trajectories at the fixed contract strikes ---
-# Same loop also computes CRR American Greeks (Δ, Γ, Vega) via central finite
+# Same loop also computes LR American Greeks (Δ, Γ, Vega) via central finite
 # differences on the same pricer used for the base marks. At each (t, path)
 # we re-price at (S±h, σ) and (S, σ±dσ) — 4 extra CRR runs per leg, plus the
 # base mark V_put/V_call[t+1,p] reused as the centre of the Γ stencil.
 const H_S_FRAC = 0.015    # spot bump: 1.5% of S_t (wider stencil → cleaner Γ)
 const D_SIGMA  = 0.005    # σ bump: ±0.5 vol points (total 1% IV span for Vega)
 
-println("\nComputing CRR American Greeks via finite differences (h=1% S, dσ=±0.5 IV pts)...")
+println("\nComputing Leisen–Reimer American Greeks via finite differences (h=1.5% S, dσ=±0.5 IV pts)...")
 σ_put_paths    = fill(NaN, size(S_paths))
 σ_call_paths   = fill(NaN, size(S_paths))
 Δ_put_paths    = fill(NaN, size(S_paths))
@@ -545,20 +593,20 @@ for p in 1:n_paths_actual
 
         # PUT: reuse base mark as Γ centre, bump S by ±h, σ by ±D_SIGMA
         V_pS0 = V_put[t+1, p]
-        V_pSp = crr_american_price(S_t + h, K_PUT, σ_p,           R_FREE, T_rem, N_STEPS_CRR, :put; q=Q_DIV)
-        V_pSm = crr_american_price(S_t - h, K_PUT, σ_p,           R_FREE, T_rem, N_STEPS_CRR, :put; q=Q_DIV)
-        V_pσp = crr_american_price(S_t,     K_PUT, σ_p + D_SIGMA, R_FREE, T_rem, N_STEPS_CRR, :put; q=Q_DIV)
-        V_pσm = crr_american_price(S_t,     K_PUT, σ_p_lo,        R_FREE, T_rem, N_STEPS_CRR, :put; q=Q_DIV)
+        V_pSp = lr_american_price(S_t + h, K_PUT, σ_p,           R_FREE, T_rem, N_STEPS_LR, :put; q=Q_DIV)
+        V_pSm = lr_american_price(S_t - h, K_PUT, σ_p,           R_FREE, T_rem, N_STEPS_LR, :put; q=Q_DIV)
+        V_pσp = lr_american_price(S_t,     K_PUT, σ_p + D_SIGMA, R_FREE, T_rem, N_STEPS_LR, :put; q=Q_DIV)
+        V_pσm = lr_american_price(S_t,     K_PUT, σ_p_lo,        R_FREE, T_rem, N_STEPS_LR, :put; q=Q_DIV)
         Δ_put_paths[t+1,  p]    = (V_pSp - V_pSm) / (2h)
         Γ_put_paths[t+1,  p]    = (V_pSp - 2*V_pS0 + V_pSm) / (h^2)
         Vega_put_paths[t+1, p]  = (V_pσp - V_pσm) / (2 * D_SIGMA * 100)
 
         # CALL
         V_cS0 = V_call[t+1, p]
-        V_cSp = crr_american_price(S_t + h, K_CALL, σ_c,           R_FREE, T_rem, N_STEPS_CRR, :call; q=Q_DIV)
-        V_cSm = crr_american_price(S_t - h, K_CALL, σ_c,           R_FREE, T_rem, N_STEPS_CRR, :call; q=Q_DIV)
-        V_cσp = crr_american_price(S_t,     K_CALL, σ_c + D_SIGMA, R_FREE, T_rem, N_STEPS_CRR, :call; q=Q_DIV)
-        V_cσm = crr_american_price(S_t,     K_CALL, σ_c_lo,        R_FREE, T_rem, N_STEPS_CRR, :call; q=Q_DIV)
+        V_cSp = lr_american_price(S_t + h, K_CALL, σ_c,           R_FREE, T_rem, N_STEPS_LR, :call; q=Q_DIV)
+        V_cSm = lr_american_price(S_t - h, K_CALL, σ_c,           R_FREE, T_rem, N_STEPS_LR, :call; q=Q_DIV)
+        V_cσp = lr_american_price(S_t,     K_CALL, σ_c + D_SIGMA, R_FREE, T_rem, N_STEPS_LR, :call; q=Q_DIV)
+        V_cσm = lr_american_price(S_t,     K_CALL, σ_c_lo,        R_FREE, T_rem, N_STEPS_LR, :call; q=Q_DIV)
         Δ_call_paths[t+1,  p]    = (V_cSp - V_cSm) / (2h)
         Γ_call_paths[t+1,  p]    = (V_cSp - 2*V_cS0 + V_cSm) / (h^2)
         Vega_call_paths[t+1, p]  = (V_cσp - V_cσm) / (2 * D_SIGMA * 100)
