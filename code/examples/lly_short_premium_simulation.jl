@@ -449,7 +449,7 @@ pA1 = path_panel(t_axis, S_paths, title_share, "Share price (\$)";
                  tail_color = COL_WORST,
                  tail_label = "Worst 5% by terminal price",
                  legend_pos = :topleft)
-hline!(pA1, [K_PUT], color = RGB(0.90, 0.55, 0.10), ls = :dash, lw = 2.0, alpha = 1.0,
+hline!(pA1, [K_PUT], color = RGB(0.85, 0.65, 0.13), ls = :dash, lw = 2.0, alpha = 1.0,
        label = @sprintf("30Δ put strike  K = \$%.2f", K_PUT))
 
 pA2 = path_panel(t_axis, V_put,
@@ -477,7 +477,7 @@ pB1 = path_panel(t_axis, S_paths, title_share, "Share price (\$)";
                  tail_color = COL_BEST,
                  tail_label = "Top 1–5% by terminal price",
                  legend_pos = :topleft)
-hline!(pB1, [K_CALL], color = RGB(0.90, 0.55, 0.10), ls = :dash, lw = 2.0, alpha = 1.0,
+hline!(pB1, [K_CALL], color = RGB(0.85, 0.65, 0.13), ls = :dash, lw = 2.0, alpha = 1.0,
        label = @sprintf("30Δ call strike  K = \$%.2f", K_CALL))
 
 pB2 = path_panel(t_axis, V_call,
