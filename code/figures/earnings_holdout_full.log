@@ -1,0 +1,188 @@
+Loading earnings calendar from /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../data/earnings/earnings_calendar.csv ...
+  loaded 28 tickers with earnings entries
+
+Loading train split: ["options-04-14-2026", "options-04-15-2026", "options-04-16-2026", "options-04-17-2026", "options-04-21-2026", "options-04-22-2026"]
+  103897 observations across 31 tickers
+
+Loading test split:  ["options-04-23-2026", "options-04-24-2026"]
+  26833 observations across 31 tickers
+
+Attaching earnings features...
+  train d2e_self        range: [-30, 30]   peer_min range: [0, 30]
+  test  d2e_self        range: [-30, 30]   peer_min range: [0, 27]
+
+  Near-earnings rows: train 74514 / 103897 (71.7%); test 22317 / 26833 (83.2%)
+
+======================================================================
+  CONFIGURATION A: POOLED CONTROL (no exclusion, 2 inputs)  (n_inputs=2, train=103897, test=26833)
+======================================================================
+  [ETF] 46291 train obs, 3 tickers, n_inputs=2
+  [Energy] 3790 train obs, 3 tickers, n_inputs=2
+  [Financials] 9036 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 12125 train obs, 8 tickers, n_inputs=2
+  [Retail] 5045 train obs, 3 tickers, n_inputs=2
+  [Tech] 27610 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  8.05%   Test RMSE: 13.03%   Gen gap: +4.99%
+
+  Per-sector test RMSE (%):
+  Sector         N_test   RMSE
+  -----------------------------------
+  ETF            10755     7.50
+  Energy           908     8.61
+  Financials      2009     5.50
+  Healthcare      3267    14.03
+  Retail          1599     9.79
+  Tech            8295    19.11
+
+  Per-ticker test RMSE (%):
+  Ticker  N_test   RMSE     d2e_self   d2e_peer
+  -------------------------------------------------------
+  QCOM      457    41.66         +5           1
+  AMD       447    40.07        +11           1
+  INTC      254    33.17         -1           5
+  LLY       988    17.79         +6           3
+  MU        796    16.95        -30           1
+  PFE       158    16.73        +11           3
+  META     1802    14.32         +5           1
+  MSFT     1213    14.00         +5           1
+  MRNA      366    13.61         +7           3
+  JNJ       237    13.21        -10           3
+  UPS       550    12.86         +4          26
+  AMGN      440    12.77         +6           3
+  AVGO     1238    12.58        +30           1
+  CVX       259    11.21         +7           7
+  UNH       513    10.46         -3           5
+  AAPL      820    10.42         +6           1
+  GOOG      584     9.87         +5           1
+  ABBV      295     9.61         +5           3
+  NVDA      684     9.43        +26           1
+  QQQ      3881     9.21         +1           1
+  BMY       270     8.97         +6           3
+  WMT       496     7.74        +27           4
+  BAC       293     7.70         -9          10
+  TGT       553     7.68        +26           4
+  XOM       323     7.64         +7           7
+  OXY       326     6.98        +11           7
+  SPY      4477     6.43         +1           1
+  JPM       387     6.24        -10           9
+  IWM      2397     6.14         +1           1
+  WFC       365     5.90        -10           9
+  GS        964     4.01        -11           9
+
+======================================================================
+  CONFIGURATION B: NON-EARNINGS BASELINE (exclude ±3 d, 2 inputs)  (n_inputs=2, train=29383, test=4516)
+======================================================================
+  [Energy] 3790 train obs, 3 tickers, n_inputs=2
+  [Financials] 2563 train obs, 4 tickers, n_inputs=2
+  [Retail] 5045 train obs, 3 tickers, n_inputs=2
+  [Tech] 17985 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  8.02%   Test RMSE:  7.96%   Gen gap: -0.06%
+
+  Per-sector test RMSE (%):
+  Sector         N_test   RMSE
+  -----------------------------------
+  Energy           908     8.60
+  Financials      2009     5.73
+  Retail          1599     9.78
+
+  Per-ticker test RMSE (%):
+  Ticker  N_test   RMSE     d2e_self   d2e_peer
+  -------------------------------------------------------
+  UPS       550    12.85         +4          26
+  CVX       259    11.22         +7           7
+  WMT       496     7.73        +27           4
+  BAC       293     7.71         -9          10
+  TGT       553     7.67        +26           4
+  XOM       323     7.63         +7           7
+  OXY       326     6.96        +11           7
+  JPM       387     6.58        -10           9
+  WFC       365     6.04        -10           9
+  GS        964     4.37        -11           9
+
+======================================================================
+  CONFIGURATION C: EARNINGS-AWARE (4 inputs: ln tau, ln m, d2e_self, d2e_peer)  (n_inputs=4, train=103897, test=26833)
+======================================================================
+  [ETF] 46291 train obs, 3 tickers, n_inputs=4
+  [Energy] 3790 train obs, 3 tickers, n_inputs=4
+  [Financials] 9036 train obs, 4 tickers, n_inputs=4
+  [Healthcare] 12125 train obs, 8 tickers, n_inputs=4
+  [Retail] 5045 train obs, 3 tickers, n_inputs=4
+  [Tech] 27610 train obs, 10 tickers, n_inputs=4
+
+  Train RMSE:  7.61%   Test RMSE: 11.98%   Gen gap: +4.36%
+
+  Per-sector test RMSE (%):
+  Sector         N_test   RMSE
+  -----------------------------------
+  ETF            10755     7.32
+  Energy           908     9.35
+  Financials      2009     5.26
+  Healthcare      3267    12.57
+  Retail          1599     8.27
+  Tech            8295    17.40
+
+  Per-ticker test RMSE (%):
+  Ticker  N_test   RMSE     d2e_self   d2e_peer
+  -------------------------------------------------------
+  QCOM      457    37.59         +5           1
+  AMD       447    36.50        +11           1
+  INTC      254    35.94         -1           5
+  PFE       158    16.39        +11           3
+  LLY       988    15.65         +6           3
+  MU        796    15.59        -30           1
+  MRNA      366    13.74         +7           3
+  JNJ       237    12.85        -10           3
+  AVGO     1238    12.83        +30           1
+  CVX       259    12.55         +7           7
+  MSFT     1213    10.73         +5           1
+  META     1802    10.73         +5           1
+  AMGN      440    10.54         +6           3
+  NVDA      684    10.47        +26           1
+  AAPL      820    10.34         +6           1
+  UPS       550     9.14         +4          26
+  QQQ      3881     9.03         +1           1
+  UNH       513     8.86         -3           5
+  XOM       323     8.39         +7           7
+  BMY       270     8.23         +6           3
+  WMT       496     7.90        +27           4
+  GOOG      584     7.90         +5           1
+  TGT       553     7.67        +26           4
+  ABBV      295     7.42         +5           3
+  OXY       326     6.95        +11           7
+  BAC       293     6.86         -9          10
+  SPY      4477     6.26         +1           1
+  JPM       387     6.17        -10           9
+  IWM      2397     5.92         +1           1
+  WFC       365     5.81        -10           9
+  GS        964     3.90        -11           9
+
+======================================================================
+  THREE-CONFIG SUMMARY (sector NN)
+======================================================================
+
+  Config                              N_train  N_test  Train(%)  Test(%)  GenGap(%)
+  -------------------------------------------------------------------------------------
+  A: pooled, 2 inputs                 103897   26833     8.05     13.03     +4.99
+  B: non-earnings, 2 inputs            29383    4516     8.02      7.96     -0.06
+  C: earnings-aware, 4 inputs         103897   26833     7.61     11.98     +4.36
+
+
+  Tech-sector test RMSE comparison (the headline pivot):
+  Ticker  d2e_self  d2e_peer   A: pooled   C: earnings   delta
+  ------------------------------------------------------------
+  AAPL       +6        1      10.42       10.34      -0.08
+  AMD       +11        1      40.07       36.50      -3.57
+  AVGO      +30        1      12.58       12.83      +0.24
+  GOOG       +5        1       9.87        7.90      -1.97
+  INTC       -1        5      33.17       35.94      +2.77
+  META       +5        1      14.32       10.73      -3.59
+  MSFT       +5        1      14.00       10.73      -3.28
+  MU        -30        1      16.95       15.59      -1.36
+  NVDA      +26        1       9.43       10.47      +1.05
+  QCOM       +5        1      41.66       37.59      -4.07
+
+  Wrote summary -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/earnings_holdout_summary.csv
+
+Done.

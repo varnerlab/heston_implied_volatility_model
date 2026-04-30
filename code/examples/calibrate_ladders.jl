@@ -81,7 +81,8 @@ function load_all_ladders(dir::String)
     files = String[]
     for (root, _, fs) in walkdir(dir)
         for f in fs
-            endswith(f, ".csv") && push!(files, joinpath(root, f))
+            endswith(f, ".csv") && occursin("_dte_ladder_", f) &&
+                push!(files, joinpath(root, f))
         end
     end
     frames = DataFrame[]

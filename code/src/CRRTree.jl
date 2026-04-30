@@ -5,7 +5,7 @@ Cox-Ross-Rubinstein binomial tree for American option pricing.
 """
 
 """
-    crr_american_price(S, K, σ, r, T, n_steps, option_type) → Float64
+    crr_american_price(S, K, σ, r, T, n_steps, option_type; q=0.0) → Float64
 
 Price an American option using the CRR binomial tree.
 
@@ -17,13 +17,15 @@ Price an American option using the CRR binomial tree.
 - `T::Float64`: time to expiration (in years)
 - `n_steps::Int`: number of tree steps
 - `option_type::Symbol`: `:call` or `:put`
+- `q::Float64`: continuous dividend yield (annualized; default 0.0)
 
 # Returns
 The American option price.
 """
 function crr_american_price(S::Float64, K::Float64, σ::Float64,
                             r::Float64, T::Float64, n_steps::Int,
-                            option_type::Symbol)::Float64
+                            option_type::Symbol;
+                            q::Float64=0.0)::Float64
     @assert option_type in (:call, :put) "option_type must be :call or :put"
     @assert σ > 0.0 "volatility must be positive"
     @assert T > 0.0 "time to expiration must be positive"
@@ -32,9 +34,9 @@ function crr_american_price(S::Float64, K::Float64, σ::Float64,
     Δt = T / n_steps
     u = exp(σ * sqrt(Δt))
     d = 1.0 / u
-    R = exp(r * Δt)
+    R = exp((r - q) * Δt)
     p = (R - d) / (u - d)
-    q = 1.0 - p
+    qprob = 1.0 - p
 
     # Terminal payoffs at expiration (step n_steps)
     prices = Vector{Float64}(undef, n_steps + 1)
@@ -50,7 +52,7 @@ function crr_american_price(S::Float64, K::Float64, σ::Float64,
     for step in (n_steps-1):-1:0
         for i in 0:step
             S_node = S * u^(step - i) * d^i
-            hold_value = disc * (p * values[i+1] + q * values[i+2])
+            hold_value = disc * (p * values[i+1] + qprob * values[i+2])
             exercise_value = _payoff(S_node, K, option_type)
             values[i+1] = max(hold_value, exercise_value)
         end
@@ -60,14 +62,19 @@ function crr_american_price(S::Float64, K::Float64, σ::Float64,
 end
 
 """
-    crr_european_price(S, K, σ, r, T, n_steps, option_type) → Float64
+    crr_european_price(S, K, σ, r, T, n_steps, option_type; q=0.0) → Float64
 
 Price a European option using the CRR binomial tree (no early exercise).
 Useful for validation against Black-Scholes.
+
+Accepts a continuous dividend yield `q` (default 0.0). The risk-neutral drift
+becomes `(r − q)Δt` so non-zero dividends shift the up-state probability the
+same way Black–Scholes-Merton does.
 """
 function crr_european_price(S::Float64, K::Float64, σ::Float64,
                             r::Float64, T::Float64, n_steps::Int,
-                            option_type::Symbol)::Float64
+                            option_type::Symbol;
+                            q::Float64=0.0)::Float64
     @assert option_type in (:call, :put) "option_type must be :call or :put"
     @assert σ > 0.0 "volatility must be positive"
     @assert T > 0.0 "time to expiration must be positive"
@@ -76,9 +83,9 @@ function crr_european_price(S::Float64, K::Float64, σ::Float64,
     Δt = T / n_steps
     u = exp(σ * sqrt(Δt))
     d = 1.0 / u
-    R = exp(r * Δt)
+    R = exp((r - q) * Δt)
     p = (R - d) / (u - d)
-    q = 1.0 - p
+    qprob = 1.0 - p
 
     values = Vector{Float64}(undef, n_steps + 1)
     for i in 0:n_steps
@@ -89,7 +96,7 @@ function crr_european_price(S::Float64, K::Float64, σ::Float64,
     disc = 1.0 / R
     for step in (n_steps-1):-1:0
         for i in 0:step
-            values[i+1] = disc * (p * values[i+1] + q * values[i+2])
+            values[i+1] = disc * (p * values[i+1] + qprob * values[i+2])
         end
     end
 
@@ -97,17 +104,19 @@ function crr_european_price(S::Float64, K::Float64, σ::Float64,
 end
 
 """
-    price_contract(S, contract, σ, r, n_steps) → Float64
+    price_contract(S, contract, σ, r; n_steps=200, q=0.0) → Float64
 
 Price an OptionContract given current underlying price and IV.
 """
 function price_contract(S::Float64, contract::OptionContract, σ::Float64,
-                        r::Float64; n_steps::Int=200)::Float64
+                        r::Float64; n_steps::Int=200, q::Float64=0.0)::Float64
     T = contract.DTE / 252.0  # convert trading days to years
     if contract.style == :american
-        return crr_american_price(S, contract.K, σ, r, T, n_steps, contract.option_type)
+        return crr_american_price(S, contract.K, σ, r, T, n_steps,
+                                  contract.option_type; q=q)
     else
-        return crr_european_price(S, contract.K, σ, r, T, n_steps, contract.option_type)
+        return crr_european_price(S, contract.K, σ, r, T, n_steps,
+                                  contract.option_type; q=q)
     end
 end
 

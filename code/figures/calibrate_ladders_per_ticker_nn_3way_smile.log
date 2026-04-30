@@ -1,0 +1,121 @@
+Loading ladder data...
+  158885 observations, 31 tickers, 6 sectors
+
+Qualification threshold: N >= 2000
+  Qualified (24):   AAPL, AMD, AMGN, AVGO, GOOG, GS, INTC, IWM, JPM, LLY, META, MRNA, MSFT, MU, NVDA, QCOM, QQQ, SPY, TGT, UNH, UPS, WFC, WMT, XOM
+  Unqualified (7): ABBV, BAC, BMY, CVX, JNJ, OXY, PFE
+
+======================================================================
+  TRAINING SECTOR NNS (baseline for comparison)
+======================================================================
+  [ETF        ] 69147 obs,  3 tickers  -> RMSE  6.22%
+  [Energy     ]  5608 obs,  3 tickers  -> RMSE  6.96%
+  [Financials ] 12869 obs,  4 tickers  -> RMSE  5.90%
+  [Healthcare ] 18497 obs,  8 tickers  -> RMSE 11.44%
+  [Retail     ]  7925 obs,  3 tickers  -> RMSE  8.53%
+  [Tech       ] 44839 obs, 10 tickers  -> RMSE 14.02%
+
+======================================================================
+  TRAINING PER-TICKER NNS (N >= 2000)
+======================================================================
+  AAPL  [Tech       ]  N= 4504  arch=2->8->8->1 (105 params, 42.5 obs/param)  sector=10.28%  per-ticker=8.40%  delta=+1.87
+  AMD   [Tech       ]  N= 2808  arch=2->8->8->1 (105 params, 26.5 obs/param)  sector=18.24%  per-ticker=17.61%  delta=+0.63
+  AMGN  [Healthcare ]  N= 2395  arch=2->8->8->1 (105 params, 22.6 obs/param)  sector=9.80%  per-ticker=8.75%  delta=+1.05
+  AVGO  [Tech       ]  N= 5819  arch=2->16->16->1 (337 params, 17.2 obs/param)  sector=10.28%  per-ticker=9.61%  delta=+0.67
+  GOOG  [Tech       ]  N= 2990  arch=2->8->8->1 (105 params, 28.2 obs/param)  sector=9.39%  per-ticker=8.77%  delta=+0.62
+  GS    [Financials ]  N= 6307  arch=2->16->16->1 (337 params, 18.7 obs/param)  sector=4.73%  per-ticker=4.29%  delta=+0.44
+  INTC  [Tech       ]  N= 2036  arch=2->8->8->1 (105 params, 19.2 obs/param)  sector=18.15%  per-ticker=16.79%  delta=+1.36
+  IWM   [ETF        ]  N=14309  arch=2->16->16->1 (337 params, 42.3 obs/param)  sector=6.38%  per-ticker=6.05%  delta=+0.33
+  JPM   [Financials ]  N= 2688  arch=2->8->8->1 (105 params, 25.4 obs/param)  sector=5.57%  per-ticker=5.92%  delta=-0.35
+  LLY   [Healthcare ]  N= 6034  arch=2->16->16->1 (337 params, 17.9 obs/param)  sector=10.90%  per-ticker=10.65%  delta=+0.25
+  META  [Tech       ]  N= 8988  arch=2->16->16->1 (337 params, 26.6 obs/param)  sector=13.81%  per-ticker=13.56%  delta=+0.25
+  MRNA  [Healthcare ]  N= 2047  arch=2->8->8->1 (105 params, 19.3 obs/param)  sector=14.59%  per-ticker=10.99%  delta=+3.59
+  MSFT  [Tech       ]  N= 6651  arch=2->16->16->1 (337 params, 19.7 obs/param)  sector=14.77%  per-ticker=14.14%  delta=+0.63
+  MU    [Tech       ]  N= 4470  arch=2->8->8->1 (105 params, 42.2 obs/param)  sector=15.85%  per-ticker=14.81%  delta=+1.04
+  NVDA  [Tech       ]  N= 4106  arch=2->8->8->1 (105 params, 38.7 obs/param)  sector=10.48%  per-ticker=9.19%  delta=+1.29
+  QCOM  [Tech       ]  N= 2467  arch=2->8->8->1 (105 params, 23.3 obs/param)  sector=21.26%  per-ticker=20.89%  delta=+0.37
+  QQQ   [ETF        ]  N=26016  arch=2->16->16->1 (337 params, 77.0 obs/param)  sector=6.25%  per-ticker=6.13%  delta=+0.11
+  SPY   [ETF        ]  N=28822  arch=2->16->16->1 (337 params, 85.3 obs/param)  sector=6.10%  per-ticker=5.85%  delta=+0.26
+  TGT   [Retail     ]  N= 2707  arch=2->8->8->1 (105 params, 25.5 obs/param)  sector=7.52%  per-ticker=7.72%  delta=-0.20
+  UNH   [Healthcare ]  N= 2528  arch=2->8->8->1 (105 params, 23.8 obs/param)  sector=9.61%  per-ticker=9.09%  delta=+0.52
+  UPS   [Retail     ]  N= 2573  arch=2->8->8->1 (105 params, 24.3 obs/param)  sector=11.14%  per-ticker=11.07%  delta=+0.08
+  WFC   [Financials ]  N= 2200  arch=2->8->8->1 (105 params, 20.8 obs/param)  sector=6.84%  per-ticker=7.30%  delta=-0.46
+  WMT   [Retail     ]  N= 2645  arch=2->8->8->1 (105 params, 25.0 obs/param)  sector=6.28%  per-ticker=6.35%  delta=-0.07
+  XOM   [Energy     ]  N= 2034  arch=2->8->8->1 (105 params, 19.2 obs/param)  sector=6.39%  per-ticker=6.55%  delta=-0.16
+
+======================================================================
+  PER-TICKER COMPARISON
+======================================================================
+
+  Qualified tickers (sorted by improvement over sector NN):
+  Ticker  Sector       N_obs   Sector%  Per-ticker%  Delta%
+  -----------------------------------------------------------------
+  MRNA    Healthcare    2047     14.59       10.99     +3.59
+  AAPL    Tech          4504     10.28        8.40     +1.87
+  INTC    Tech          2036     18.15       16.79     +1.36
+  NVDA    Tech          4106     10.48        9.19     +1.29
+  AMGN    Healthcare    2395      9.80        8.75     +1.05
+  MU      Tech          4470     15.85       14.81     +1.04
+  AVGO    Tech          5819     10.28        9.61     +0.67
+  MSFT    Tech          6651     14.77       14.14     +0.63
+  AMD     Tech          2808     18.24       17.61     +0.63
+  GOOG    Tech          2990      9.39        8.77     +0.62
+  UNH     Healthcare    2528      9.61        9.09     +0.52
+  GS      Financials    6307      4.73        4.29     +0.44
+  QCOM    Tech          2467     21.26       20.89     +0.37
+  IWM     ETF          14309      6.38        6.05     +0.33
+  SPY     ETF          28822      6.10        5.85     +0.26
+  LLY     Healthcare    6034     10.90       10.65     +0.25
+  META    Tech          8988     13.81       13.56     +0.25
+  QQQ     ETF          26016      6.25        6.13     +0.11
+  UPS     Retail        2573     11.14       11.07     +0.08
+  WMT     Retail        2645      6.28        6.35     -0.07
+  XOM     Energy        2034      6.39        6.55     -0.16
+  TGT     Retail        2707      7.52        7.72     -0.20
+  JPM     Financials    2688      5.57        5.92     -0.35
+  WFC     Financials    2200      6.84        7.30     -0.46
+
+  Unqualified tickers (stay on sector NN, below N=2000):
+  Ticker  Sector       N_obs   Sector%
+  ---------------------------------------------
+  ABBV    Healthcare    1818      8.99
+  OXY     Energy        1795      7.50
+  CVX     Energy        1779      7.01
+  BAC     Financials    1674      8.51
+  JNJ     Healthcare    1562     11.44
+  BMY     Healthcare    1236     12.78
+  PFE     Healthcare     877     16.96
+
+  Overall in-sample RMSE:
+    Sector NN only:                            9.78%
+    Per-ticker NN (qualified) + sector NN:     9.33%  (delta +0.45)
+    Qualified coverage: 24 of 31 tickers (93% of obs)
+
+======================================================================
+  FITTING POLYNOMIAL BASELINE (5 betas + per-ticker theta_base)
+======================================================================
+  Polynomial overall RMSE: 12.13% IV   (betas: -0.322, -1.515, +0.510, +23.863, -0.001)
+
+Generating figures...
+  -> saved ladder_per_ticker_nn_improvement.png/pdf
+  -> saved ladder_per_ticker_nn_smile_panels.png/pdf
+  -> saved ladder_per_ticker_nn_residuals.png/pdf
+
+======================================================================
+  SUMMARY
+======================================================================
+  Corpus: 158885 obs, 31 tickers (24 qualified for per-ticker NN)
+  Sector NN overall:                         9.78% IV
+  Per-ticker (qualified) + sector NN combo:  9.33% IV  (0.45 improvement)
+  Tickers improved over sector NN: 19  |  regressed: 5
+
+[promote_figures] 17/17 referenced PDFs synced -> paper/sections/figures/
+[promote_figures] WARNING: 7 unreferenced PDF(s) in code/figures/:
+    - ladder_atm_term_structure.pdf
+    - ladder_iv_surface_spy.pdf
+    - ladder_per_ticker_nn_residuals.pdf
+    - ladder_residuals_moneyness.pdf
+    - ladder_sector_nn_atm_term_structure.pdf
+    - ladder_smile_panels.pdf
+    - ladder_theta_base_bar.pdf
+    -> cite them in paper/sections/*.tex or remove them.

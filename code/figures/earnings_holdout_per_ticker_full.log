@@ -1,0 +1,123 @@
+Loading earnings calendar from /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../data/earnings/earnings_calendar.csv ...
+  loaded 28 tickers with earnings entries
+
+Loading train split: ["options-04-14-2026", "options-04-15-2026", "options-04-16-2026", "options-04-17-2026", "options-04-21-2026", "options-04-22-2026"]
+  103897 observations across 31 tickers
+
+Loading test split:  ["options-04-23-2026", "options-04-24-2026"]
+  26833 observations across 31 tickers
+
+Attaching earnings features to train and test ...
+
+Non-earnings subset: train 29383 / 103897 (28.3%); test 4516 / 26833 (16.8%)
+  test after restricting to train tickers: 4516 obs across 10 tickers
+
+======================================================================
+  TRAINING SECTOR NN on non-earnings train (Config B baseline)
+======================================================================
+  [Energy     ]  3790 obs,  3 tickers, h=16
+  [Financials ]  2563 obs,  4 tickers, h=16
+  [Retail     ]  5045 obs,  3 tickers, h=16
+  [Tech       ] 17985 obs, 10 tickers, h=16
+
+  Sector NN (Config B): train 8.02% | test 7.96% | gap -0.06%
+
+======================================================================
+  TRAINING PER-TICKER NN on non-earnings train
+======================================================================
+  Qualification threshold: N_train_ne >= 2000
+  Qualified (2):   META, MSFT
+  Unqualified (18): AAPL, AMD, AVGO, BAC, CVX, GOOG, GS, INTC, JPM, MU, NVDA, OXY, QCOM, TGT, UPS, WFC, WMT, XOM
+  META  [Tech       ] N_train= 3272  arch=2->8->8->1  train RMSE=7.61%
+  MSFT  [Tech       ] N_train= 2798  arch=2->8->8->1  train RMSE=8.25%
+
+======================================================================
+  TEST-SET EVALUATION (non-earnings)
+======================================================================
+
+  Per-ticker test RMSE on non-earnings holdout (% IV):
+  Ticker  Sector       N_test   Sector%   Per-ticker%   Delta%   Qualified
+  ---------------------------------------------------------------------------
+  BAC     Financials     293     7.71         --          --     no
+  CVX     Energy         259    11.22         --          --     no
+  GS      Financials     964     4.37         --          --     no
+  JPM     Financials     387     6.58         --          --     no
+  OXY     Energy         326     6.96         --          --     no
+  TGT     Retail         553     7.67         --          --     no
+  UPS     Retail         550    12.85         --          --     no
+  WFC     Financials     365     6.04         --          --     no
+  WMT     Retail         496     7.73         --          --     no
+  XOM     Energy         323     7.63         --          --     no
+
+  Headline test RMSE (non-earnings, n_test=4516):
+    Sector NN only:                           7.96%
+    Per-ticker NN (qualified) + sector NN:    7.96%   delta +0.00%
+
+  -> wrote /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/earnings_holdout_per_ticker_summary.csv
+
+[Config B strict] Summary:
+  Sector NN (Config B reproducer): test 7.96% (gen gap -0.06%)
+  Per-ticker NN + sector fallback: test 7.96% on the same 4516 non-earnings rows
+  Qualified tickers: 2 / 10  (covering 0% of test obs)
+  WARNING: no qualified ticker has non-earnings test rows. Per-ticker NN
+           cannot be evaluated head-to-head under strict Config B at this
+           corpus size. Continuing with Config B' (asymmetric).
+
+======================================================================
+  CONFIG B' (asymmetric): per-ticker on FULL train, test on non-earnings
+======================================================================
+
+  Training sector NN on FULL train ...
+    [ETF        ] 46291 obs,  3 tickers, h=16
+    [Energy     ]  3790 obs,  3 tickers, h=16
+    [Financials ]  9036 obs,  4 tickers, h=16
+    [Healthcare ] 12125 obs,  8 tickers, h=16
+    [Retail     ]  5045 obs,  3 tickers, h=16
+    [Tech       ] 27610 obs, 10 tickers, h=16
+
+  Sector NN (full train) on non-earnings test: 7.89%
+
+  Training per-ticker NN on FULL train ...
+    Qualified (11): AAPL, AVGO, GS, IWM, LLY, META, MSFT, MU, NVDA, QQQ, SPY
+    Unqualified (20): ABBV, AMD, AMGN, BAC, BMY, CVX, GOOG, INTC, JNJ, JPM, MRNA, OXY, PFE, QCOM, TGT, UNH, UPS, WFC, WMT, XOM
+    AAPL  [Tech       ] N_train= 2855  arch=2->8->8->1  train RMSE=6.76%
+    AVGO  [Tech       ] N_train= 3229  arch=2->8->8->1  train RMSE=9.40%
+    GS    [Financials ] N_train= 4483  arch=2->8->8->1  train RMSE=4.99%
+    IWM   [ETF        ] N_train= 9467  arch=2->16->16->1  train RMSE=6.34%
+    LLY   [Healthcare ] N_train= 4107  arch=2->8->8->1  train RMSE=7.44%
+    META  [Tech       ] N_train= 5208  arch=2->16->16->1  train RMSE=9.28%
+    MSFT  [Tech       ] N_train= 4056  arch=2->8->8->1  train RMSE=11.55%
+    MU    [Tech       ] N_train= 2899  arch=2->8->8->1  train RMSE=10.23%
+    NVDA  [Tech       ] N_train= 2809  arch=2->8->8->1  train RMSE=7.40%
+    QQQ   [ETF        ] N_train=17231  arch=2->16->16->1  train RMSE=5.54%
+    SPY   [ETF        ] N_train=19593  arch=2->16->16->1  train RMSE=5.88%
+
+  Per-ticker test RMSE on non-earnings holdout (% IV), Config B':
+  Ticker  Sector       N_test   Sector%   Per-ticker%   Delta%   Qualified
+  ---------------------------------------------------------------------------
+  GS      Financials     964     4.01       4.25      -0.24     yes
+  BAC     Financials     293     7.70         --          --     no
+  CVX     Energy         259    11.21         --          --     no
+  JPM     Financials     387     6.24         --          --     no
+  OXY     Energy         326     6.98         --          --     no
+  TGT     Retail         553     7.68         --          --     no
+  UPS     Retail         550    12.86         --          --     no
+  WFC     Financials     365     5.90         --          --     no
+  WMT     Retail         496     7.74         --          --     no
+  XOM     Energy         323     7.64         --          --     no
+
+  Headline test RMSE (Config B', n_test=4516):
+    Sector NN (full train) on non-earnings test:                 7.89%
+    Per-ticker NN (qualified) + sector NN on non-earnings test:  7.92%   delta -0.03%
+    Qualified tickers in test: 1 / 10  (covering 21% of test obs)
+  -> wrote /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/earnings_holdout_per_ticker_b2_summary.csv
+
+======================================================================
+  FINAL TWO-CONFIG SUMMARY (per-ticker NN vs sector NN, non-earnings test)
+======================================================================
+  Strict Config B (non-earn train + non-earn test):
+    Sector NN:       7.96%   (canonical reference)
+    Per-ticker NN:   7.96%   (qualified=2, but 0 covered in test)
+  Asymmetric Config B-prime (full train + non-earn test):
+    Sector NN:       7.89%
+    Per-ticker NN:   7.92%   (qualified=11, 964/4516 test obs covered)

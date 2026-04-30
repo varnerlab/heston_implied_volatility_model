@@ -39,6 +39,7 @@ end
 function promote_figures()
     mkpath(PAPER_FIG_DIR)
     refs = _referenced_pdfs()
+    refs_set = Set(refs)
     copied = String[]
     missing_pdfs = String[]
     for pdf in refs
@@ -57,7 +58,23 @@ function promote_figures()
             println("    - $f")
         end
     end
-    return (copied=copied, missing=missing_pdfs)
+    # Warn about unreferenced PDFs sitting in code/figures/ — these accumulate
+    # as scripts evolve and confuse anyone browsing the directory. Either cite
+    # them in a .tex section or delete them.
+    stale = String[]
+    if isdir(FIG_DIR)
+        for f in readdir(FIG_DIR)
+            endswith(f, ".pdf") && !(f in refs_set) && push!(stale, f)
+        end
+    end
+    if !isempty(stale)
+        println("[promote_figures] WARNING: $(length(stale)) unreferenced PDF(s) in code/figures/:")
+        for f in sort(stale)
+            println("    - $f")
+        end
+        println("    -> cite them in paper/sections/*.tex or remove them.")
+    end
+    return (copied=copied, missing=missing_pdfs, stale=stale)
 end
 
 # Allow direct invocation: `julia --project=. scripts/promote_figures.jl`

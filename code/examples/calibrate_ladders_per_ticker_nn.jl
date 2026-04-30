@@ -17,9 +17,12 @@ Outputs:
 
 using CSV
 using DataFrames
+using JLD2
 using Statistics
 using Flux
+using Optim
 using Plots
+using Plots.PlotMeasures
 using Printf
 using Random
 using LinearAlgebra
@@ -116,6 +119,52 @@ println("  Unqualified ($(length(unqualified))): ", join(unqualified, ", "))
 println()
 
 # ============================================================================
+# Cache: skip retraining when artifacts already exist
+# ============================================================================
+const CACHE_PATH = joinpath(PLOT_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
+const RETRAIN = "--retrain" in ARGS
+const SKIP_TRAINING = !RETRAIN && isfile(CACHE_PATH)
+
+# Predeclare globals so both branches (cache load / fresh training) populate the
+# same names that the figure code reads.
+sector_models       = Dict{String,Any}()
+per_ticker_models   = Dict{String,Any}()
+POLY_BETA           = Float64[]
+POLY_THETA          = Dict{String,Float64}()
+sector_only_rmse    = NaN
+combined_rmse       = NaN
+improved_count      = 0
+regressed_count     = 0
+
+build_psi_nn(n_obs::Integer, threshold::Integer) = n_obs >= threshold ?
+    Chain(Dense(2 => 16, tanh), Dense(16 => 16, tanh), Dense(16 => 1)) :
+    Chain(Dense(2 => 8,  tanh), Dense(8  => 8,  tanh), Dense(8  => 1))
+
+if SKIP_TRAINING
+    println("Cache hit ($(basename(CACHE_PATH))): loading trained models — pass --retrain to refit.")
+    cache = JLD2.load(CACHE_PATH)
+    for (s, p) in cache["sector_payload"]
+        psi_nn = build_psi_nn(p.n_obs, 2000)
+        Flux.loadmodel!(psi_nn, p.state)
+        ticker_idx = Dict(t => i for (i, t) in enumerate(p.tickers))
+        sector_models[s] = (model = (psi_nn = psi_nn, log_theta = p.log_theta),
+                            tickers = p.tickers, ticker_idx = ticker_idx)
+    end
+    for (t, p) in cache["per_ticker_payload"]
+        psi_nn = build_psi_nn(p.n_obs, 5000)
+        Flux.loadmodel!(psi_nn, p.state)
+        per_ticker_models[t] = (model = (psi_nn = psi_nn, log_theta = p.log_theta),
+                                mask = all_data.ticker .== t)
+    end
+    POLY_BETA        = cache["poly_beta"]
+    POLY_THETA       = Dict(cache["poly_theta_pairs"])
+    sector_only_rmse = cache["sector_only_rmse"]
+    combined_rmse    = cache["combined_rmse"]
+    improved_count   = cache["improved_count"]
+    regressed_count  = cache["regressed_count"]
+end
+
+# ============================================================================
 # Shared training helpers
 # ============================================================================
 
@@ -138,7 +187,7 @@ Returns the final (model, best_loss) after loading the best state.
 function train_with_schedule!(model, Xs, ys, loss_fn;
                               n_epochs::Int=2000, patience::Int=200,
                               lr_init::Float64=1e-3)
-    opt_state = Flux.setup(Adam(Float32(lr_init)), model)
+    opt_state = Flux.setup(Flux.Adam(Float32(lr_init)), model)
     best_loss = Inf
     best_state = nothing
     no_improve = 0
@@ -166,6 +215,8 @@ function train_with_schedule!(model, Xs, ys, loss_fn;
     Flux.loadmodel!(model, best_state)
     return model, best_loss
 end
+
+if !SKIP_TRAINING
 
 # ============================================================================
 # Step 4: Train sector NNs (for the comparison baseline)
@@ -351,35 +402,88 @@ println("\n  Overall in-sample RMSE:")
         100 * sum(r.n_obs for r in eachrow(cmp_df) if r.qualified) / nrow(all_data))
 
 # ============================================================================
+# Step 6b: Fit the polynomial baseline (shared 5-beta + per-ticker theta_base)
+# on the same corpus, so the smile panels can show all three curves.
+# ============================================================================
+
+println("\n" * "="^70)
+println("  FITTING POLYNOMIAL BASELINE (5 betas + per-ticker theta_base)")
+println("="^70)
+
+const POLY_TICKER_IDX = Dict(t => i for (i, t) in enumerate(tickers))
+const POLY_OBS_IV  = Float64.(all_data.implied_vol)
+const POLY_OBS_LDT = log.(max.(Float64.(all_data.actual_dte), 1.0))
+const POLY_OBS_LM  = log.(Float64.(all_data.moneyness))
+const POLY_OBS_TID = [POLY_TICKER_IDX[t] for t in all_data.ticker]
+const POLY_N_OBS   = length(POLY_OBS_IV)
+
+eval_psi_poly(beta, ld, lm) =
+    exp(beta[1]*ld + beta[2]*lm + beta[3]*ld*lm + beta[4]*lm^2 + beta[5]*ld^2)
+
+function poly_objective(x)
+    beta = @view x[1:5]
+    log_theta = @view x[6:end]
+    s = 0.0
+    @inbounds for i in 1:POLY_N_OBS
+        theta_t = exp(log_theta[POLY_OBS_TID[i]])
+        psi_v = eval_psi_poly(beta, POLY_OBS_LDT[i], POLY_OBS_LM[i])
+        sigma_m = sqrt(max(theta_t * psi_v, 1e-10))
+        s += (sigma_m - POLY_OBS_IV[i])^2
+    end
+    return s / POLY_N_OBS
+end
+
+let beta_init = [0.3, -1.0, 0.1, 2.0, -0.15],
+    theta_init = [mean(POLY_OBS_IV[POLY_OBS_TID .== i])^2 for i in 1:length(tickers)]
+
+    x0 = vcat(beta_init, log.(theta_init))
+    res1 = optimize(poly_objective, x0, NelderMead(),
+                    Optim.Options(iterations=100_000, show_trace=false))
+    res2 = optimize(poly_objective, Optim.minimizer(res1), NelderMead(),
+                    Optim.Options(iterations=100_000, show_trace=false))
+    x_opt = Optim.minimizer(res2)
+    global POLY_BETA = x_opt[1:5]
+    global POLY_THETA = Dict(t => exp(x_opt[5+i]) for (i, t) in enumerate(tickers))
+    global POLY_RMSE  = sqrt(Optim.minimum(res2)) * 100
+end
+@printf("  Polynomial overall RMSE: %.2f%% IV   (betas: %s)\n",
+        POLY_RMSE,
+        join([@sprintf("%+.3f", b) for b in POLY_BETA], ", "))
+
+# ----------------------------------------------------------------------------
+# Cache trained artifacts so future runs reuse them (use --retrain to refit).
+# ----------------------------------------------------------------------------
+global improved_count = count(r -> r.qualified && r.improvement > 0, eachrow(cmp_df))
+global regressed_count = count(r -> r.qualified && r.improvement < 0, eachrow(cmp_df))
+
+let
+    sector_payload = Dict(s => (state = Flux.state(sm.model.psi_nn),
+                                log_theta = sm.model.log_theta,
+                                tickers = sm.tickers,
+                                n_obs = sum(all_data.sector .== s))
+                          for (s, sm) in sector_models)
+    per_ticker_payload = Dict(t => (state = Flux.state(pm.model.psi_nn),
+                                    log_theta = pm.model.log_theta,
+                                    n_obs = sum(all_data.ticker .== t))
+                              for (t, pm) in per_ticker_models)
+    JLD2.jldsave(CACHE_PATH;
+        sector_payload, per_ticker_payload,
+        poly_beta = POLY_BETA,
+        poly_theta_pairs = collect(POLY_THETA),
+        sector_only_rmse, combined_rmse,
+        improved_count, regressed_count)
+    println("[cache] saved -> $(CACHE_PATH)")
+end
+
+end  # if !SKIP_TRAINING
+
+# ============================================================================
 # Step 7: Figures
 # ============================================================================
 
 println("\nGenerating figures...")
 
-sector_colors = Dict("Tech" => :blue, "Financials" => :red, "Energy" => :green,
-                     "Healthcare" => :purple, "Retail" => :orange, "ETF" => :black)
-
-# --- Figure 1: per-ticker improvement bar chart ---
-q_sorted_by_delta = sort(filter(r -> r.qualified, cmp_df), :improvement, rev=true)
-tickers_plot = [r.ticker for r in eachrow(q_sorted_by_delta)]
-delta_plot = [r.improvement for r in eachrow(q_sorted_by_delta)]
-colors_plot = [get(sector_colors, r.sector, :gray) for r in eachrow(q_sorted_by_delta)]
-
-p1 = bar(tickers_plot, delta_plot,
-         title="Per-Ticker NN Improvement Over Sector NN (in-sample RMSE reduction)",
-         xlabel="Ticker", ylabel="Delta RMSE (% IV), positive = per-ticker better",
-         legend=false, size=(1000, 450), dpi=150,
-         color=colors_plot, alpha=0.8, xrotation=45)
-hline!(p1, [0.0], color=:black, ls=:dash, label=nothing, alpha=0.5)
-for (sector, c) in sort(collect(sector_colors))
-    bar!(p1, [], [], label=sector, color=c)
-end
-plot!(p1, legend=:topright)
-savefig(p1, joinpath(PLOT_DIR, "ladder_per_ticker_nn_improvement.png"))
-savefig(p1, joinpath(PLOT_DIR, "ladder_per_ticker_nn_improvement.pdf"))
-println("  -> saved ladder_per_ticker_nn_improvement.png/pdf")
-
-# --- Figure 2: smile-fit panels for representative qualified tickers ---
+# --- Smile-fit panels — polynomial vs sector NN vs per-ticker NN ---
 function eval_per_ticker_iv_grid(ticker::String, m_range, dte_val::Float64)
     pm = per_ticker_models[ticker]
     psi_nn = pm.model.psi_nn
@@ -406,65 +510,92 @@ function eval_sector_iv_grid(ticker::String, m_range, dte_val::Float64)
     return Float64.(ivs) .* 100
 end
 
-# Pick a spread of qualified tickers across sectors for the panel
+function eval_poly_iv_grid(ticker::String, m_range, dte_val::Float64)
+    theta_t = POLY_THETA[ticker]
+    log_dte = log(max(dte_val, 1.0))
+    [sqrt(max(theta_t * eval_psi_poly(POLY_BETA, log_dte, log(m)), 1e-10)) * 100 for m in m_range]
+end
+
+# Style palette — chosen so the three model curves are distinguishable in
+# greyscale print as well as on screen.
+const COL_CALL = RGBA(0.20, 0.40, 0.75, 0.55)
+const COL_PUT  = RGBA(0.78, 0.30, 0.30, 0.55)
+const COL_POLY = RGB(0.88, 0.55, 0.10)   # warm orange, dotted
+const COL_SEC  = RGB(0.50, 0.50, 0.50)   # mid-gray, dashed
+const COL_PT   = RGB(0.00, 0.00, 0.00)   # black, solid
+
+# Representative tickers — one per sector where qualified, spanning IV regimes.
 panel_candidates = ["SPY", "NVDA", "MSFT", "LLY", "GS", "AVGO"]
 panel_tickers = [t for t in panel_candidates if t in Set(qualified)]
 
-p_panels = []
-for t in panel_tickers
+p_panels = Any[]
+for (k, t) in enumerate(panel_tickers)
     slice = all_data[all_data.ticker .== t, :]
     avail_dtes = sort(unique(slice.actual_dte))
     target_dte = avail_dtes[max(1, length(avail_dtes) ÷ 2)]
     dte_slice = slice[slice.actual_dte .== target_dte, :]
     sector = get(SECTORS, t, "Other")
 
-    p = plot(title="$t [$sector] DTE=$target_dte",
-             xlabel="K/S", ylabel="IV (%)", legend=:topright, titlefontsize=9)
+    show_legend = (k == 1)
+
+    p = plot(title = "$t — $sector   (DTE = $target_dte)",
+             xlabel = "Moneyness  K/S",
+             ylabel = "Implied Volatility (%)",
+             legend = show_legend ? :topright : false,
+             legendfontsize = 8,
+             titlefontsize = 11,
+             guidefontsize = 10,
+             tickfontsize = 9,
+             framestyle = :box,
+             grid = true,
+             gridalpha = 0.25,
+             foreground_color_grid = :gray,
+             background_color = :white,
+             xlims = (0.78, 1.22),
+             left_margin = 4mm,
+             right_margin = 2mm,
+             top_margin = 2mm,
+             bottom_margin = 4mm)
 
     calls = dte_slice[dte_slice.type .== "call", :]
-    puts = dte_slice[dte_slice.type .== "put", :]
+    puts  = dte_slice[dte_slice.type .== "put",  :]
     scatter!(p, calls.moneyness, Float64.(calls.implied_vol) .* 100,
-             label="Calls", marker=:circle, ms=3, color=:blue, alpha=0.5)
+             label = show_legend ? "Calls (market)" : "",
+             marker = :circle, ms = 3.5, msw = 0.0, color = COL_CALL)
     scatter!(p, puts.moneyness, Float64.(puts.implied_vol) .* 100,
-             label="Puts", marker=:diamond, ms=3, color=:red, alpha=0.5)
+             label = show_legend ? "Puts (market)" : "",
+             marker = :diamond, ms = 3.5, msw = 0.0, color = COL_PUT)
 
-    m_range = range(0.85, 1.15, length=80)
-    sec_curve = eval_sector_iv_grid(t, m_range, Float64(target_dte))
-    pt_curve = eval_per_ticker_iv_grid(t, m_range, Float64(target_dte))
-    plot!(p, m_range, sec_curve, label="Sector NN", lw=2, color=:gray, ls=:dash)
-    plot!(p, m_range, pt_curve, label="Per-ticker NN", lw=2, color=:black)
-    vline!(p, [1.0], label=nothing, ls=:dash, color=:gray, alpha=0.3)
+    m_grid = collect(range(0.85, 1.15, length = 100))
+    poly_curve = eval_poly_iv_grid(t, m_grid, Float64(target_dte))
+    sec_curve  = eval_sector_iv_grid(t, m_grid, Float64(target_dte))
+    pt_curve   = eval_per_ticker_iv_grid(t, m_grid, Float64(target_dte))
+
+    plot!(p, m_grid, poly_curve,
+          label = show_legend ? "Polynomial (5β)" : "",
+          lw = 2.0, color = COL_POLY, ls = :dot)
+    plot!(p, m_grid, sec_curve,
+          label = show_legend ? "Sector NN" : "",
+          lw = 2.0, color = COL_SEC, ls = :dash)
+    plot!(p, m_grid, pt_curve,
+          label = show_legend ? "Per-ticker NN" : "",
+          lw = 2.5, color = COL_PT, ls = :solid)
+    vline!(p, [1.0], label = "", ls = :dash, color = :gray, alpha = 0.30)
+
     push!(p_panels, p)
 end
-p2 = plot(p_panels..., layout=(2, 3), size=(1200, 700), dpi=150,
-          plot_title="IV Smile Fit — Sector NN vs Per-Ticker NN")
+
+p2 = plot(p_panels...,
+          layout = (2, 3),
+          size = (1500, 800),
+          dpi = 200,
+          left_margin = 6mm,
+          right_margin = 4mm,
+          bottom_margin = 5mm,
+          top_margin = 4mm)
 savefig(p2, joinpath(PLOT_DIR, "ladder_per_ticker_nn_smile_panels.png"))
 savefig(p2, joinpath(PLOT_DIR, "ladder_per_ticker_nn_smile_panels.pdf"))
 println("  -> saved ladder_per_ticker_nn_smile_panels.png/pdf")
-
-# --- Figure 3: residual distribution, sector vs per-ticker on qualified tickers ---
-sec_resid_pooled = Float64[]
-pt_resid_pooled = Float64[]
-for t in qualified
-    mask = all_data.ticker .== t
-    target = Float64.(all_data.implied_vol[mask])
-    sector = get(SECTORS, t, "Other")
-    sc = sector_data_cache[sector]
-    sc_mask = sc.data.ticker .== t
-    append!(sec_resid_pooled, (sc.model_ivs[sc_mask] .- target) .* 100)
-    append!(pt_resid_pooled, (per_ticker_preds[t] .- target) .* 100)
-end
-
-p3 = histogram(sec_resid_pooled, bins=-15:0.5:15, alpha=0.5, label="Sector NN",
-               color=:gray, normalize=:pdf, size=(900, 450), dpi=150,
-               title="Residual Distribution — Qualified Tickers",
-               xlabel="Residual (% IV)", ylabel="Density")
-histogram!(p3, pt_resid_pooled, bins=-15:0.5:15, alpha=0.5, label="Per-ticker NN",
-           color=:steelblue, normalize=:pdf)
-vline!(p3, [0.0], color=:black, ls=:dash, label=nothing)
-savefig(p3, joinpath(PLOT_DIR, "ladder_per_ticker_nn_residuals.png"))
-savefig(p3, joinpath(PLOT_DIR, "ladder_per_ticker_nn_residuals.pdf"))
-println("  -> saved ladder_per_ticker_nn_residuals.png/pdf")
 
 # ============================================================================
 # Summary
@@ -478,9 +609,16 @@ println("="^70)
 @printf("  Sector NN overall:                        %5.2f%% IV\n", sector_only_rmse)
 @printf("  Per-ticker (qualified) + sector NN combo: %5.2f%% IV  (%.2f improvement)\n",
         combined_rmse, sector_only_rmse - combined_rmse)
-improved = count(r -> r.qualified && r.improvement > 0, eachrow(cmp_df))
-regressed = count(r -> r.qualified && r.improvement < 0, eachrow(cmp_df))
-@printf("  Tickers improved over sector NN: %d  |  regressed: %d\n", improved, regressed)
+@printf("  Tickers improved over sector NN: %d  |  regressed: %d\n",
+        improved_count, regressed_count)
 
-include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
-promote_figures()
+# Promote the single figure this script owns. Avoid promote_figures() while the
+# paper figure set is being rebuilt — the .tex still references stale names that
+# would otherwise be re-pulled into paper/sections/figures/.
+let smile_pdf = joinpath(PLOT_DIR, "ladder_per_ticker_nn_smile_panels.pdf"),
+    paper_dir = abspath(joinpath(@__DIR__, "..", "..", "paper", "sections", "figures"))
+
+    mkpath(paper_dir)
+    cp(smile_pdf, joinpath(paper_dir, "ladder_per_ticker_nn_smile_panels.pdf"); force=true)
+    println("\n[promote] copied ladder_per_ticker_nn_smile_panels.pdf -> paper/sections/figures/")
+end

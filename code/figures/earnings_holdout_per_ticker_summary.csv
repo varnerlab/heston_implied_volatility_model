@@ -1,0 +1,11 @@
+ticker,sector,n_test,sector_rmse,per_ticker_rmse,delta,qualified
+BAC,Financials,293,7.71305410414848,NaN,NaN,false
+CVX,Energy,259,11.219951334238477,NaN,NaN,false
+GS,Financials,964,4.369753441563921,NaN,NaN,false
+JPM,Financials,387,6.58263407388955,NaN,NaN,false
+OXY,Energy,326,6.955100302302489,NaN,NaN,false
+TGT,Retail,553,7.668829100757385,NaN,NaN,false
+UPS,Retail,550,12.854828528861653,NaN,NaN,false
+WFC,Financials,365,6.042320155250289,NaN,NaN,false
+WMT,Retail,496,7.727509207638894,NaN,NaN,false
+XOM,Energy,323,7.629811829558557,NaN,NaN,false
