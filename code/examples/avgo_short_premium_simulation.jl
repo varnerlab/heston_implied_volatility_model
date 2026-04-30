@@ -1,24 +1,15 @@
 """
-Short-premium scenario study for LLY.
+Short-premium scenario study for AVGO.
 
-Sells a 30-day 30Δ put and a 30-day 30Δ call today. Forward-simulates 1,000
-LLY price paths from the pretrained JumpHMM marginal, evolves a Heston-style
-CIR variance with leverage coupling (ρ < 0) along each path, and prices both
-contracts via Leisen–Reimer American at every daily step using
-
-    σ²(K, T-t, t) = v_t · ψ_NN((K/S_t)_std, (T-t)_std)
-
-where ψ_NN is the per-ticker neural smile/term-structure surface and v_t is
-the time-varying level. Bins the bottom-5% (top-5%) terminal price paths
-and renders three publication figures:
-
-    A — LLY paths + short-put premium paths    (worst-5% in red)
-    B — LLY paths + short-call premium paths   (top-5%   in green)
-    C — terminal short-PnL histograms for short-put and short-call
+Mirror of `lly_short_premium_simulation.jl` retargeted to AVGO. Same
+generator (JumpHMM marginal → drift-anchored CCGR → Heston CIR variance
+with leverage), same Leisen–Reimer American pricer, same five-figure
+output set. Only the underlying-specific constants (ticker, contract
+strikes, market mids/IVs, drift prior) and output filenames differ.
 
 Run:
-    julia --project=. examples/lly_short_premium_simulation.jl
-    julia --project=. examples/lly_short_premium_simulation.jl --resim   # force re-simulate
+    julia --project=. examples/avgo_short_premium_simulation.jl
+    julia --project=. examples/avgo_short_premium_simulation.jl --resim
 """
 
 using CSV
@@ -87,7 +78,7 @@ end
 # Constants & hyperparameters
 # ============================================================================
 
-const TICKER       = "LLY"
+const TICKER       = "AVGO"
 const T_DAYS       = 31           # matches the real 2026-05-29 expiry from the 04-28 capture
 const N_PATHS      = 1000
 const N_STEPS_LR   = 201          # LR with N≈200 is more accurate than CRR with N≈1500
@@ -95,30 +86,27 @@ const SEED         = 20260429
 const R_FREE       = 0.0425
 const Q_DIV        = 0.0
 
-# Long-run drift anchor for the JumpHMM marginal. The trained LLY model
-# carries a +24.7%/yr unconditional CCGR baked in from the 2014–2024
-# Mounjaro/Zepbound regime; projecting that forward into a 30-day option
-# scenario inflates the share-price paths far above any realistic
-# expectation. We additively shift every per-step observation in CCGR
-# space so the simulated unconditional mean equals LLY_PRIOR_CCGR_PCT.
-# The shift is uniform across paths and steps → per-path rank order,
-# dispersion, and tail structure are preserved; only the central tendency
-# moves. ~10%/yr matches the long-run healthcare expected return at LLY's
-# β=0.5 (rf 4.25% + 0.5·5pp ERP + ~3pp quality alpha).
-const LLY_PRIOR_CCGR_PCT = 10.0
+# Long-run drift anchor for the JumpHMM marginal. The trained AVGO model
+# carries a +34.5%/yr unconditional CCGR baked in from the 2014–2024 AI/
+# semiconductor cycle; projecting that forward inflates the path bundle
+# unrealistically. We additively shift every per-step observation in CCGR
+# space so the simulated unconditional mean equals AVGO_PRIOR_CCGR_PCT.
+# ~12%/yr is appropriate for a high-β tech compounder
+# (rf 4.25% + ~1.3·5pp tech-ERP + ~1pp alpha).
+const AVGO_PRIOR_CCGR_PCT = 12.0
 
-# Real LLY contracts pulled from the 04-28-2026 capture (closest to 30 DTE / 30Δ):
-#   put : LLY 2026-05-29 K=$825   Δ = -0.303   bid/ask = 18.95/27.65   mid = $23.30   IV = 44.4%
-#   call: LLY 2026-05-29 K=$940   Δ = +0.309   bid/ask = 17.88/23.64   mid = $20.76   IV = 44.0%
+# Real AVGO contracts pulled from the 04-28-2026 capture (closest to 30 DTE / 30Δ):
+#   put : AVGO 2026-05-29 K=$375  Δ = -0.292   bid/ask =  9.97/11.43  mid = $10.70  IV = 46.6%
+#   call: AVGO 2026-05-29 K=$435  Δ = +0.289   bid/ask =  8.14/ 9.85  mid =  $9.00  IV = 45.8%
 const EXPIRY              = "2026-05-29"
-const K_PUT               = 825.0
-const K_CALL              = 940.0
-const MARKET_PREMIUM_PUT  = 23.30
-const MARKET_PREMIUM_CALL = 20.76
-const MARKET_IV_PUT       = 0.444
-const MARKET_IV_CALL      = 0.440
-const MARKET_DELTA_PUT    = -0.303
-const MARKET_DELTA_CALL   = +0.309
+const K_PUT               = 375.0
+const K_CALL              = 435.0
+const MARKET_PREMIUM_PUT  = 10.70
+const MARKET_PREMIUM_CALL = 9.00
+const MARKET_IV_PUT       = 0.466
+const MARKET_IV_CALL      = 0.458
+const MARKET_DELTA_PUT    = -0.292
+const MARKET_DELTA_CALL   = +0.289
 
 # Heston (CIR) variance dynamics
 const HESTON_KAPPA   = 2.0    # mean-reversion speed (~0.5y half-life)
@@ -127,9 +115,10 @@ const HESTON_RHO     = -0.6   # leverage: dW_v ~ ρ·dW_S + √(1-ρ²)·dW_v_in
 
 # Paths
 const LADDER_DIR     = joinpath(@__DIR__, "..", "data", "ladder")
-const PLOT_DIR       = joinpath(@__DIR__, "..", "figures")
-const NN_CACHE       = joinpath(PLOT_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
-const SIM_CACHE      = joinpath(PLOT_DIR, "lly_short_premium_simulation_cache.jld2")
+const FIG_CACHE_DIR  = joinpath(@__DIR__, "..", "figures")    # cached NN + sim artifacts
+const PLOT_DIR       = joinpath(@__DIR__, "..", "..", "paper", "sections", "figures", "avgo")
+const NN_CACHE       = joinpath(FIG_CACHE_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
+const SIM_CACHE      = joinpath(FIG_CACHE_DIR, "avgo_short_premium_simulation_cache.jld2")
 const PORT_PATH      = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-surrogate.jld2")
 
 const RESIM = "--resim" in ARGS
@@ -152,7 +141,7 @@ isfile(NN_CACHE) || error("NN cache missing at $(NN_CACHE). Run calibrate_ladder
 isfile(PORT_PATH) || error("Pretrained portfolio model missing at $(PORT_PATH).")
 
 # ============================================================================
-# Step 1: Load ladder corpus → standardisation + LLY spot
+# Step 1: Load ladder corpus → standardisation + ticker spot
 # ============================================================================
 
 function load_ladder(filepath)
@@ -199,13 +188,13 @@ const SIGMA_DTE = std(log.(max.(Float64.(all_data.actual_dte), 1.0)))
 const MU_M      = mean(log.(Float64.(all_data.moneyness)))
 const SIGMA_M   = std(log.(Float64.(all_data.moneyness)))
 
-# Latest LLY spot — most recent capture date
-lly_slice = all_data[all_data.ticker .== TICKER, :]
-S_0 = Float64(lly_slice.S[end])
+# Latest ticker spot — most recent capture date
+ticker_slice = all_data[all_data.ticker .== TICKER, :]
+S_0 = Float64(ticker_slice.S[end])
 @printf("  S_0 (%s) = \$%.2f\n", TICKER, S_0)
 
 # ============================================================================
-# Step 2: Restore per-ticker NN ψ surface for LLY
+# Step 2: Restore per-ticker NN ψ surface for the underlying
 # ============================================================================
 
 build_psi_nn(n_obs::Integer, threshold::Integer) = n_obs >= threshold ?
@@ -218,11 +207,11 @@ const PT_PAYLOAD = nn_cache["per_ticker_payload"][TICKER]
 const PSI_NN     = build_psi_nn(PT_PAYLOAD.n_obs, 5000)
 Flux.loadmodel!(PSI_NN, PT_PAYLOAD.state)
 const LOG_THETA  = Float64(PT_PAYLOAD.log_theta[1])
-const THETA_LLY  = exp(LOG_THETA)
-@printf("  θ̄ (LLY long-term variance) = %.4f  →  IV %.1f%%\n", THETA_LLY, sqrt(THETA_LLY)*100)
+const THETA_TICKER  = exp(LOG_THETA)
+@printf("  θ̄ (%s long-term variance) = %.4f  →  IV %.1f%%\n", TICKER, THETA_TICKER, sqrt(THETA_TICKER)*100)
 
 """ψ_NN((K/S)_std, (DTE_days)_std) → ψ scalar (positive)"""
-function psi_lly(K::Float64, S::Float64, dte_days::Real)
+function psi_ticker(K::Float64, S::Float64, dte_days::Real)
     log_dte_s = Float32((log(max(Float64(dte_days), 1.0)) - MU_DTE) / SIGMA_DTE)
     log_m_s   = Float32((log(K / S) - MU_M) / SIGMA_M)
     x = reshape(Float32[log_dte_s, log_m_s], 2, 1)
@@ -231,16 +220,16 @@ function psi_lly(K::Float64, S::Float64, dte_days::Real)
 end
 
 """IV implied by the calibrated NN at (K, S, DTE)."""
-nn_iv(K, S, dte) = sqrt(max(THETA_LLY * psi_lly(K, S, dte), 1e-10))
+nn_iv(K, S, dte) = sqrt(max(THETA_TICKER * psi_ticker(K, S, dte), 1e-10))
 
 """IV given a stochastic level v and the NN cross-section shape."""
-heston_smile_iv(v, K, S, dte) = sqrt(max(v * psi_lly(K, S, dte), 1e-10))
+heston_smile_iv(v, K, S, dte) = sqrt(max(v * psi_ticker(K, S, dte), 1e-10))
 
 # ============================================================================
-# Step 3: Report the real LLY contracts being simulated
+# Step 3: Report the real ticker contracts being simulated
 # ============================================================================
 
-@printf("  Real-contract setup (LLY %s, %d DTE):\n", EXPIRY, T_DAYS)
+@printf("  Real-contract setup (%s %s, %d DTE):\n", TICKER, EXPIRY, T_DAYS)
 @printf("    Put  K=\$%.2f   market Δ=%+0.3f   mid=\$%.2f   market IV=%.1f%%   (model NN-IV=%.1f%%)\n",
         K_PUT,  MARKET_DELTA_PUT,  MARKET_PREMIUM_PUT,  MARKET_IV_PUT*100,
         nn_iv(K_PUT,  S_0, T_DAYS)*100)
@@ -255,14 +244,14 @@ heston_smile_iv(v, K, S, dte) = sqrt(max(v * psi_lly(K, S, dte), 1e-10))
 function simulate_all()
     println("\nLoading pretrained portfolio model...")
     portfolio = JLD2.load(PORT_PATH)
-    lly_model = portfolio["marginals"][TICKER]
+    ticker_model = portfolio["marginals"][TICKER]
 
-    println("Simulating $N_PATHS LLY price paths over $T_DAYS days...")
-    sim = JumpHMM.simulate(lly_model, T_DAYS; n_paths=N_PATHS, seed=SEED)
+    println("Simulating $N_PATHS $TICKER price paths over $T_DAYS days...")
+    sim = JumpHMM.simulate(ticker_model, T_DAYS; n_paths=N_PATHS, seed=SEED)
     n_actual = length(sim.paths)
 
     # Anchor the projection drift to a documented long-run prior.
-    target_drift = LLY_PRIOR_CCGR_PCT / 100.0
+    target_drift = AVGO_PRIOR_CCGR_PCT / 100.0
     empirical_drift = mean(vcat([sim.paths[p].observations for p in 1:n_actual]...))
     drift_shift = target_drift - empirical_drift
     @printf("  Drift anchor: empirical %+.2f%%/yr → target %+.2f%%/yr   (shift %+.2f%%/yr)\n",
@@ -276,15 +265,15 @@ function simulate_all()
     S_paths[1, :] .= S_0
     for p in 1:n_actual
         prices = JumpHMM.prices_from_growth_rates(sim.paths[p].observations,
-                                                  S_0; rf=lly_model.rf,
-                                                  dt=lly_model.dt)
+                                                  S_0; rf=ticker_model.rf,
+                                                  dt=ticker_model.dt)
         # JumpHMM returns one entry per observation step; place at t=1..T_DAYS.
         S_paths[2:end, p] .= prices[1:T_DAYS]
     end
 
     println("Evolving CIR variance with leverage coupling (κ=$HESTON_KAPPA, σ_v=$HESTON_SIGMA_V, ρ=$HESTON_RHO)...")
     v_paths = Array{Float64}(undef, T_DAYS + 1, n_actual)
-    v_paths[1, :] .= THETA_LLY
+    v_paths[1, :] .= THETA_TICKER
     rng = MersenneTwister(SEED + 1)
     Δt = 1.0 / 365.0
     sqrtΔt = sqrt(Δt)
@@ -299,7 +288,7 @@ function simulate_all()
             Z_v_indep = randn(rng)
             Z_v = HESTON_RHO * Z_S + rho2 * Z_v_indep
             v_prev = v_paths[t-1, p]
-            dv = HESTON_KAPPA * (THETA_LLY - v_prev) * Δt +
+            dv = HESTON_KAPPA * (THETA_TICKER - v_prev) * Δt +
                  HESTON_SIGMA_V * sqrt(max(v_prev, 1e-10)) * sqrtΔt * Z_v
             v_paths[t, p] = max(v_prev + dv, 1e-10)
         end
@@ -344,9 +333,9 @@ function load_or_simulate()
         cache_S0    = get(cache, "S_0", NaN)
         cache_kput  = get(cache, "K_put", NaN)
         cache_kcal  = get(cache, "K_call", NaN)
-        cache_prior = get(cache, "lly_prior_ccgr_pct", NaN)
+        cache_prior = get(cache, "avgo_prior_ccgr_pct", NaN)
         if cache_S0 ≈ S_0 && cache_kput ≈ K_PUT && cache_kcal ≈ K_CALL &&
-           cache_prior ≈ LLY_PRIOR_CCGR_PCT
+           cache_prior ≈ AVGO_PRIOR_CCGR_PCT
             println("Cache hit: loading prior simulation from $(basename(SIM_CACHE))")
             return (S_paths=cache["S_paths"],
                     v_paths=cache["v_paths"],
@@ -362,9 +351,9 @@ function load_or_simulate()
         S_paths=art.S_paths, v_paths=art.v_paths,
         V_put=art.V_put, V_call=art.V_call,
         S_0=S_0, K_put=K_PUT, K_call=K_CALL,
-        theta_lly=THETA_LLY,
+        theta_ticker=THETA_TICKER,
         heston_kappa=HESTON_KAPPA, heston_sigma_v=HESTON_SIGMA_V, heston_rho=HESTON_RHO,
-        lly_prior_ccgr_pct=LLY_PRIOR_CCGR_PCT,
+        avgo_prior_ccgr_pct=AVGO_PRIOR_CCGR_PCT,
         seed=SEED)
     println("[cache] saved -> $(SIM_CACHE)")
     return art
@@ -501,8 +490,8 @@ p_A = plot(pA1, pA2, layout = (1, 2), size = (1500, 600), dpi = 220,
            left_margin = 9mm, right_margin = 4mm,
            bottom_margin = 7mm, top_margin = 4mm)
 mkpath(PLOT_DIR)
-out_A_pdf = joinpath(PLOT_DIR, "lly_short_put_paths.pdf")
-out_A_png = joinpath(PLOT_DIR, "lly_short_put_paths.png")
+out_A_pdf = joinpath(PLOT_DIR, "avgo_short_put_paths.pdf")
+out_A_png = joinpath(PLOT_DIR, "avgo_short_put_paths.png")
 savefig(p_A, out_A_pdf); savefig(p_A, out_A_png)
 
 # --- Figure B: stock path bundle + short-call premium bundle (top-5% green) ---
@@ -524,8 +513,8 @@ hline!(pB2, [PREMIUM_CALL_T0], color = COL_PREMIUM, ls = :dash, lw = 1.5,
 p_B = plot(pB1, pB2, layout = (1, 2), size = (1500, 600), dpi = 220,
            left_margin = 9mm, right_margin = 4mm,
            bottom_margin = 7mm, top_margin = 4mm)
-out_B_pdf = joinpath(PLOT_DIR, "lly_short_call_paths.pdf")
-out_B_png = joinpath(PLOT_DIR, "lly_short_call_paths.png")
+out_B_pdf = joinpath(PLOT_DIR, "avgo_short_call_paths.pdf")
+out_B_png = joinpath(PLOT_DIR, "avgo_short_call_paths.png")
 savefig(p_B, out_B_pdf); savefig(p_B, out_B_png)
 
 # --- Figure C: terminal short P&L histograms ---
@@ -585,8 +574,8 @@ pC2 = pnl_panel(pnl_call, PREMIUM_CALL_T0,
 p_C = plot(pC1, pC2, layout = (1, 2), size = (1500, 600), dpi = 220,
            left_margin = 11mm, right_margin = 4mm,
            bottom_margin = 7mm, top_margin = 4mm)
-out_C_pdf = joinpath(PLOT_DIR, "lly_short_pnl_distributions.pdf")
-out_C_png = joinpath(PLOT_DIR, "lly_short_pnl_distributions.png")
+out_C_pdf = joinpath(PLOT_DIR, "avgo_short_pnl_distributions.pdf")
+out_C_png = joinpath(PLOT_DIR, "avgo_short_pnl_distributions.png")
 savefig(p_C, out_C_pdf); savefig(p_C, out_C_png)
 
 # --- Figure D: implied-volatility trajectories at the fixed contract strikes ---
@@ -665,8 +654,8 @@ pD2 = path_panel(t_iv, σ_call_plot,
 p_D = plot(pD1, pD2, layout = (1, 2), size = (1500, 600), dpi = 220,
            left_margin = 9mm, right_margin = 4mm,
            bottom_margin = 7mm, top_margin = 4mm)
-out_D_pdf = joinpath(PLOT_DIR, "lly_iv_trajectories.pdf")
-out_D_png = joinpath(PLOT_DIR, "lly_iv_trajectories.png")
+out_D_pdf = joinpath(PLOT_DIR, "avgo_iv_trajectories.pdf")
+out_D_png = joinpath(PLOT_DIR, "avgo_iv_trajectories.png")
 savefig(p_D, out_D_pdf); savefig(p_D, out_D_png)
 
 # --- Figure E: Greek trajectories (Δ, Γ, Vega) for both legs ---
@@ -708,12 +697,13 @@ p_E = plot(pE1, pE2, pE3, pE4, pE5, pE6, layout = (3, 2),
            size = (1500, 1500), dpi = 220,
            left_margin = 9mm, right_margin = 4mm,
            bottom_margin = 5mm, top_margin = 4mm)
-out_E_pdf = joinpath(PLOT_DIR, "lly_short_greeks.pdf")
-out_E_png = joinpath(PLOT_DIR, "lly_short_greeks.png")
+out_E_pdf = joinpath(PLOT_DIR, "avgo_short_greeks.pdf")
+out_E_png = joinpath(PLOT_DIR, "avgo_short_greeks.png")
 savefig(p_E, out_E_pdf); savefig(p_E, out_E_png)
 
-include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
-promote_figures()
+# Output goes directly to paper/sections/figures/avgo/ — no promote_figures()
+# step needed (and promote_figures only knows about the flat code/figures →
+# paper/sections/figures/ mapping, which would flag these as unreferenced).
 
 # ============================================================================
 # Summary
