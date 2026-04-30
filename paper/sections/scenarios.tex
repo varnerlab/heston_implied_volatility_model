@@ -1,8 +1,49 @@
 \section{Forward-simulated short-premium scenarios}\label{sec:scenarios}
 
-To exercise the calibrated framework as a synthetic-data generator and stress test, we forward-simulated 1{,}000 LLY price paths over a 31 trading-day horizon and tracked the path-conditional fair value of two real LLY option contracts pulled directly from the 2026-04-28 ladder capture: a short put at $K_p = \$825$ (market $\Delta = -0.303$, mid \$23.30, market IV $44.4\%$) and a short call at $K_c = \$940$ (market $\Delta = +0.309$, mid \$20.76, market IV $44.0\%$), both expiring 2026-05-29 with the underlying spot at $S_0 = \$873.83$. Each path drew from the JumpHMM marginal pretrained on LLY returns. Conditional on the path, we evolved a Cox--Ingersoll--Ross variance level $v_t$ with mean-reversion $\kappa = 2.0$, vol-of-vol $\sigma_v = 0.5$, and leverage coupling $\rho = -0.6$, and at every trading day along every path we re-priced both contracts via 201-step Leisen--Reimer American with $\sigma_t^2 = v_t \cdot \psi_{\mathrm{NN}}((K/S_t)_{\mathrm{std}}, (T-t)_{\mathrm{std}})$, the per-ticker neural smile/term-structure surface from the ladder calibration. We adopted Leisen--Reimer over the standard CRR lattice because the Peizer--Pratt construction places the strike $K$ at a fixed lattice position by design at every $(S, \sigma)$ configuration, which gave smooth Greeks via finite differences without the staircase aliasing that CRR's recombining tree produced when bumps moved $K$ across node boundaries. The seller received the market mid as the entry premium, and the model marked the position to its Leisen--Reimer fair value at every subsequent step; we assumed no scheduled earnings event during the 31-day window so the only sources of variation were diffusion, jumps, and the variance dynamics themselves. The model's $t=0$ fair value sat slightly above the market mid on both legs (put: \$25.91 vs.\ \$23.30, edge $+\$2.61$; call: \$21.34 vs.\ \$20.76, edge $+\$0.58$), so the simulated short was selling at a small discount to the model and would have realised that entry edge on top of the path-conditional terminal P\&L.
+To exercise the calibrated framework as a synthetic-data generator and stress test, we forward-simulated 1{,}000 LLY price paths over a 31 trading-day horizon and tracked the path-conditional fair value of two real LLY option contracts pulled directly from the 2026-04-28 ladder capture: a short put at $K_p = \$825$ (market $\Delta = -0.303$, mid \$23.30, market IV $44.4\%$) and a short call at $K_c = \$940$ (market $\Delta = +0.309$, mid \$20.76, market IV $44.0\%$), both expiring 2026-05-29 with the underlying spot at $S_0 = \$873.83$. Each path drew from the JumpHMM marginal pretrained on LLY returns. Conditional on the path, we evolved a Cox-Ingersoll-Ross variance level $v_t$ with mean-reversion $\kappa = 2.0$, vol-of-vol $\sigma_v = 0.5$, and leverage coupling $\rho = -0.6$, and at every trading day along every path we re-priced both contracts via 201-step Leisen-Reimer American with $\sigma_t^2 = v_t \cdot \psi_{\mathrm{NN}}((K/S_t)_{\mathrm{std}}, (T-t)_{\mathrm{std}})$, the per-ticker neural smile/term-structure surface from the ladder calibration. We adopted Leisen-Reimer over the standard CRR lattice because the Peizer-Pratt construction places the strike $K$ at a fixed lattice position by design at every $(S, \sigma)$ configuration, which gave smooth Greeks via finite differences without the staircase aliasing that CRR's recombining tree produced when bumps moved $K$ across node boundaries. The seller received the market mid as the entry premium, and the model marked the position to its Leisen-Reimer fair value at every subsequent step; we assumed no scheduled earnings event during the 31-day window so the only sources of variation were diffusion, jumps, and the variance dynamics themselves. The model's $t=0$ fair value sat slightly above the market mid on both legs (put: \$25.91 vs.\ \$23.30, edge $+\$2.61$; call: \$21.34 vs.\ \$20.76, edge $+\$0.58$; Supplementary Table~\ref{tab:lly_scenario}), so the simulated short was selling at a small discount to the model and would have realised that entry edge on top of the path-conditional terminal P\&L.
 
-Figures~\ref{fig:lly_put_paths} and~\ref{fig:lly_call_paths} render the share-price ensemble alongside the short-put and short-call premium ensembles. On the worst-5\% paths (red, Fig.~\ref{fig:lly_put_paths}), LLY drifted toward and through $K_p$, the short-put premium more than tripled to roughly \$80, and the position closed with a mean P\&L of $-\$58.01$ on those paths. On the top 1--5\% paths (green, Fig.~\ref{fig:lly_call_paths}; the wildest 1\% are excluded for legibility), LLY pushed past $K_c$ and the short-call premium tripled despite the calendar pulling extrinsic value toward zero; mean P\&L on the top-5\% paths was $-\$142.81$, more than $2.4{\times}$ the mean loss on the worst put paths. On both panels the median path stayed inside the 25--75\% band and closed flat at the premium received; the short-premium trade made money on the typical path, with both legs carrying a long left tail.
+The forward-simulation engine is summarised in Algorithm~\ref{alg:forward_sim}. Each simulated trading day along each path produced a $(S_t, \sigma_t)$ pair from which the LR pricer returned a fair value for the contract; the same $(S_t, \sigma_t)$ pair fed Algorithm~\ref{alg:greeks} for the central finite-difference Greeks. The two algorithms shared the lattice constructor and the per-ticker $\psi_{\mathrm{NN}}$ surface, so the Greek bumps inherited the same shape function used for the base mark and did not require a separate calibration.
+
+\begin{algorithm}[ht]
+\caption{Forward simulation of path-conditional option premia}\label{alg:forward_sim}
+\begin{algorithmic}[1]
+\Require JumpHMM marginal for ticker $i$; per-ticker $\psi_{\mathrm{NN}}^{(i)}$ and level $\theta_i$; contract $(K, T)$; CIR parameters $(\kappa, \sigma_v, \rho)$; spot $S_0$; risk-free rate $r$; number of paths $N_p$; LR tree depth $N_{\mathrm{LR}}$; step $\Delta t = 1/252$.
+\Ensure $\{S_t^{(j)}, v_t^{(j)}, \sigma_t^{(j)}, P_t^{(j)}\}$ for $j = 1,\ldots,N_p$ and $t = 0, \ldots, T$.
+\State $v_0 \gets \theta_i \cdot \psi_{\mathrm{NN}}^{(i)}\!\big(\widetilde{\ln(K/S_0)},\, \widetilde{\ln T}\big)$ \Comment{equilibrium initialization, eq.~\eqref{eq:v0}}
+\For{$j = 1$ \textbf{to} $N_p$}
+  \State Draw price path $\{S_t^{(j)}\}_{t=0}^{T}$ from the JumpHMM marginal
+  \State $v_0^{(j)} \gets v_0$
+  \For{$t = 0$ \textbf{to} $T-1$}
+    \State $\sigma_t^{(j)} \gets \sqrt{v_t^{(j)} \cdot \psi_{\mathrm{NN}}^{(i)}\!\big(\widetilde{\ln(K/S_t^{(j)})},\, \widetilde{\ln(T-t)}\big)}$
+    \State $P_t^{(j)} \gets \mathrm{LR}_{N_{\mathrm{LR}}}\!\big(S_t^{(j)},\, K,\, \sigma_t^{(j)},\, T-t,\, r\big)$ \Comment{Leisen-Reimer American}
+    \State Draw $Z_S^{(j)}$ from the JumpHMM return innovation; draw $Z_\perp \sim \mathcal{N}(0,1)$ independent
+    \State $Z_v^{(j)} \gets \rho\, Z_S^{(j)} + \sqrt{1 - \rho^2}\, Z_\perp$ \Comment{leverage coupling}
+    \State $v_{t+1}^{(j)} \gets \big| v_t^{(j)} + \kappa(\theta_i - v_t^{(j)})\,\Delta t + \sigma_v \sqrt{\max(v_t^{(j)},\,0)}\,\sqrt{\Delta t}\, Z_v^{(j)} \big|$
+  \EndFor
+  \State $P_T^{(j)} \gets \max(\phi (S_T^{(j)} - K),\, 0)$ \Comment{$\phi=+1$ call, $\phi=-1$ put}
+\EndFor
+\State \Return $\{S_t^{(j)}, v_t^{(j)}, \sigma_t^{(j)}, P_t^{(j)}\}$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{algorithm}[ht]
+\caption{Path-conditional Greeks via central finite differences on the LR pricer}\label{alg:greeks}
+\begin{algorithmic}[1]
+\Require State $(S, \sigma, \tau)$ with $\tau = T - t$; contract $(K, r)$; LR depth $N_{\mathrm{LR}}$; spot bump $h_S$ (relative); IV bump $h_\sigma$ (absolute).
+\Ensure $\Delta$, $\Gamma$, Vega.
+\State $P_+^S \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S(1+h_S),\, K,\, \sigma,\, \tau,\, r)$
+\State $P_-^S \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S(1-h_S),\, K,\, \sigma,\, \tau,\, r)$
+\State $P_0  \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S,\, K,\, \sigma,\, \tau,\, r)$
+\State $P_+^\sigma \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S,\, K,\, \sigma + h_\sigma,\, \tau,\, r)$
+\State $P_-^\sigma \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S,\, K,\, \sigma - h_\sigma,\, \tau,\, r)$
+\State $\Delta \gets \dfrac{P_+^S - P_-^S}{2\, h_S\, S}$
+\State $\Gamma \gets \dfrac{P_+^S - 2\, P_0 + P_-^S}{(h_S\, S)^2}$
+\State $\mathrm{Vega} \gets \dfrac{P_+^\sigma - P_-^\sigma}{2\, h_\sigma}$ \Comment{per unit IV; multiply by $0.01$ for per-$1\%$ IV}
+\State \Return $(\Delta,\, \Gamma,\, \mathrm{Vega})$
+\end{algorithmic}
+\end{algorithm}
+
+We rendered the share-price ensemble alongside the short-put and short-call premium ensembles (Figs.~\ref{fig:lly_put_paths}, \ref{fig:lly_call_paths}). On the worst-5\% paths (red, Fig.~\ref{fig:lly_put_paths}), LLY drifted toward and through $K_p$, the short-put premium more than tripled to roughly \$80, and the position closed with a mean P\&L of $-\$58.01$ on those paths. On the top 1--5\% paths (green, Fig.~\ref{fig:lly_call_paths}; the wildest 1\% were excluded for legibility), LLY pushed past $K_c$ and the short-call premium tripled despite the calendar pulling extrinsic value toward zero; mean P\&L on the top-5\% paths was $-\$142.81$, more than $2.4{\times}$ the mean loss on the worst put paths. On both panels the median path stayed inside the 25--75\% band and closed flat at the premium received; the short-premium trade made money on the typical path, with both legs carrying a long left tail.
 
 \begin{figure}[ht]
 \centering
@@ -18,7 +59,7 @@ Figures~\ref{fig:lly_put_paths} and~\ref{fig:lly_call_paths} render the share-pr
 \label{fig:lly_call_paths}
 \end{figure}
 
-The IV trajectories in Figure~\ref{fig:lly_iv} make explicit why the short-call leg lost asymmetrically. Both panels showed the implied volatility at the contract strike rising as $t \to T$, but the rise was not a model artefact: it is the empirical short-dated wing-bow that the per-ticker $\psi_{\mathrm{NN}}$ learned from the ladder corpus. As $(T-t)$ shrank at fixed $\log(K/S)$, the standardised moneyness drifted deeper into the wing where $\psi_{\mathrm{NN}}$ is monotonically larger, and a Gaussian diffusion would underprice that wing without the inflation, since short-horizon returns are far more leptokurtic than the central-limit-theorem regime of long-horizon returns. The level $v_t$ contributed only a slow mean-reverting drift around $\bar\theta$, so the rise was essentially a smile-shape effect at a fixed point on the surface. On the green tail $S_t$ pushed away from the call strike, dragging the standardised moneyness even further into the wing and amplifying the rise; on the red tail the leverage coupling lifted $v_t$ at the same time as $S_t$ fell, compounding the IV climb.
+The short-call leg lost asymmetrically because IV at the contract strike rose as $t \to T$ on every path (Fig.~\ref{fig:lly_iv}). The rise was not a model artefact: it was the empirical short-dated wing-bow that the per-ticker $\psi_{\mathrm{NN}}$ learned from the ladder corpus. As $(T-t)$ shrank at fixed $\log(K/S)$, the standardised moneyness drifted deeper into the wing where $\psi_{\mathrm{NN}}$ was monotonically larger, and a Gaussian diffusion would have underpriced that wing without the inflation, since short-horizon returns were far more leptokurtic than the central-limit-theorem regime of long-horizon returns. The level $v_t$ contributed only a slow mean-reverting drift around $\bar\theta$, so the rise was essentially a smile-shape effect at a fixed point on the surface. On the green tail $S_t$ pushed away from the call strike, dragging the standardised moneyness even further into the wing and amplifying the rise; on the red tail the leverage coupling lifted $v_t$ at the same time as $S_t$ fell, compounding the IV climb.
 
 \begin{figure}[ht]
 \centering
@@ -27,16 +68,16 @@ The IV trajectories in Figure~\ref{fig:lly_iv} make explicit why the short-call 
 \label{fig:lly_iv}
 \end{figure}
 
-Figure~\ref{fig:lly_greeks} decomposes the position risk into $\Delta$, $\Gamma$, and Vega along the same paths, computed by central finite differences on the same 201-step Leisen--Reimer American pricer used for the base marks (spot bumps of $\pm 1.5\%$ for $\Delta$ and $\Gamma$; $\sigma$ bumps of $\pm 0.005$ for Vega-per-1\%-IV). The long-put $\Delta$ began near $-0.30$ and bifurcated: on the worst-5\% paths it ran to $-1$ as the put pinned ITM at expiry, while on the rest it ran to $0$; the long-call mirror image held at the call strike on the top tail. $\Gamma$ collapsed to zero on every path that drifted away from its strike but spiked sharply on paths that pinned to the strike near expiry, exhibiting the canonical short-gamma blowup geometry that motivates the practitioner aversion to short-premium expiry-day exposure. Vega decayed monotonically toward zero on every path (the $\sqrt{T-t}$ factor dominates), but the worst-5\% put paths and top-5\% call paths held materially more vega than the median through about $t = 20$, which exposed the short-premium trader to vol-of-vol risk on precisely the paths that were already losing on $\Delta$. The signs of the position-level Greeks for the short trader are the negatives of the long Greeks shown.
+We decomposed the position risk into $\Delta$, $\Gamma$, and Vega along the same paths (Fig.~\ref{fig:lly_greeks}), computed by central finite differences on the same 201-step Leisen-Reimer American pricer used for the base marks (spot bumps of $\pm 1.5\%$ for $\Delta$ and $\Gamma$; $\sigma$ bumps of $\pm 0.005$ for Vega-per-1\%-IV). The long-put $\Delta$ began near $-0.30$ and bifurcated: on the worst-5\% paths it ran to $-1$ as the put pinned ITM at expiry, while on the rest it ran to $0$; the long-call mirror image held at the call strike on the top tail. $\Gamma$ collapsed to zero on every path that drifted away from its strike but spiked sharply on paths that pinned to the strike near expiry, exhibiting the canonical short-gamma blowup geometry that motivates the practitioner aversion to short-premium expiry-day exposure. Vega decayed monotonically toward zero on every path (the $\sqrt{T-t}$ factor dominates), but the worst-5\% put paths and top-5\% call paths held materially more vega than the median through about $t = 20$, which exposed the short-premium trader to vol-of-vol risk on precisely the paths that were already losing on $\Delta$. The signs of the position-level Greeks for the short trader are the negatives of the long Greeks shown.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly_short_greeks.pdf}
-\caption{Leisen--Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the put and call strikes over the 31-day horizon, computed by central finite differences on the 201-step Leisen--Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta$/$\Gamma$, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta$. Middle: $\Gamma$, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt{T-t}$ on every path. Tail overlays as in Figs.~\ref{fig:lly_put_paths} and~\ref{fig:lly_call_paths}.}
+\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the put and call strikes over the 31-day horizon, computed by central finite differences on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta$/$\Gamma$, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta$. Middle: $\Gamma$, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt{T-t}$ on every path. Tail overlays as in Figs.~\ref{fig:lly_put_paths} and~\ref{fig:lly_call_paths}.}
 \label{fig:lly_greeks}
 \end{figure}
 
-Figure~\ref{fig:lly_pnl} summarises the terminal P\&L distributions and Table~\ref{tab:lly_scenario} reports the moments and tail statistics. Both legs showed the characteristic short-premium asymmetry: a thin probability mass piled at the premium ceiling, a long left tail. The short put kept its full \$23.30 premium on $83.1\%$ of paths and closed with a mean P\&L of $+\$16.94$; the short call kept its full \$20.76 premium on $70.2\%$ of paths but its mean P\&L was essentially zero ($+\$1.86$) and the worst-case loss reached $-\$325.62$, $1.87{\times}$ the worst put loss and $15.7{\times}$ the premium itself. The asymmetry between the two legs reflected the negative skew that LLY's per-ticker $\psi_{\mathrm{NN}}$ encodes (higher IV at down-strikes than at equally-far up-strikes) together with the leverage coupling that lifted $v_t$ on down-paths; the put leg was implicitly priced for the down-tail and earned a fair premium for it, while the call leg encountered a fatter empirical right-tail than its strike-symmetric BS-implied premium accounted for.
+Both legs showed the characteristic short-premium asymmetry (Fig.~\ref{fig:lly_pnl}; moments in Supplementary Table~\ref{tab:lly_scenario}): a thin probability mass piled at the premium ceiling, paired with a long left tail. The short put kept its full \$23.30 premium on $83.1\%$ of paths and closed with a mean P\&L of $+\$16.94$; the short call kept its full \$20.76 premium on $70.2\%$ of paths but its mean P\&L was essentially zero ($+\$1.86$) and the worst-case loss reached $-\$325.62$, $1.87{\times}$ the worst put loss and $15.7{\times}$ the premium itself. The asymmetry between the two legs reflected the negative skew that LLY's per-ticker $\psi_{\mathrm{NN}}$ encodes (higher IV at down-strikes than at equally-far up-strikes) together with the leverage coupling that lifted $v_t$ on down-paths; the put leg was implicitly priced for the down-tail and earned a fair premium for it, while the call leg encountered a fatter empirical right-tail than its strike-symmetric BS-implied premium accounted for.
 
 \begin{figure}[ht]
 \centering
@@ -45,25 +86,3 @@ Figure~\ref{fig:lly_pnl} summarises the terminal P\&L distributions and Table~\r
 \label{fig:lly_pnl}
 \end{figure}
 
-\begin{table}[ht]
-\centering
-\caption{Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium is the market mid from the 2026-04-28 capture. The model's $t=0$ Leisen--Reimer fair value at NN-IV is reported as a reference; statistics are per contract.}
-\label{tab:lly_scenario}
-\begin{tabular}{lrr}
-\toprule
-Statistic & Short put (\$) & Short call (\$) \\
-\midrule
-Strike $K$                  & 825        & 940       \\
-Market mid (entry premium)  & $+23.30$   & $+20.76$  \\
-Model $t=0$ fair value      & $+25.91$   & $+21.34$  \\
-Entry edge (model $-$ market) & $+2.61$  & $+0.58$   \\
-\midrule
-Mean P\&L                    & $+16.94$  & $+1.86$   \\
-Median P\&L                  & $+23.30$  & $+20.76$  \\
-Std P\&L                     &  $20.22$  & $42.36$   \\
-5\%-tile P\&L                & $-28.47$  & $-97.56$  \\
-Worst-case P\&L              & $-174.60$ & $-325.62$ \\
-Premium kept in full         & $83.1\%$  & $70.2\%$  \\
-\bottomrule
-\end{tabular}
-\end{table}
