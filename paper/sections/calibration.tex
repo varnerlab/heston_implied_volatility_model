@@ -53,15 +53,16 @@ The two-day in-sample fit established that the sector-specific $\psi_{\text{NN}}
 \begin{table}[ht]
 \centering
 \caption{Temporal-holdout sector-NN comparison across the three configurations. The pooled control (A) reproduced the existing four-day reference number ($13.03\%$ test RMSE on the same train/test split). Excluding earnings-window observations from both train and test (B) reduced the test RMSE to $7.96\%$ and collapsed the generalization gap from $+4.99$ to $-0.06\%$ IV. Adding the earnings indicator and peer-coupling feature to the input vector (C) on the original train and test rows reduced the pooled test RMSE to $11.98\%$ and the generalization gap to $+4.36\%$.}\label{tab:earnings_holdout}
+\resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrr}
 \toprule
-Configuration & $N_{\text{train}}$ & $N_{\text{test}}$ & Train RMSE (\%) & Test RMSE (\%) & Gen.\ gap (\%) \\
+Configuration & $N_{\text{tr}}$ & $N_{\text{te}}$ & Train (\%) & Test (\%) & Gap (\%) \\
 \midrule
-A: pooled control (2 inputs)        & 103{,}897 & 26{,}833 & 8.05 & 13.03 & $+4.99$ \\
-B: non-earnings baseline (2 inputs) &  29{,}383 &  4{,}516 & 8.02 &  7.96 & $-0.06$ \\
-C: earnings-aware (4 inputs)        & 103{,}897 & 26{,}833 & 7.61 & 11.98 & $+4.36$ \\
+A: pooled (2-input)         & 103{,}897 & 26{,}833 & 8.05 & 13.03 & $+4.99$ \\
+B: non-earnings (2-input)   &  29{,}383 &  4{,}516 & 8.02 &  7.96 & $-0.06$ \\
+C: earnings-aware (4-input) & 103{,}897 & 26{,}833 & 7.61 & 11.98 & $+4.36$ \\
 \bottomrule
-\end{tabular}
+\end{tabular}}
 \end{table}
 
 The three-way comparison resolved the generalization question (Table~\ref{tab:earnings_holdout}). Configuration~B revealed that scheduled earnings events accounted for the entire test-time generalization gap of the sector NN: with all earnings-window observations removed from both splits, the test RMSE ($7.96\%$) fell to within rounding of the train RMSE ($8.02\%$), giving a generalization gap of $-0.06\%$ IV. The architecture itself generalized faithfully out of sample; what failed was the model's ability to price options on days when an earnings catalyst dominated the IV surface. Configuration~C confirmed that adding event-aware inputs to the shape network recovered roughly one-fifth of the lost performance: relative to the pooled control, the test RMSE dropped from $13.03\%$ to $11.98\%$ ($1.05\%$ IV absolute, $8.1\%$ relative), and the generalization gap narrowed from $+4.99$ to $+4.36\%$. The peer-coupling feature did the heavy lifting in this reduction: the per-ticker breakdown showed the largest improvements on Tech names whose own earnings prints fell outside the immediate holdout window but whose sector peers printed during it (Supplementary Table~\ref{tab:tech_pivot}). QCOM (own print 6 days after the holdout) and AMD (12 days after) both benefited from the peer-coupling signal because INTC printed inside the window and dragged their IV surfaces with a $\sim 4\%$ IV reduction in test error each. The same mechanism reduced META, MSFT, and GOOG test RMSE by 2 to $4\%$ IV apiece. INTC itself, the print-day ticker, was the one Tech name whose RMSE rose under the earnings-aware fit ($33.17 \to 35.94\%$); its outsized $+2192\%$ EPS surprise produced an unanticipated post-print IV crush that no scheduled-event indicator could predict from the calendar alone.
