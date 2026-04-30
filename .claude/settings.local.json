@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Skill(review-abstract)",
+      "mcp__ide__executeCode"
+    ]
+  }
+}
