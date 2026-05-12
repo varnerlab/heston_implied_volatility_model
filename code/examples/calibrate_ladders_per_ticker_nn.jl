@@ -140,6 +140,11 @@ build_psi_nn(n_obs::Integer, threshold::Integer) = n_obs >= threshold ?
     Chain(Dense(2 => 16, tanh), Dense(16 => 16, tanh), Dense(16 => 1)) :
     Chain(Dense(2 => 8,  tanh), Dense(8  => 8,  tanh), Dense(8  => 1))
 
+# Polynomial psi helper — defined outside the !SKIP_TRAINING branch so the
+# figure code (which always runs) can call it after a cache load.
+eval_psi_poly(beta, ld, lm) =
+    exp(beta[1]*ld + beta[2]*lm + beta[3]*ld*lm + beta[4]*lm^2 + beta[5]*ld^2)
+
 if SKIP_TRAINING
     println("Cache hit ($(basename(CACHE_PATH))): loading trained models — pass --retrain to refit.")
     cache = JLD2.load(CACHE_PATH)
@@ -416,9 +421,6 @@ const POLY_OBS_LDT = log.(max.(Float64.(all_data.actual_dte), 1.0))
 const POLY_OBS_LM  = log.(Float64.(all_data.moneyness))
 const POLY_OBS_TID = [POLY_TICKER_IDX[t] for t in all_data.ticker]
 const POLY_N_OBS   = length(POLY_OBS_IV)
-
-eval_psi_poly(beta, ld, lm) =
-    exp(beta[1]*ld + beta[2]*lm + beta[3]*ld*lm + beta[4]*lm^2 + beta[5]*ld^2)
 
 function poly_objective(x)
     beta = @view x[1:5]

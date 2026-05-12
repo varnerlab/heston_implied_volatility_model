@@ -337,9 +337,9 @@ println("\n" * "="^70)
 println("  THREE-WAY COMPARISON")
 println("="^70)
 
-# Prior results (hardcoded from previous runs)
-parametric_overall = 9.36
-shared_nn_overall = 8.03
+# Prior results (hardcoded from the 15-date pooled corpus, 234,549 obs)
+parametric_overall = 12.48
+shared_nn_overall = 11.47
 sector_nn_overall = overall_rmse * 100
 
 println("\n  Model                   Overall RMSE(%)")
@@ -360,11 +360,11 @@ println("\n  Per-sector RMSE comparison:")
 println("  Sector         Parametric  Shared NN  Sector NN")
 println("  " * "-"^55)
 
-# Parametric and shared NN per-sector (from prior runs)
-parametric_sector = Dict("ETF" => 8.93, "Energy" => 7.66, "Financials" => 6.85,
-                         "Healthcare" => 10.78, "Retail" => 8.62, "Tech" => 11.65)
-shared_nn_sector = Dict("ETF" => 6.89, "Energy" => 6.44, "Financials" => 6.44,
-                        "Healthcare" => 9.83, "Retail" => 6.94, "Tech" => 11.23)
+# Parametric and shared NN per-sector (from the 15-date pooled corpus)
+parametric_sector = Dict("ETF" => 10.54, "Energy" => 9.36, "Financials" => 9.05,
+                         "Healthcare" => 13.49, "Retail" => 11.73, "Tech" => 15.58)
+shared_nn_sector = Dict("ETF" => 8.69, "Energy" => 8.24, "Financials" => 7.79,
+                        "Healthcare" => 12.71, "Retail" => 10.23, "Tech" => 15.31)
 
 for sector in sectors
     mask = all_data.sector .== sector

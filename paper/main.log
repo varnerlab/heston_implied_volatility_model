@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  30 APR 2026 07:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  12 MAY 2026 12:48
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main.tex
+**main
 (./main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -600,7 +600,10 @@ File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
 Package pdftex.def Info: sections/figures/ladder_per_ticker_nn_smile_panels.pdf
   used on input line 35.
 (pdftex.def)             Requested size: 397.48499pt x 211.9853pt.
-<sections/figures/ladder_price_error_three_tickers.pdf, id=260, 1505.625pt x 54
+
+
+[8]
+<sections/figures/ladder_price_error_three_tickers.pdf, id=266, 1505.625pt x 54
 2.025pt>
 File: sections/figures/ladder_price_error_three_tickers.pdf Graphic file (type 
 pdf)
@@ -609,8 +612,6 @@ Package pdftex.def Info: sections/figures/ladder_price_error_three_tickers.pdf
  used on input line 43.
 (pdftex.def)             Requested size: 397.48499pt x 143.09007pt.
 
-
-[8]
 
 [9 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf> <./sections/figur
 es/ladder_price_error_three_tickers.pdf>]) (./sections/scenarios.tex
@@ -637,9 +638,6 @@ Package pdftex.def Info: sections/figures/lly_iv_trajectories.pdf  used on inpu
 t line 66.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
 
 [11]
 <sections/figures/lly_short_greeks.pdf, id=305, 1505.625pt x 1505.625pt>
@@ -649,7 +647,7 @@ Package pdftex.def Info: sections/figures/lly_short_greeks.pdf  used on input l
 ine 75.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+Underfull \vbox (badness 7362) has occurred while \output is active []
 
 
 
@@ -662,17 +660,17 @@ Package pdftex.def Info: sections/figures/lly_short_pnl_distributions.pdf  used
  on input line 84.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 ) (./sections/discussion.tex
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+
 
 [13 <./sections/figures/lly_short_put_paths.pdf> <./sections/figures/lly_short_
 call_paths.pdf>]
-Underfull \vbox (badness 2012) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
 [14 <./sections/figures/lly_iv_trajectories.pdf>]
-Underfull \vbox (badness 4001) has occurred while \output is active []
-
-
 
 [15 <./sections/figures/lly_short_greeks.pdf>]) (./sections/conclusion.tex
 
@@ -694,16 +692,16 @@ LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 34D29AD0D776809621383C7A022DE094;5703.
+(rerunfilecheck)             Checksum: 6DCCFC5B919B6D4C8048AA75F43A2F9A;5688.
  ) 
 Here is how much of TeX's memory you used:
  13619 strings out of 473190
  216730 string characters out of 5715801
- 640533 words of memory out of 5000000
+ 639880 words of memory out of 5000000
  36562 multiletter control sequences out of 15000+600000
  575861 words of font info for 67 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,18n,79p,2742b,560s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,18n,79p,2760b,554s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
@@ -719,7 +717,7 @@ ve/2025/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/t
 exlive/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/202
 5/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-di
 st/fonts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (22 pages, 2340403 bytes).
+Output written on main.pdf (22 pages, 2453206 bytes).
 PDF statistics:
  497 PDF objects out of 1000 (max. 8388607)
  429 compressed objects within 5 object streams
