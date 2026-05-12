@@ -13,6 +13,7 @@ Run:
 """
 
 using CSV
+using Dates
 using DataFrames
 using Distributions
 using Flux
@@ -188,10 +189,15 @@ const SIGMA_DTE = std(log.(max.(Float64.(all_data.actual_dte), 1.0)))
 const MU_M      = mean(log.(Float64.(all_data.moneyness)))
 const SIGMA_M   = std(log.(Float64.(all_data.moneyness)))
 
-# Latest ticker spot — most recent capture date
+# Anchor S_0 to the 04-28-2026 capture, since the contract strikes, premiums,
+# IVs, and deltas hardcoded above were all observed on that date. Pulling the
+# "latest" spot would drift the scenario off the contract design.
+const ANCHOR_DATE = Date("2026-04-28")
 ticker_slice = all_data[all_data.ticker .== TICKER, :]
-S_0 = Float64(ticker_slice.S[end])
-@printf("  S_0 (%s) = \$%.2f\n", TICKER, S_0)
+anchor_rows = ticker_slice[ticker_slice.und_session_date .== ANCHOR_DATE, :]
+isempty(anchor_rows) && error("No $TICKER rows for anchor date $ANCHOR_DATE in the ladder corpus.")
+S_0 = Float64(anchor_rows.S[1])
+@printf("  S_0 (%s, anchored to %s) = \$%.2f\n", TICKER, ANCHOR_DATE, S_0)
 
 # ============================================================================
 # Step 2: Restore per-ticker NN ψ surface for the underlying

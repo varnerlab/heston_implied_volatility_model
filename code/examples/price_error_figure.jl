@@ -31,7 +31,7 @@ const PLOT_DIR      = joinpath(@__DIR__, "..", "figures")
 const CACHE_PATH    = joinpath(PLOT_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 const PAPER_FIG_DIR = abspath(joinpath(@__DIR__, "..", "..", "paper", "sections", "figures"))
 
-const PANEL_TICKERS = ["SPY", "NVDA", "LLY"]
+const PANEL_TICKERS = ["SPY", "NVDA", "LLY", "GS"]
 # Risk-free rate: ~3-month T-bill area as of the late-April 2026 capture window.
 const R_FREE  = 0.0425
 const N_STEPS = 200
@@ -212,16 +212,21 @@ for (k, t) in enumerate(PANEL_TICKERS)
         error("Cache has no per-ticker NN for $t — qualified set may have changed.")
 
     slice = all_data[all_data.ticker .== t, :]
+    # Restrict to the most recent capture date so the slice has a single underlying
+    # spot — pooling across 15 capture dates would otherwise mix contracts whose
+    # actual_dte matches but whose expiration date and spot differ by days/dollars.
+    latest_session = maximum(slice.und_session_date)
+    slice = slice[slice.und_session_date .== latest_session, :]
     avail_dtes = sort(unique(slice.actual_dte))
     target_dte = avail_dtes[max(1, length(avail_dtes) ÷ 2)]
     dte_slice = slice[slice.actual_dte .== target_dte, :]
-    isempty(dte_slice) && error("$t has no contracts at DTE $target_dte.")
-    S = Float64(dte_slice.S[1])
+    isempty(dte_slice) && error("$t has no contracts at DTE $target_dte on $latest_session.")
     sector = get(SECTORS, t, "Other")
 
     q_t = default_q(t)
     rows = NamedTuple[]
     for r in eachrow(dte_slice)
+        S = Float64(r.S)
         K = Float64(r.strike)
         otype = Symbol(r.type)
         mid = ismissing(r.mid) ? NaN : Float64(r.mid)
@@ -283,16 +288,41 @@ for (k, t) in enumerate(PANEL_TICKERS)
              left_margin = 4mm, right_margin = 2mm,
              top_margin = 2mm, bottom_margin = 4mm)
 
-    # Constant ±median(½ bid–ask spread) band — the typical noise floor.
-    # Per-contract spreads can balloon at deep ITM/OTM strikes ($5+ on a $100
-    # option is normal in dollar terms), so a per-contract ribbon exaggerates
-    # the noise floor at the wings. The summary table reports the per-contract
-    # "% inside spread" which still uses the actual contract spread.
-    med_hs = median(cdf.half_spread)
-    plot!(p, [0.83, 1.17], [0.0, 0.0],
-          ribbon = ([med_hs, med_hs], [med_hs, med_hs]),
-          fillalpha = 0.20, color = :gray, lw = 0,
-          label = show_legend ? @sprintf("±median ½ spread (\$%.2f)", med_hs) : "")
+    # Per-K/S local ±½ bid–ask spread ribbon. We bin contracts into ~12
+    # moneyness bins and take the median half-spread in each bin, then
+    # interpolate onto a fine grid so the ribbon traces the actual quote
+    # width at each strike (which typically widens at deep ITM/OTM wings).
+    # This matches what the "% inside spread" metric in the printed table
+    # uses on a per-contract basis.
+    let nbin = 12
+        m_min, m_max = extrema(cdf.moneyness)
+        edges = range(m_min, m_max, length = nbin + 1)
+        centers = [(edges[i] + edges[i+1]) / 2 for i in 1:nbin]
+        bin_hs = Float64[]
+        for i in 1:nbin
+            in_bin = (cdf.moneyness .>= edges[i]) .& (cdf.moneyness .<= edges[i+1])
+            push!(bin_hs, sum(in_bin) > 0 ? median(cdf.half_spread[in_bin]) : NaN)
+        end
+        keep = .!isnan.(bin_hs)
+        if count(keep) >= 2
+            xs = centers[keep]
+            ys = bin_hs[keep]
+            # Linear interpolation onto a fine moneyness grid
+            m_grid = collect(range(xs[1], xs[end], length = 200))
+            ribbon_hs = similar(m_grid)
+            for (j, m) in enumerate(m_grid)
+                k1 = searchsortedfirst(xs, m)
+                k1 = clamp(k1, 2, length(xs))
+                w = (m - xs[k1-1]) / (xs[k1] - xs[k1-1] + eps())
+                ribbon_hs[j] = (1 - w) * ys[k1-1] + w * ys[k1]
+            end
+            med_hs_overall = median(cdf.half_spread)
+            plot!(p, m_grid, zeros(length(m_grid)),
+                  ribbon = (ribbon_hs, ribbon_hs),
+                  fillalpha = 0.20, color = :gray, lw = 0,
+                  label = show_legend ? @sprintf("±½ spread (median \$%.2f)", med_hs_overall) : "")
+        end
+    end
 
     hline!(p, [0.0], color = :black, ls = :solid, lw = 0.8, alpha = 0.7, label = "")
     vline!(p, [1.0], color = :gray,  ls = :dash,  lw = 0.8, alpha = 0.30, label = "")
@@ -336,8 +366,8 @@ for (k, t) in enumerate(PANEL_TICKERS)
 end
 
 p_fig = plot(p_panels...,
-             layout = (1, 3),
-             size = (1500, 540),
+             layout = (2, 2),
+             size = (1200, 900),
              dpi = 200,
              left_margin   = 6mm,
              right_margin  = 4mm,
@@ -364,7 +394,7 @@ println("="^78)
 @printf("  %-5s %-4s %4s  %4s |   %5s   %5s   %5s   %5s\n",
         "tkr", "DTE", "N", "½sp", "poly", "sec", "p-tkr", "mkt-IV")
 @printf("  %-5s %-4s %4s  %4s |   %5s   %5s   %5s   %5s\n",
-        "", "", "", "(\$)", "MAE\$", "MAE\$", "MAE\$", "MAE\$")
+        "", "", "", "(\$)", "Med|e|", "Med|e|", "Med|e|", "Med|e|")
 println("  " * "-"^76)
 for r in mae_summary
     @printf("  %-5s %-4d %4d  %4.2f |   %5.2f   %5.2f   %5.2f   %5.2f\n",

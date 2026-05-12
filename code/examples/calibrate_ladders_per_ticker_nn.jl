@@ -533,6 +533,12 @@ panel_tickers = [t for t in panel_candidates if t in Set(qualified)]
 p_panels = Any[]
 for (k, t) in enumerate(panel_tickers)
     slice = all_data[all_data.ticker .== t, :]
+    # Restrict to a single capture date so the panel doesn't pool contracts
+    # from 15 capture dates with different spots and IV regimes — pooling
+    # would make the market scatter visually bimodal/trimodal even though the
+    # per-ticker NN correctly fits the time-averaged ψ surface.
+    latest_session = maximum(slice.und_session_date)
+    slice = slice[slice.und_session_date .== latest_session, :]
     avail_dtes = sort(unique(slice.actual_dte))
     target_dte = avail_dtes[max(1, length(avail_dtes) ÷ 2)]
     dte_slice = slice[slice.actual_dte .== target_dte, :]
@@ -540,7 +546,7 @@ for (k, t) in enumerate(panel_tickers)
 
     show_legend = (k == 1)
 
-    p = plot(title = "$t — $sector   (DTE = $target_dte)",
+    p = plot(title = "$t — $sector   (DTE = $target_dte, $(latest_session))",
              xlabel = "Moneyness  K/S",
              ylabel = "Implied Volatility (%)",
              legend = show_legend ? :topright : false,

@@ -20,7 +20,7 @@ Run:
     julia --project=. examples/avgo_sigma_v_ab.jl
 """
 
-using CSV, DataFrames, Distributions, Flux, JLD2, JumpHMM
+using CSV, DataFrames, Dates, Distributions, Flux, JLD2, JumpHMM
 using Plots, Plots.PlotMeasures
 using Printf, Random, Statistics
 
@@ -111,8 +111,12 @@ const MU_DTE    = mean(log.(max.(Float64.(all_data.actual_dte), 1.0)))
 const SIGMA_DTE = std( log.(max.(Float64.(all_data.actual_dte), 1.0)))
 const MU_M      = mean(log.(Float64.(all_data.moneyness)))
 const SIGMA_M   = std( log.(Float64.(all_data.moneyness)))
-const S_0 = Float64(all_data[all_data.ticker .== TICKER, :S][end])
-@printf("  S_0 (%s) = \$%.2f\n", TICKER, S_0)
+const ANCHOR_DATE = Date("2026-04-28")
+const TICKER_SLICE = all_data[all_data.ticker .== TICKER, :]
+const ANCHOR_ROWS = TICKER_SLICE[TICKER_SLICE.und_session_date .== ANCHOR_DATE, :]
+isempty(ANCHOR_ROWS) && error("No $TICKER rows for anchor date $ANCHOR_DATE in the ladder corpus.")
+const S_0 = Float64(ANCHOR_ROWS.S[1])
+@printf("  S_0 (%s, anchored to %s) = \$%.2f\n", TICKER, ANCHOR_DATE, S_0)
 
 # ---------- Restore NN ψ surface ----------------------------------------------
 build_psi_nn(n_obs::Integer, threshold::Integer) = n_obs >= threshold ?

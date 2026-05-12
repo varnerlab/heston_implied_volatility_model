@@ -140,6 +140,29 @@ Rank & Ticker & Obs.\ count & RMSE (\% IV) & Sector \\
 \end{tabular}
 \end{table}
 
+\subsection{Leave-one-date-out validation on the fifteen-date corpus}\label{sec:supp_loo}
+
+The headline three-way comparison in Table~\ref{tab:three_way} reports the in-sample fit on the pooled fifteen-date corpus. To verify that the $10.24\%$ overall RMSE of the sector NN reflected faithful generalization rather than memorization of the pooled data, we ran a leave-one-date-out check: held out the latest capture (2026-05-11, 14{,}442 observations, $6.2\%$ of the corpus) as a temporal test set, trained the six sector $\psi_{\text{NN}}$ networks on the remaining fourteen dates using identical architecture, schedule, and seed, standardised only on the training rows so the test split could not leak through the input scaling, and evaluated test RMSE on the held-out day (Table~\ref{tab:loo_sector_nn}). The overall train RMSE of $10.21\%$ matched the full-corpus in-sample number of $10.24\%$ within rounding, confirming that withholding one day did not perturb the fit, and the held-out test RMSE of $10.89\%$ left a generalization gap of only $+0.68\%$ IV pooled across all six sectors. The gap was strongly sector-specific: four of six sectors (ETF, Financials, Healthcare, Tech) carried negative or small-positive gaps, while Energy ($+2.23\%$) and Retail ($+3.96\%$) showed larger positive gaps consistent with the small per-sector sample sizes on the holdout day amplifying single-name idiosyncrasies. The overall pattern was consistent with the temporal-holdout result of §\ref{sec:earnings_holdout}: with no earnings prints inside the holdout, the sector NN generalized to an unseen capture date with $\sim 7\%$ relative degradation in RMSE, far below what an overfit model would exhibit.
+
+\begin{table}[ht]
+\centering
+\caption{Leave-one-date-out validation of the sector NN, holding out 2026-05-11. Per-sector train and test RMSE (\% IV) and gap (test $-$ train). The pooled gap of $+0.68\%$ IV is small relative to the in-sample RMSE itself, indicating that the architecture does not overfit the fifteen-date corpus.}\label{tab:loo_sector_nn}
+\begin{tabular}{lrrr}
+\toprule
+Sector & Train (\%) & Test (\%) & Gap (\%) \\
+\midrule
+ETF        &  6.12 &  5.87 & $-0.25$ \\
+Financials &  6.72 &  6.32 & $-0.40$ \\
+Healthcare & 12.58 & 12.00 & $-0.58$ \\
+Tech       & 14.45 & 15.04 & $+0.58$ \\
+Energy     &  7.74 &  9.97 & $+2.23$ \\
+Retail     &  9.21 & 13.17 & $+3.96$ \\
+\midrule
+Pooled     & 10.21 & 10.89 & $+0.68$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
 \section{Holdout diagnostics motivating the earnings-aware mechanism}\label{sec:supp_earnings_diag}
 
 The temporal-holdout result of the main text attributed the test-time generalization gap to scheduled corporate events rather than to a broad-market regime shift, but that attribution required ruling out the alternative explanation that the 04-23 and 04-24 capture days landed inside a volatility expansion that the training block did not see. Two diagnostics established the alternative as untenable and pinned the blow-up to ticker-level event behavior. First, the broad-market volatility index VIX traced a flat path through the holdout window: VIX closed at comparable levels on the final training day and the two holdout days, with no intraday excursion during the holdout that approached even a one-standard-deviation move relative to the trailing six-day window. A regime-shift hypothesis required the index to move materially over the holdout, and it did not. Second, the per-ticker ATM~IV trace revealed that the IV expansion on 04-23 and 04-24 was concentrated entirely in the technology sector, and within that sector concentrated on the names with earnings prints inside or adjacent to the holdout window: INTC (which printed inside the window), MSFT, META, and GOOG all exhibited ATM~IV elevations of 5 to 30 percentage points relative to their training-block baselines, while non-Tech names traced ATM~IV paths consistent with their pre-holdout levels. The combination established that the holdout RMSE jump was not a market-wide effect that the architecture had failed to absorb but a localized response to the earnings calendar, and it directly motivated the earnings indicator and peer-coupling feature reported in Configuration~C of Table~\ref{tab:earnings_holdout}. The per-ticker decomposition of the earnings-aware fit on the Tech sector (Table~\ref{tab:tech_pivot}) traced the Configuration~C improvement to the peer-coupling feature: tickers whose own prints fell outside the holdout but whose sector peers printed during it received the largest test-RMSE reductions, while INTC, the print-day ticker, was the one Tech name to worsen because its $+2192\%$ EPS surprise produced a post-print IV crush that no calendar-based indicator could anticipate.
@@ -165,13 +188,40 @@ INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
 \end{tabular}
 \end{table}
 
-\section{LLY short-premium scenario: terminal P\&L statistics}\label{sec:supp_lly_pnl}
+\section{GS short-premium scenario: terminal P\&L statistics}\label{sec:supp_gs_pnl}
 
-The main-text §5 short-premium scenario rendered the share-price, premium, IV, Greek, and terminal-P\&L distributions for the LLY 31-day forward simulation as figures. The corresponding moments and tail statistics per contract are reported in Table~\ref{tab:lly_scenario}. Both legs showed the short-premium asymmetry that the figures rendered qualitatively: a thin-tailed right side with a hard ceiling at the entry premium, paired with a long left tail that extended an order of magnitude beyond the median. The model's $t=0$ Leisen-Reimer fair value sat above the market mid on both contracts (entry edge $+\$2.61$ on the put, $+\$0.58$ on the call), so the shorts were sold at a small discount to the model. The dispersion was substantially larger on the call leg (std $\$42.36$ vs.\ $\$20.22$), and the worst-case loss on the call ($-\$325.62$) exceeded the worst put loss ($-\$174.60$) by a factor of $1.87$, despite the call collecting a smaller entry premium.
+The main-text §5 short-premium scenario rendered the share-price, premium, IV, Greek, and terminal-P\&L distributions for the GS 31-day forward simulation as figures. The corresponding moments and tail statistics per contract are reported in Table~\ref{tab:gs_scenario}. Both legs showed the short-premium asymmetry that the figures rendered qualitatively: a thin-tailed right side with a hard ceiling at the entry premium, paired with a long left tail that extended an order of magnitude beyond the median. The model's $t=0$ Leisen-Reimer fair value sat essentially at the market mid on both contracts (entry edge $+\$0.75$ on the put, $-\$0.02$ on the call), confirming the per-ticker $\psi_{\mathrm{NN}}$ matched the 04-28 GS market IV. The dispersion was larger on the call leg (std $\$51.58$ vs.\ $\$34.12$), and the worst-case loss on the call ($-\$484.57$) exceeded the worst put loss ($-\$323.42$) by a factor of $1.50$, despite the call collecting a smaller entry premium.
 
 \begin{table}[ht]
 \centering
-\caption{Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium was the market mid from the 2026-04-28 capture. The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}
+\caption{Terminal P\&L statistics from 1{,}000 GS 31-day forward simulations of the real 2026-05-29 \$890 put and \$970 call. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}
+\label{tab:gs_scenario}
+\begin{tabular}{lrr}
+\toprule
+Statistic & Short put (\$) & Short call (\$) \\
+\midrule
+Strike $K$                  & 890        & 970       \\
+Market mid (entry premium)  & $+16.51$   & $+16.09$  \\
+Model $t=0$ fair value      & $+17.26$   & $+16.07$  \\
+Entry edge (model $-$ market) & $+0.75$  & $-0.02$   \\
+\midrule
+Mean P\&L                    &  $+1.52$  &  $-9.00$  \\
+Median P\&L                  & $+16.51$  & $+16.09$  \\
+Std P\&L                     &  $34.12$  &  $51.58$  \\
+5\%-tile P\&L                & $-76.13$  & $-113.16$ \\
+Worst-case P\&L              & $-323.42$ & $-484.57$ \\
+Premium kept in full         & $72.2\%$  & $64.3\%$  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{LLY short-premium scenario: cross-ticker validation}\label{sec:supp_lly_scenario}
+
+The cross-ticker validation reported in §\ref{sec:lly_scenario} re-ran the GS pipeline verbatim on an LLY option pair from the same 04-28 capture. Terminal P\&L statistics per contract are reported in Table~\ref{tab:lly_scenario}; the share-price-and-premium panels (Figs.~\ref{fig:lly_put_paths}, \ref{fig:lly_call_paths}), IV trajectories (Fig.~\ref{fig:lly_iv}), and Leisen-Reimer American Greek panels (Fig.~\ref{fig:lly_greeks}) parallel the GS figures in §\ref{sec:scenarios}. The qualitative features---tall premium-ceiling spike, long left tail, fatter short-call wing, leverage-driven Vega expansion on down-paths---all reproduced on a ticker with a different sector, IV regime, and JumpHMM marginal.
+
+\begin{table}[ht]
+\centering
+\caption{Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi_{\mathrm{NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap.}
 \label{tab:lly_scenario}
 \begin{tabular}{lrr}
 \toprule
@@ -179,15 +229,43 @@ Statistic & Short put (\$) & Short call (\$) \\
 \midrule
 Strike $K$                  & 825        & 940       \\
 Market mid (entry premium)  & $+23.30$   & $+20.76$  \\
-Model $t=0$ fair value      & $+25.91$   & $+21.34$  \\
-Entry edge (model $-$ market) & $+2.61$  & $+0.58$   \\
+Model $t=0$ fair value      & $+21.95$   & $+18.96$  \\
+Entry edge (model $-$ market) & $-1.35$  & $-1.80$   \\
 \midrule
-Mean P\&L                    & $+16.94$  & $+1.86$   \\
+Mean P\&L                    & $+14.31$  &  $+6.45$  \\
 Median P\&L                  & $+23.30$  & $+20.76$  \\
-Std P\&L                     &  $20.22$  & $42.36$   \\
-5\%-tile P\&L                & $-28.47$  & $-97.56$  \\
-Worst-case P\&L              & $-174.60$ & $-325.62$ \\
-Premium kept in full         & $83.1\%$  & $70.2\%$  \\
+Std P\&L                     &  $23.75$  & $36.81$   \\
+5\%-tile P\&L                & $-41.54$  & $-79.68$  \\
+Worst-case P\&L              & $-185.19$ & $-303.88$ \\
+Premium kept in full         & $77.4\%$  & $75.7\%$  \\
 \bottomrule
 \end{tabular}
 \end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/lly/lly_short_put_paths.pdf}
+\caption{LLY share-price paths (left) and short 30$\Delta$ put premium trajectories (right); analogue of GS Fig.~\ref{fig:gs_put_paths}. The 30$\Delta$ put strike $K = \$825$ sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot.}
+\label{fig:lly_put_paths}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/lly/lly_short_call_paths.pdf}
+\caption{LLY share-price paths (left, repeated) and short 30$\Delta$ call premium trajectories (right); analogue of GS Fig.~\ref{fig:gs_call_paths}. Top-5\% terminal-price paths in green; the call premium spikes correspond to the right-tail underlying moves.}
+\label{fig:lly_call_paths}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/lly/lly_iv_trajectories.pdf}
+\caption{Path-conditional IV at $K_{\text{put}}$ and $K_{\text{call}}$ over the 31-day horizon; analogue of GS Fig.~\ref{fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}
+\label{fig:lly_iv}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/lly/lly_short_greeks.pdf}
+\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref{fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt{T-t}$ Vega decay both reproduced the GS signatures.}
+\label{fig:lly_greeks}
+\end{figure}
