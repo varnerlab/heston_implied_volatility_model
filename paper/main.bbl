@@ -17,6 +17,7 @@ L.~Andersen.
   model.
 \newblock \emph{Journal of Computational Finance}, 11\penalty0 (3):\penalty0
   1--42, 2008.
+\newblock \doi{10.21314/JCF.2008.189}.
 
 \bibitem[Bayer and Stemper(2018)]{bayer2019}
 C.~Bayer and B.~Stemper.
@@ -28,6 +29,7 @@ F.~Black and M.~Scholes.
 \newblock The pricing of options and corporate liabilities.
 \newblock \emph{Journal of Political Economy}, 81\penalty0 (3):\penalty0
   637--654, 1973.
+\newblock \doi{10.1086/260062}.
 
 \bibitem[Broadie and Detemple(1996)]{broadie1996}
 M.~Broadie and J.~Detemple.
@@ -35,35 +37,41 @@ M.~Broadie and J.~Detemple.
   comparison of existing methods.
 \newblock \emph{Review of Financial Studies}, 9\penalty0 (4):\penalty0
   1211--1250, 1996.
+\newblock \doi{10.1093/rfs/9.4.1211}.
 
 \bibitem[Buehler et~al.(2019)Buehler, Gonon, Teichmann, and Wood]{buehler2019}
 H.~Buehler, L.~Gonon, J.~Teichmann, and B.~Wood.
 \newblock Deep hedging.
 \newblock \emph{Quantitative Finance}, 19\penalty0 (8):\penalty0 1271--1291,
   2019.
+\newblock \doi{10.1080/14697688.2019.1571683}.
 
 \bibitem[Cont(2001)]{cont2001}
 R.~Cont.
 \newblock Empirical properties of asset returns: stylized facts and statistical
   issues.
 \newblock \emph{Quantitative Finance}, 1\penalty0 (2):\penalty0 223--236, 2001.
+\newblock \doi{10.1080/713665670}.
 
 \bibitem[Cont and da~Fonseca(2002)]{cont2002}
 R.~Cont and J.~da~Fonseca.
 \newblock Dynamics of implied volatility surfaces.
 \newblock \emph{Quantitative Finance}, 2\penalty0 (1):\penalty0 45--60, 2002.
+\newblock \doi{10.1088/1469-7688/2/1/304}.
 
 \bibitem[Cox et~al.(1979)Cox, Ross, and Rubinstein]{cox1979}
 J.~C. Cox, S.~A. Ross, and M.~Rubinstein.
 \newblock Option pricing: A simplified approach.
 \newblock \emph{Journal of Financial Economics}, 7\penalty0 (3):\penalty0
   229--263, 1979.
+\newblock \doi{10.1016/0304-405X(79)90015-1}.
 
 \bibitem[Demarta and McNeil(2005)]{demarta2005}
 S.~Demarta and A.~J. McNeil.
 \newblock The $t$ copula and related copulas.
 \newblock \emph{International Statistical Review}, 73\penalty0 (1):\penalty0
   111--129, 2005.
+\newblock \doi{10.1111/j.1751-5823.2005.tb00254.x}.
 
 \bibitem[Derman and Kani(1994)]{derman1994}
 E.~Derman and I.~Kani.
@@ -79,18 +87,18 @@ B.~Dupire.
 J.~Gatheral.
 \newblock A parsimonious arbitrage-free implied volatility parameterization
   with application to the valuation of volatility derivatives.
-\newblock \emph{Presentation at Global Derivatives \& Risk Management, Madrid},
-  2004.
+\newblock Presentation at Global Derivatives \& Risk Management, Madrid, 2004.
 
 \bibitem[Glasserman(2004)]{glasserman2004}
 P.~Glasserman.
 \newblock \emph{Monte Carlo Methods in Financial Engineering}.
 \newblock Stochastic Modelling and Applied Probability. Springer, 2004.
+\newblock \doi{10.1007/978-0-387-21617-1}.
 
 \bibitem[Hagan et~al.(2002)Hagan, Kumar, Lesniewski, and Woodward]{hagan2002}
 P.~S. Hagan, D.~Kumar, A.~S. Lesniewski, and D.~E. Woodward.
 \newblock Managing smile risk.
-\newblock \emph{Wilmott Magazine}, pages 84--108, 2002.
+\newblock \emph{Wilmott Magazine}, pages 84--108, September 2002.
 
 \bibitem[Heston(1993)]{heston1993}
 S.~L. Heston.
@@ -98,18 +106,21 @@ S.~L. Heston.
   applications to bond and currency options.
 \newblock \emph{The Review of Financial Studies}, 6\penalty0 (2):\penalty0
   327--343, 1993.
+\newblock \doi{10.1093/rfs/6.2.327}.
 
 \bibitem[Horvath et~al.(2021)Horvath, Muguruza, and Tomas]{horvath2021}
 B.~Horvath, A.~Muguruza, and M.~Tomas.
 \newblock Deep learning volatility: a deep neural network perspective on
   pricing and calibration in (rough) volatility models.
 \newblock \emph{Quantitative Finance}, 21\penalty0 (1):\penalty0 11--27, 2021.
+\newblock \doi{10.1080/14697688.2020.1817974}.
 
 \bibitem[Jarrow and Rudd(1982)]{jarrow1983}
 R.~Jarrow and A.~Rudd.
 \newblock Approximate option valuation for arbitrary stochastic processes.
 \newblock \emph{Journal of Financial Economics}, 10\penalty0 (3):\penalty0
   347--369, 1982.
+\newblock \doi{10.1016/0304-405X(82)90007-1}.
 
 \bibitem[Leisen and Reimer(1996)]{leisen1996}
 D.~P.~J. Leisen and M.~Reimer.
@@ -117,17 +128,20 @@ D.~P.~J. Leisen and M.~Reimer.
   convergence.
 \newblock \emph{Applied Mathematical Finance}, 3\penalty0 (4):\penalty0
   319--346, 1996.
+\newblock \doi{10.1080/13504869600000015}.
 
 \bibitem[Tian(1993)]{tian1993}
 Y.~Tian.
 \newblock A modified lattice approach to option pricing.
 \newblock \emph{Journal of Futures Markets}, 13\penalty0 (5):\penalty0
   563--577, 1993.
+\newblock \doi{10.1002/fut.3990130509}.
 
 \bibitem[Wiese et~al.(2020)Wiese, Knobloch, Korn, and Kretschmer]{wiese2020}
 M.~Wiese, R.~Knobloch, R.~Korn, and P.~Kretschmer.
 \newblock Quant {GANs}: Deep generation of financial time series.
 \newblock \emph{Quantitative Finance}, 20\penalty0 (9):\penalty0 1419--1440,
   2020.
+\newblock \doi{10.1080/14697688.2020.1730426}.
 
 \end{thebibliography}
