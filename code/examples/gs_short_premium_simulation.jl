@@ -532,6 +532,43 @@ out_B_pdf = joinpath(PLOT_DIR, "gs_short_call_paths.pdf")
 out_B_png = joinpath(PLOT_DIR, "gs_short_call_paths.png")
 savefig(p_B, out_B_pdf); savefig(p_B, out_B_png)
 
+# --- Figure A+B combined: 2x2 panel for the paper ---
+# Row 1 = put scenario (share path with K_p, short-put premium).
+# Row 2 = call scenario (share path with K_c, short-call premium).
+# Panels are rebuilt (rather than reusing the saved p_A/p_B objects) so the
+# combined figure inherits a slightly compressed per-panel size.
+println("Rendering Figure A+B — combined put/call 2x2 ...")
+pAB1 = path_panel(t_axis, S_paths, title_share, "Share price (\$)";
+                  tails = both_tails, legend_pos = :topleft)
+hline!(pAB1, [K_PUT], color = RGB(0.85, 0.65, 0.13), ls = :dash, lw = 3.5, alpha = 1.0,
+       label = @sprintf("30Δ put strike  K = \$%.2f", K_PUT))
+
+pAB2 = path_panel(t_axis, V_put,
+                  "Short 30-day 30Δ put — option price",
+                  "Put price (\$)";
+                  tails = both_tails, legend_pos = :topleft)
+hline!(pAB2, [PREMIUM_PUT_T0], color = COL_PREMIUM, ls = :dash, lw = 1.5,
+       label = @sprintf("Premium received  \$%.2f", PREMIUM_PUT_T0))
+
+pAB3 = path_panel(t_axis, S_paths, title_share, "Share price (\$)";
+                  tails = both_tails, legend_pos = :topleft)
+hline!(pAB3, [K_CALL], color = RGB(0.85, 0.65, 0.13), ls = :dash, lw = 3.5, alpha = 1.0,
+       label = @sprintf("30Δ call strike  K = \$%.2f", K_CALL))
+
+pAB4 = path_panel(t_axis, V_call,
+                  "Short 30-day 30Δ call — option price",
+                  "Call price (\$)";
+                  tails = both_tails, legend_pos = :topleft)
+hline!(pAB4, [PREMIUM_CALL_T0], color = COL_PREMIUM, ls = :dash, lw = 1.5,
+       label = @sprintf("Premium received  \$%.2f", PREMIUM_CALL_T0))
+
+p_AB = plot(pAB1, pAB2, pAB3, pAB4, layout = (2, 2), size = (1500, 1100), dpi = 220,
+            left_margin = 9mm, right_margin = 4mm,
+            bottom_margin = 7mm, top_margin = 4mm)
+out_AB_pdf = joinpath(PLOT_DIR, "gs_short_paths.pdf")
+out_AB_png = joinpath(PLOT_DIR, "gs_short_paths.png")
+savefig(p_AB, out_AB_pdf); savefig(p_AB, out_AB_png)
+
 # --- Figure C: terminal short P&L histograms ---
 println("Rendering Figure C — terminal short P&L distributions ...")
 function pnl_panel(pnl_vec, premium_t0, title_str)
