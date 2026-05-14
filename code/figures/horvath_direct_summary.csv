@@ -1,0 +1,2 @@
+config,n_train,n_test,train_rmse,test_rmse,embed_dim,hidden_dim,n_params
+D_horvath_direct_8d_embedding,103897,26833,0.08290674778571426,0.12357636853179825,8,32,1753

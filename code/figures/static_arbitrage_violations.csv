@@ -1,0 +1,9 @@
+surface_label,ticker,sector,psi_source,S_0,n_grid_pts,n_butterfly,n_butterfly_viol,frac_butterfly_viol,max_butterfly_violation,n_calendar,n_calendar_viol,frac_calendar_viol,max_calendar_violation
+ETF / SPY,SPY,ETF,sector,711.68,400,360,56,0.15555555555555556,-0.015732518319983325,380,23,0.060526315789473685,-0.062494198201240296
+Tech / NVDA,NVDA,Tech,sector,213.15,400,360,17,0.04722222222222222,-0.016233762563471275,380,0,0.0,0.0
+Healthcare / LLY,LLY,Healthcare,sector,873.83,400,360,20,0.05555555555555555,-0.0043862062272330155,380,0,0.0,0.0
+Financials / GS,GS,Financials,sector,926.38,400,360,54,0.15,-0.005676241733433079,380,0,0.0,0.0
+Retail / WMT,WMT,Retail,sector,127.595,400,360,45,0.125,-0.04659105664020669,380,0,0.0,0.0
+Energy / XOM,XOM,Energy,sector,150.55,400,360,24,0.06666666666666667,-0.01318491104100908,380,0,0.0,0.0
+GS per-ticker,GS,Financials,per_ticker,926.38,400,360,36,0.1,-0.003109127777386729,380,0,0.0,0.0
+LLY per-ticker,LLY,Healthcare,per_ticker,873.83,400,360,29,0.08055555555555556,-0.007162552500485812,380,0,0.0,0.0

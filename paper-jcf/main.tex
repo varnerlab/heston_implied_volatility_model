@@ -41,8 +41,12 @@
 \input{sections/methods}
 \input{sections/calibration}
 \input{sections/scenarios}
+\input{sections/adaptive_recalibration}
 \input{sections/discussion}
 \input{sections/conclusion}
+
+\section*{Code and Data Availability}\label{sec:code_availability}
+The framework was implemented as an open-source Julia package, \texttt{HestonIV}, available at \url{https://github.com/varnerlab/heston-implied-volatility-model}. The repository ships the 15-date, 31-ticker, 6-sector option-ladder CSVs used for calibration; the pretrained JumpHMM portfolio surrogate; the calibrated $\psi_{\mathrm{NN}}$ cache (\texttt{calibrate\_ladders\_per\_ticker\_nn\_cache.jld2}) that backs the §\ref{sec:scenarios} scenarios; and per-scenario simulation caches (\texttt{\{ticker\}\_short\_premium\_simulation\_cache.jld2}) that reproduce the figures without re-running the JumpHMM forward pass. The earnings calendar used for the temporal-holdout features is included under \texttt{code/data/earnings/}. Setup, dependency-pin (\texttt{Project.toml}/\texttt{Manifest.toml}), and one-line invocations for every script that produces a paper figure are documented in \texttt{SETUP.md}. The walk-forward, static-arbitrage, and SABR-baseline scripts used in the revision are co-located under \texttt{code/examples/}.
 
 \bibliographystyle{apalike}
 \bibliography{references}

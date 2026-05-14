@@ -28,6 +28,8 @@ include("Types.jl")
 include("ThetaFunction.jl")
 include("HestonVariance.jl")
 include("CRRTree.jl")
+include("LRTree.jl")
+include("IVInversion.jl")
 include("Pipeline.jl")
 include("Calibration.jl")
 
@@ -46,6 +48,12 @@ export variance_to_iv, variance_path_to_iv
 
 # CRR tree
 export crr_american_price, crr_european_price, price_contract
+
+# Leisen-Reimer American option pricer
+export lr_american_price
+
+# Black-Scholes IV inversion
+export bs_price, bs_vega, bs_implied_vol
 
 # Pipeline
 export run_scenario, run_single_asset_scenario, summarize

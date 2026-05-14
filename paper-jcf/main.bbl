@@ -92,6 +92,12 @@ Horvath, B., Muguruza, A., and Tomas, M. (2021).
   pricing and calibration in (rough) volatility models.
 \newblock {\em Quantitative Finance}, 21(1):11--27.
 
+\bibitem[Hu et~al., 2022]{hu2022lora}
+Hu, E.~J., Shen, Y., Wallis, P., Allen-Zhu, Z., Li, Y., Wang, S., Wang, L., and
+  Chen, W. (2022).
+\newblock {LoRA}: Low-rank adaptation of large language models.
+\newblock In {\em International Conference on Learning Representations (ICLR)}.
+
 \bibitem[Jarrow and Rudd, 1982]{jarrow1983}
 Jarrow, R. and Rudd, A. (1982).
 \newblock Approximate option valuation for arbitrary stochastic processes.
