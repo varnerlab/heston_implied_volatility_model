@@ -1,0 +1,207 @@
+\section{Sector-NN calibration: corpus partition and per-sector breakdown}\label{sec:supp_sector_nn}
+
+We decomposed the headline three-way RMSE comparison along two axes and observed that the ETF and Technology sectors together carried roughly three-quarters of the corpus, the sector NN reduced RMSE in every sector over the shared NN with the largest gains in ETF and financials, and the per-ticker residual error concentrated on a small set of technology and healthcare names (Tables~\ref{tab:sector_map}, \ref{tab:per_sector}, \ref{tab:worst_tickers}). The corpus partition that defined the sector grouping is reported in Table~\ref{tab:sector_map}, the per-sector RMSE decomposition in Table~\ref{tab:per_sector}, and the per-ticker fit ranking under the sector NN in Table~\ref{tab:worst_tickers}.
+
+\begin{table}[ht]
+\centering
+\caption{Sector partition of the 31-ticker ladder. Each ticker appeared on at least one of fifteen capture dates (2026-04-14 through 2026-05-11); per-sector observation counts were pooled across dates. ETF observation counts were substantially larger than other sectors because SPY, QQQ, and IWM carried far deeper strike ladders than individual-name chains.}\label{tab:sector_map}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lrl}
+\toprule
+Sector & Observations & Tickers \\
+\midrule
+ETF        & 102{,}738 & IWM, QQQ, SPY \\
+Technology &  68{,}334 & AAPL, AMD, AVGO, GOOG, INTC, META, MSFT, MU, NVDA, QCOM \\
+Healthcare &  26{,}387 & ABBV, AMGN, BMY, JNJ, LLY, MRNA, PFE, UNH \\
+Financials &  17{,}938 & BAC, GS, JPM, WFC \\
+Retail     &  11{,}320 & TGT, UPS, WMT \\
+Energy     &   7{,}832 & CVX, OXY, XOM \\
+\bottomrule
+\end{tabular}}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Per-sector RMSE (\% IV) across the three calibration strategies on the 31-ticker ladder. The sector NN reduced RMSE in every sector over the shared NN, with the largest absolute gains in ETF and financials, where the global shape poorly represented the local geometry. Healthcare and technology retained the largest residual errors, reflecting within-sector smile heterogeneity that a single shared sector $\psi$ could not absorb.}\label{tab:per_sector}
+\begin{tabular}{lrrrr}
+\toprule
+Sector & Parametric & Shared NN & Sector NN & Obs.\ count \\
+\midrule
+ETF        & 10.54 &  8.69 &  6.10 & 102{,}738 \\
+Financials &  9.05 &  7.79 &  6.70 &  17{,}938 \\
+Energy     &  9.36 &  8.24 &  7.88 &   7{,}832 \\
+Retail     & 11.73 & 10.23 &  9.50 &  11{,}320 \\
+Healthcare & 13.49 & 12.71 & 12.53 &  26{,}387 \\
+Technology & 15.58 & 15.31 & 14.47 &  68{,}334 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{Best and worst individual ticker fits under the sector-specific NN calibration, ranked by RMSE across all 31 tickers. The best fits were dominated by the broad-market ETFs and the deep-liquidity financials (GS, JPM); the worst fits were concentrated in technology (QCOM, MU, INTC, AMD) and healthcare (PFE, MRNA), where within-sector smile heterogeneity was largest. PFE and BMY remained the only tickers below the 2{,}000-observation per-ticker threshold.}\label{tab:worst_tickers}
+\begin{tabular}{llrrl}
+\toprule
+Rank & Ticker & Obs.\ count & RMSE (\% IV) & Sector \\
+\midrule
+\multicolumn{5}{l}{\emph{Best 5}} \\
+ 1 & GS   &  8{,}772 & 5.40 & Financials \\
+ 2 & SPY  & 42{,}224 & 6.02 & ETF \\
+ 3 & IWM  & 21{,}368 & 6.11 & ETF \\
+ 4 & QQQ  & 39{,}146 & 6.17 & ETF \\
+ 5 & JPM  &  3{,}720 & 6.18 & Financials \\
+\midrule
+\multicolumn{5}{l}{\emph{Worst 5}} \\
+27 & PFE  &  1{,}300 & 17.66 & Healthcare \\
+28 & AMD  &  4{,}566 & 17.74 & Technology \\
+29 & INTC &  3{,}417 & 17.78 & Technology \\
+30 & MU   &  6{,}619 & 18.45 & Technology \\
+31 & QCOM &  3{,}375 & 21.46 & Technology \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Leave-one-date-out validation on the fifteen-date corpus}\label{sec:supp_loo}
+
+We held out the latest capture (2026-05-11) and retrained the sector $\psi_{\text{NN}}$ on the remaining fourteen dates as a leave-one-date-out check, and observed that the held-out test RMSE landed within $0.68\%$ IV of the pooled train RMSE (Table~\ref{tab:loo_sector_nn}). The held-out day comprised 14{,}442 observations ($6.2\%$ of the corpus); we trained the six sector networks on the remaining fourteen dates using identical architecture, schedule, and seed, standardised only on the training rows so the test split could not leak through the input scaling, and evaluated test RMSE on the held-out day. The overall train RMSE of $10.21\%$ matched the full-corpus in-sample number of $10.24\%$ within rounding, confirming that withholding one day did not perturb the fit, and the held-out test RMSE of $10.89\%$ left a generalization gap of only $+0.68\%$ IV pooled across all six sectors. The gap was strongly sector-specific: four of six sectors (ETF, Financials, Healthcare, Tech) carried negative or small-positive gaps, while Energy ($+2.23\%$) and Retail ($+3.96\%$) showed larger positive gaps consistent with the small per-sector sample sizes on the holdout day amplifying single-name idiosyncrasies. The overall pattern was consistent with the temporal-holdout result of §\ref{sec:earnings_holdout}: with no earnings prints inside the holdout, the sector NN generalized to an unseen capture date with $\sim 7\%$ relative degradation in RMSE, far below what an overfit model would exhibit.
+
+\begin{table}[ht]
+\centering
+\caption{Leave-one-date-out validation of the sector NN, holding out 2026-05-11. Per-sector train and test RMSE (\% IV) and gap (test $-$ train). The pooled gap of $+0.68\%$ IV is small relative to the in-sample RMSE itself, indicating that the architecture does not overfit the fifteen-date corpus.}\label{tab:loo_sector_nn}
+\begin{tabular}{lrrr}
+\toprule
+Sector & Train (\%) & Test (\%) & Gap (\%) \\
+\midrule
+ETF        &  6.12 &  5.87 & $-0.25$ \\
+Financials &  6.72 &  6.32 & $-0.40$ \\
+Healthcare & 12.58 & 12.00 & $-0.58$ \\
+Tech       & 14.45 & 15.04 & $+0.58$ \\
+Energy     &  7.74 &  9.97 & $+2.23$ \\
+Retail     &  9.21 & 13.17 & $+3.96$ \\
+\midrule
+Pooled     & 10.21 & 10.89 & $+0.68$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Holdout diagnostics motivating the earnings-aware mechanism}\label{sec:supp_earnings_diag}
+
+We decomposed the holdout test error on the Tech sector across the pooled control (A) and the earnings-aware fit (C) and traced the Configuration-C improvement to the peer-coupling feature: tickers whose own prints fell outside the holdout but whose sector peers printed during it received the largest test-RMSE reductions, while INTC, the print-day ticker, was the one Tech name to worsen (Table~\ref{tab:tech_pivot}). The decomposition rested on two preceding diagnostics that established the holdout RMSE jump as a localized earnings response rather than a broad-market regime shift. First, the broad-market volatility index VIX traced a flat path through the holdout window: VIX closed at comparable levels on the final training day and the two holdout days, with no intraday excursion during the holdout that approached even a one-standard-deviation move relative to the trailing six-day window. A regime-shift hypothesis required the index to move materially over the holdout, and it did not. Second, the per-ticker ATM~IV trace revealed that the IV expansion on 04-23 and 04-24 was concentrated entirely in the technology sector, and within that sector concentrated on the names with earnings prints inside or adjacent to the holdout window: INTC (which printed inside the window), MSFT, META, and GOOG all exhibited ATM~IV elevations of 5 to 30 percentage points relative to their training-block baselines, while non-Tech names traced ATM~IV paths consistent with their pre-holdout levels. The combination established that the holdout RMSE jump was not a market-wide effect that the architecture had failed to absorb but a localized response to the earnings calendar, and it directly motivated the earnings indicator and peer-coupling feature reported in Configuration~C of Table~\ref{tab:earnings_holdout}. INTC, the print-day ticker, was the one Tech name to worsen under the earnings-aware fit because its $+2192\%$ EPS surprise produced a post-print IV crush that no calendar-based indicator could anticipate.
+
+\begin{table}[ht]
+\centering
+\caption{Per-ticker test RMSE on the Tech sector across the pooled control (A) and the earnings-aware fit (C). Columns $e$ and $e^{\text{peer}}$ report the median signed days-to-earnings and the minimum same-sector peer distance for each ticker on the holdout days. The largest gains accrued to tickers whose peers printed within the holdout (QCOM, AMD, META, MSFT, GOOG); INTC, the print-day ticker, was the one name that worsened, reflecting an unanticipated outcome that no calendar-based indicator could absorb.}\label{tab:tech_pivot}
+\begin{tabular}{lrrrrr}
+\toprule
+Ticker & $e$ & $e^{\text{peer}}$ & A: pooled (\%) & C: earnings-aware (\%) & $\Delta$ (\%) \\
+\midrule
+QCOM & $+5$  & $1$ & 41.66 & 37.59 & $-4.07$ \\
+AMD  & $+11$ & $1$ & 40.07 & 36.50 & $-3.57$ \\
+META & $+5$  & $1$ & 14.32 & 10.73 & $-3.59$ \\
+MSFT & $+5$  & $1$ & 14.00 & 10.73 & $-3.28$ \\
+GOOG & $+5$  & $1$ &  9.87 &  7.90 & $-1.97$ \\
+MU   & $-30$ & $1$ & 16.95 & 15.59 & $-1.36$ \\
+AAPL & $+6$  & $1$ & 10.42 & 10.34 & $-0.08$ \\
+AVGO & $+30$ & $1$ & 12.58 & 12.83 & $+0.24$ \\
+NVDA & $+26$ & $1$ &  9.43 & 10.47 & $+1.05$ \\
+INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Short-premium scenarios: P\&L statistics and cross-ticker validation}\label{sec:supp_short_premium}
+
+We tabulated the moments and tail statistics per contract for the GS 31-day forward simulation and observed the short-premium asymmetry that the main-text figures rendered qualitatively: a thin-tailed right side with a hard ceiling at the entry premium, paired with a long left tail that extended an order of magnitude beyond the median (Table~\ref{tab:gs_scenario}). The model's $t=0$ Leisen-Reimer fair value sat essentially at the market mid on both contracts (entry edge $+\$0.75$ on the put, $-\$0.02$ on the call), confirming the per-ticker $\psi_{\mathrm{NN}}$ matched the 04-28 GS market IV. The dispersion was larger on the call leg (std $\$51.58$ vs.\ $\$34.12$), and the worst-case loss on the call ($-\$484.57$) exceeded the worst put loss ($-\$323.42$) by a factor of $1.50$, despite the call collecting a smaller entry premium.
+
+\begin{table}[ht]
+\centering
+\caption{Terminal P\&L statistics from 1{,}000 GS 31-day forward simulations of the real 2026-05-29 \$890 put and \$970 call. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}
+\label{tab:gs_scenario}
+\begin{tabular}{lrr}
+\toprule
+Statistic & Short put (\$) & Short call (\$) \\
+\midrule
+Strike $K$                  & 890        & 970       \\
+Market mid (entry premium)  & $+16.51$   & $+16.09$  \\
+Model $t=0$ fair value      & $+17.26$   & $+16.07$  \\
+Entry edge (model $-$ market) & $+0.75$  & $-0.02$   \\
+\midrule
+Mean P\&L                    &  $+1.52$  &  $-9.00$  \\
+Median P\&L                  & $+16.51$  & $+16.09$  \\
+Std P\&L                     &  $34.12$  &  $51.58$  \\
+5\%-tile P\&L                & $-76.13$  & $-113.16$ \\
+Worst-case P\&L              & $-323.42$ & $-484.57$ \\
+Premium kept in full         & $72.2\%$  & $64.3\%$  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{algorithm}[ht]
+\caption{Path-conditional Greeks via central finite differences on the LR pricer}\label{alg:greeks}
+\begin{algorithmic}[1]
+\Require State $(S, \sigma, \tau)$ with $\tau = T - t$; contract $(K, r)$; LR depth $N_{\mathrm{LR}}$; spot bump $h_S$ (relative); IV bump $h_\sigma$ (absolute).
+\Ensure $\Delta$, $\Gamma$, Vega.
+\State $P_+^S \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S(1+h_S),\, K,\, \sigma,\, \tau,\, r)$
+\State $P_-^S \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S(1-h_S),\, K,\, \sigma,\, \tau,\, r)$
+\State $P_0  \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S,\, K,\, \sigma,\, \tau,\, r)$
+\State $P_+^\sigma \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S,\, K,\, \sigma + h_\sigma,\, \tau,\, r)$
+\State $P_-^\sigma \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S,\, K,\, \sigma - h_\sigma,\, \tau,\, r)$
+\State $\Delta \gets \dfrac{P_+^S - P_-^S}{2\, h_S\, S}$
+\State $\Gamma \gets \dfrac{P_+^S - 2\, P_0 + P_-^S}{(h_S\, S)^2}$
+\State $\mathrm{Vega} \gets \dfrac{P_+^\sigma - P_-^\sigma}{2\, h_\sigma}$ \Comment{per unit IV; multiply by $0.01$ for per-$1\%$ IV}
+\State \Return $(\Delta,\, \Gamma,\, \mathrm{Vega})$
+\end{algorithmic}
+\end{algorithm}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/gs/gs_short_greeks.pdf}
+\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the GS put and call strikes over the 31-day horizon, computed by central finite differences (Algorithm~\ref{alg:greeks}) on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta$/$\Gamma$, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta$. Middle: $\Gamma$, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt{T-t}$ on every path. Tail overlays as in Fig.~\ref{fig:gs_paths}.}
+\label{fig:gs_greeks}
+\end{figure}
+
+We re-ran the GS pipeline verbatim on an LLY option pair from the same 04-28 capture and observed that the qualitative features (tall premium-ceiling spike, long left tail, fatter short-call wing, leverage-driven Vega expansion on down-paths) reproduced on a ticker with a different sector, IV regime, and JumpHMM marginal (Table~\ref{tab:lly_scenario}; Figs.~\ref{fig:lly_paths}, \ref{fig:lly_iv}, \ref{fig:lly_greeks}). Terminal P\&L statistics per contract are reported in Table~\ref{tab:lly_scenario}; the share-price-and-premium panel (Fig.~\ref{fig:lly_paths}), IV trajectories (Fig.~\ref{fig:lly_iv}), and Leisen-Reimer American Greek panels (Fig.~\ref{fig:lly_greeks}) parallel the GS figures in §\ref{sec:scenarios}.
+
+\begin{table}[ht]
+\centering
+\caption{Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi_{\mathrm{NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap.}
+\label{tab:lly_scenario}
+\begin{tabular}{lrr}
+\toprule
+Statistic & Short put (\$) & Short call (\$) \\
+\midrule
+Strike $K$                  & 825        & 940       \\
+Market mid (entry premium)  & $+23.30$   & $+20.76$  \\
+Model $t=0$ fair value      & $+21.95$   & $+18.96$  \\
+Entry edge (model $-$ market) & $-1.35$  & $-1.80$   \\
+\midrule
+Mean P\&L                    & $+14.31$  &  $+6.45$  \\
+Median P\&L                  & $+23.30$  & $+20.76$  \\
+Std P\&L                     &  $23.75$  & $36.81$   \\
+5\%-tile P\&L                & $-41.54$  & $-79.68$  \\
+Worst-case P\&L              & $-185.19$ & $-303.88$ \\
+Premium kept in full         & $77.4\%$  & $75.7\%$  \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/lly/lly_short_paths.pdf}
+\caption{Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days; analogue of GS Fig.~\ref{fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call).}
+\label{fig:lly_paths}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/lly/lly_iv_trajectories.pdf}
+\caption{Path-conditional IV at $K_{\text{put}}$ and $K_{\text{call}}$ over the 31-day horizon; analogue of GS Fig.~\ref{fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}
+\label{fig:lly_iv}
+\end{figure}
+
+\begin{figure}[ht]
+\centering
+\includegraphics[width=\textwidth]{sections/figures/lly/lly_short_greeks.pdf}
+\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref{fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt{T-t}$ Vega decay both reproduced the GS signatures.}
+\label{fig:lly_greeks}
+\end{figure}

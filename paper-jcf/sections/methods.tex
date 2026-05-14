@@ -1,0 +1,68 @@
+\section{Methods}\label{sec:methods}
+
+\subsection{Pipeline overview}
+
+The generator produced synthetic American option prices through a three-stage pipeline:
+\begin{align}\label{eq:pipeline}
+    &\underbrace{\text{JumpHMM}(\text{prices})}_{\text{Stage 1}}
+    \;\to\; \{S_t,\, s_t,\, \text{jumps}\}
+    \;\to\; \underbrace{dv \text{ process}}_{\text{Stage 2}}
+    \;\to\; \sigma_{\text{imp}} = \sqrt{v_t} \nonumber\\
+    &\quad\to\; \underbrace{\text{CRR}(S_t,\, \sigma_{\text{imp}},\, K,\, \text{DTE},\, r_f)}_{\text{Stage 3}}
+    \;\to\; P_{\text{american}}
+\end{align}
+This ordering was dictated by data flow: the JumpHMM produced the price paths and regime-state sequences that the Heston process required as inputs, and the Heston process produced the IV values that the CRR tree required for pricing. Each stage was self-contained, so the pipeline could be run forward without iteration or feedback from downstream stages.
+
+\subsection{Modified Heston variance process}\label{sec:theta_function}
+
+We modified the standard Heston process~\eqref{eq:heston_standard} by making the mean-reversion target time-varying:
+\begin{equation}\label{eq:heston_modified}
+    dv = \kappa\bigl(\theta(t) - v\bigr)\,dt + \sigma_v \sqrt{v}\,dW_v
+\end{equation}
+The mean-reversion target decomposed into a per-ticker base level, an aggregate market mood modulator, and a contract-specific smile and term-structure adjustment that included a scheduled-event indicator:
+\begin{equation}\label{eq:theta}
+    \theta(i, t) = \theta_{i,\,s_t} \cdot \bigl(1 + \gamma \cdot M_t\bigr) \cdot \psi\bigl(\mathrm{DTE}_t,\; K/S_t,\; e_{i,t},\; e^{\text{peer}}_{i,t}\bigr)
+\end{equation}
+where $\theta_{i,\,s_t}$ was a per-ticker, regime-dependent variance level (one value per ticker $i$ per HMM state $s_t$); $\gamma \geq 0$ was the market mood sensitivity controlling how strongly aggregate stress elevated IV; $M_t \in [0, 1]$ was the aggregate market mood; and $\psi$ was the smile, term-structure, and event-shape adjustment with two earnings-event inputs $e_{i,t}$ (signed days from $t$ to ticker $i$'s nearest earnings print) and $e^{\text{peer}}_{i,t}$ (the minimum of $|e_{j,t}|$ over same-sector equity peers $j \neq i$). The regime-dependent base $\theta_{i,\,s_t}$ linked the Heston process directly to the JumpHMM state sequence for forward simulation: when the HMM transitioned into a tail state (via a Poisson jump or an extreme Markov transition), $\theta_{i,\,s_t}$ rose, elevating the IV target. This mechanism produced the leverage effect as an emergent property of the return dynamics rather than as a separate model component: large negative returns drove the HMM into low-numbered tail states with $p_{\text{neg}} \approx 0.52$, which in turn elevated $\theta$. For the IV-surface calibration that follows, we restricted~\eqref{eq:theta} to the operational form
+\begin{equation}\label{eq:theta_calibration}
+    \theta_{\text{cal}}(i, t) = \theta_i \cdot \psi\bigl(\mathrm{DTE}_t,\; K/S_t,\; e_{i,t},\; e^{\text{peer}}_{i,t}\bigr)
+\end{equation}
+in which $\gamma = 0$ (the aggregate mood multiplier was reserved for forward simulation with simulated state paths) and the per-state level $\theta_{i,\,s_t}$ collapsed to a single per-ticker level $\theta_i$ (since the calibration corpus consisted of observation-day IV surfaces rather than state-conditioned histories). Both restrictions were transparent to $\psi$, so the shape function carried over without modification when the full state-and-mood mechanism was reactivated for simulation.
+
+The function $\psi$ captured the shape of the IV surface with five parameters:
+\begin{equation}\label{eq:psi}
+    \psi(\tau,\; m) = \exp\!\Big(\beta_1 \ln\tau + \beta_2 \ln m + \beta_3 \ln\tau\,\ln m + \beta_4 (\ln m)^2 + \beta_5 (\ln\tau)^2\Big)
+\end{equation}
+where $\tau = \max(\mathrm{DTE}, 1)$ and $m = K/S$. The parameter $\beta_1$ controlled the linear term-structure decay; $\beta_2$ controlled the skew (negative values produced put skew, with OTM puts having higher IV than OTM calls); $\beta_3$ captured the DTE-skew interaction (the skew flattened at longer maturities); $\beta_4$ controlled the smile curvature; and $\beta_5$ controlled the DTE curvature, capturing the U-shaped ATM term structure where short-dated and long-dated IV were both elevated relative to intermediate maturities.
+
+Rather than specifying a separate initial variance $v_0$, we initialized the variance process at its mean-reversion target:
+\begin{equation}\label{eq:v0}
+    v_0 = \theta(s_0,\; \mathrm{DTE},\; K/S_0,\; M_0)
+\end{equation}
+This ensured that each (ticker, strike, DTE) triple started at its own equilibrium implied volatility. The initial IV surface inherited the smile, skew, and term structure encoded in $\psi$ without requiring any external IV data. Different contracts on the same underlying received different $v_0$ values, and the variance process immediately began mean-reverting around its local $\theta(t)$. The value of this design choice lay in eliminating $v_0$ as a free parameter: the model did not require a separate calibration of the initial IV surface, as it was determined by construction from $\theta$.
+
+The market mood $M_t$ was defined as the fraction of tickers currently occupying tail HMM states, where $N$ was the JumpHMM state count and $N_{\text{tail}}$ denoted the number of extreme states at each end of the state space (inherited from the JumpHMM fit):
+\begin{equation}\label{eq:mood}
+    M_t = \frac{1}{N_{\text{tickers}}} \sum_{i=1}^{N_{\text{tickers}}} \mathbf{1}\!\left\{s_t^{(i)} \leq N_{\text{tail}} \;\text{or}\; s_t^{(i)} > N - N_{\text{tail}}\right\}
+\end{equation}
+This signal was fully endogenous to the JumpHMM copula model; it required no external data (e.g., VIX) and introduced no circularity. When multiple tickers simultaneously occupied tail states, the mood rose, elevating $\theta$ and thus IV across all contracts, so that correlated IV spikes during market stress events emerged by construction. The variance process was discretized via Euler-Maruyama with a reflecting boundary at zero and a daily time step $\Delta t = 1/252$:
+\begin{equation}\label{eq:euler}
+    v_{t+1} = \left| v_t + \kappa\bigl(\theta_t - v_t\bigr)\Delta t + \sigma_v \sqrt{\max(v_t, 0)}\,\sqrt{\Delta t}\, Z_t \right|, \quad Z_t \sim \mathcal{N}(0, 1)
+\end{equation}
+The reflecting boundary allowed $\theta$ to vary freely across HMM states without requiring the Feller condition $2\kappa\theta > \sigma_v^2$ to hold at every timestep~\cite{andersen2008}, a practical necessity since tail states could drive $\theta$ to values where the Feller condition would otherwise have been violated. American option prices were computed from the resulting IV using a CRR binomial tree with 200 steps per contract, a depth chosen because the price oscillation amplitude across that range fell below $\$0.05$ on the contracts of interest, well inside the bid-ask spread of the underlying market.
+
+\subsection{Neural surrogate for $\psi$}\label{sec:psi_nn}
+
+The parametric form of $\psi$ in equation~\eqref{eq:psi} used five shape parameters shared across all contracts on a given ticker. When the model was applied to a broad universe spanning multiple sectors, this global shape became a bottleneck: the semiconductor smile geometry differed systematically from mega-cap ETFs, healthcare names carried idiosyncratic event risk, and energy tickers inherited commodity-driven skew patterns not expressible by a five-term log-polynomial. We therefore replaced the parametric $\psi$ with a neural surrogate~\cite{horvath2021}, keeping the multiplicative decomposition $\sigma_{\text{model}}^2 = \theta_{\text{ticker}} \cdot \psi$ but allowing the shape to be data-driven and adding two scheduled-event inputs $(e,\,e^{\text{peer}})$ that captured pre-earnings IV expansion and same-sector earnings spillover:
+\begin{equation}\label{eq:psi_nn}
+    \psi_{\text{NN}}(\ln\tau,\,\ln m,\,e,\,e^{\text{peer}}) = \exp\!\bigl(\mathrm{NN}(\tilde z_\tau,\,\tilde z_m,\,\tilde z_e,\,\tilde z_{e^{\text{peer}}})\bigr)
+\end{equation}
+where each input was standardized to its training-set mean and standard deviation, $\tilde z_x = (x - \mu_x)/\sigma_x$. The earnings inputs were the signed clipped days-to-earnings for the contract's ticker, $e = \mathrm{clip}(\Delta_{\text{earn}}^{(i)},\,-30,\,30)$, and the minimum absolute days-to-earnings over same-sector equity peers excluding self, $e^{\text{peer}} = \min_{j \neq i,\, c(j)=c(i)} |\Delta_{\text{earn}}^{(j)}|$ (clipped to 30). The peer feature carried the sector-coupling signal: a ticker $j$ in the same sector printing on day $t$ contributed $e^{\text{peer}} = 0$ for all of $i$'s contracts that day, which let the network learn the IV-spillover shape characteristic of the sector. For ETFs (no own earnings), $e$ was set equal to $e^{\text{peer}}$ taken over the full equity universe. The network produced $\ln\psi$ so that $\psi > 0$ by construction, preserving the log-Gaussian interpretation of the smile surface used in the parametric form. Each sector network was a two-hidden-layer multilayer perceptron with $\tanh$ activations: $4 \to 16 \to 16 \to 1$ (369 parameters) for groups with $\geq 2000$ observations and $4 \to 8 \to 8 \to 1$ (121 parameters) for smaller groups, a width chosen to keep the observations-to-parameters ratio above 30 across all sector fits.
+
+The decomposition defined a natural hierarchy of sharing. At one extreme, a single global $\psi_{\text{NN}}$ shared across all tickers assumed that smile geometry was universal and left only the variance level $\theta_{\text{ticker}}$ to distinguish names. At the other extreme, a per-ticker $\psi_{\text{NN}}$ recovered ticker-specific shape but required enough data per name to resolve the surface without overfitting. We adopted a sector-specific intermediate: one $\psi_{\text{NN}}^{(c)}$ per sector $c$, with all tickers within a sector sharing shape but each ticker retaining its own $\theta_{\text{ticker}}$. This choice reflected the empirical observation that within-sector tickers shared dominant risk factors (technology names tracked semiconductor cycles, healthcare names tracked FDA and trial catalysts, financials tracked rate expectations), so pooling shape across a sector provided a favorable bias-variance tradeoff at the current data volume. As per-ticker sample sizes grew, the same architecture supported relaxation to per-ticker networks without changing the downstream pipeline.
+
+Training minimized the mean squared IV error jointly over the network weights and the per-ticker log-variance levels $\{\ln\theta_{\text{ticker}}\}$:
+\begin{equation}\label{eq:nn_loss}
+    \min_{w,\,\{\ln\theta_t\}} \;\frac{1}{n} \sum_{i=1}^{n} \Bigl(\sqrt{\theta_{t(i)} \cdot \psi_{\text{NN}}(\ln\tau_i,\,\ln m_i,\,e_i,\,e^{\text{peer}}_i;\,w)} - \text{IV}_{\text{market},i}\Bigr)^2
+\end{equation}
+where $t(i)$ denoted the ticker of the $i$th observation. The log-variance levels were initialized from each ticker's mean squared market IV and then updated jointly with the network weights under a single Adam optimizer, which coupled the level and shape fits and avoided the chicken-and-egg problem of fitting one conditional on the other. The learning rate followed a step schedule (1\mbox{e-3} $\to$ 5\mbox{e-4} at epoch 500 $\to$ 2\mbox{e-4} at 1000 $\to$ 1\mbox{e-4} at 1500), and training ran up to 2000 epochs with a best-checkpoint patience of 200 epochs on the training loss. Earnings dates were sourced from the public Yahoo Finance calendar and joined to each contract by ticker and observation date.

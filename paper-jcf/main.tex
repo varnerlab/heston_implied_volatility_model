@@ -1,0 +1,59 @@
+\documentclass[11pt]{article}
+
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{enumitem}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{subcaption}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{setspace}
+\usepackage{authblk}
+\usepackage[round,authoryear]{natbib}
+\usepackage{lineno}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\onehalfspacing
+\linenumbers
+
+\title{Synthetic American Option Pricing via\\Jump-HMM-Driven Heston Implied Volatility}
+
+\author[ ]{Julia Sun}
+\author[ ]{Zheyu Jin}
+\author[ ]{Jiawei Zhang}
+\author[*]{Jeffrey D.\ Varner}
+\affil[ ]{Robert Frederick Smith School of Chemical and Biomolecular Engineering, Cornell University, Ithaca, NY 14853, USA}
+\affil[*]{Corresponding author: \texttt{jdv27@cornell.edu}}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+\input{sections/abstract}
+\end{abstract}
+
+\input{sections/introduction}
+\input{sections/background}
+\input{sections/methods}
+\input{sections/calibration}
+\input{sections/scenarios}
+\input{sections/discussion}
+\input{sections/conclusion}
+
+\bibliographystyle{apalike}
+\bibliography{references}
+
+\clearpage
+
+\appendix
+\renewcommand{\thefigure}{S\arabic{figure}}
+\renewcommand{\thetable}{S\arabic{table}}
+\setcounter{figure}{0}
+\setcounter{table}{0}
+\input{sections/supplement}
+
+\end{document}

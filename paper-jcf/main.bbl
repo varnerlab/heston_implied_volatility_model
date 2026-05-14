@@ -1,0 +1,116 @@
+\begin{thebibliography}{}
+
+\bibitem[Alswaidan and Varner, 2026]{jumphmm2025}
+Alswaidan, A. and Varner, J.~D. (2026).
+\newblock Hybrid hidden markov model for modeling equity excess growth rate
+  dynamics: A discrete-state approach with jump-diffusion.
+\newblock {\em arXiv preprint arXiv:2603.10202}.
+
+\bibitem[Andersen, 2008]{andersen2008}
+Andersen, L. (2008).
+\newblock Simple and efficient simulation of the {H}eston stochastic volatility
+  model.
+\newblock {\em Journal of Computational Finance}, 11(3):1--42.
+
+\bibitem[Bayer and Stemper, 2018]{bayer2019}
+Bayer, C. and Stemper, B. (2018).
+\newblock Deep calibration of rough stochastic volatility models.
+\newblock {\em arXiv preprint arXiv:1810.03399}.
+
+\bibitem[Black and Scholes, 1973]{black1973}
+Black, F. and Scholes, M. (1973).
+\newblock The pricing of options and corporate liabilities.
+\newblock {\em Journal of Political Economy}, 81(3):637--654.
+
+\bibitem[Broadie and Detemple, 1996]{broadie1996}
+Broadie, M. and Detemple, J. (1996).
+\newblock American option valuation: New bounds, approximations, and a
+  comparison of existing methods.
+\newblock {\em Review of Financial Studies}, 9(4):1211--1250.
+
+\bibitem[Buehler et~al., 2019]{buehler2019}
+Buehler, H., Gonon, L., Teichmann, J., and Wood, B. (2019).
+\newblock Deep hedging.
+\newblock {\em Quantitative Finance}, 19(8):1271--1291.
+
+\bibitem[Cont, 2001]{cont2001}
+Cont, R. (2001).
+\newblock Empirical properties of asset returns: stylized facts and statistical
+  issues.
+\newblock {\em Quantitative Finance}, 1(2):223--236.
+
+\bibitem[Cont and da~Fonseca, 2002]{cont2002}
+Cont, R. and da~Fonseca, J. (2002).
+\newblock Dynamics of implied volatility surfaces.
+\newblock {\em Quantitative Finance}, 2(1):45--60.
+
+\bibitem[Cox et~al., 1979]{cox1979}
+Cox, J.~C., Ross, S.~A., and Rubinstein, M. (1979).
+\newblock Option pricing: A simplified approach.
+\newblock {\em Journal of Financial Economics}, 7(3):229--263.
+
+\bibitem[Demarta and McNeil, 2005]{demarta2005}
+Demarta, S. and McNeil, A.~J. (2005).
+\newblock The $t$ copula and related copulas.
+\newblock {\em International Statistical Review}, 73(1):111--129.
+
+\bibitem[Derman and Kani, 1994]{derman1994}
+Derman, E. and Kani, I. (1994).
+\newblock Riding on a smile.
+\newblock {\em Risk}, 7(2):32--39.
+
+\bibitem[Dupire, 1994]{dupire1994}
+Dupire, B. (1994).
+\newblock Pricing with a smile.
+\newblock {\em Risk}, 7(1):18--20.
+
+\bibitem[Gatheral, 2004]{gatheral2004}
+Gatheral, J. (2004).
+\newblock A parsimonious arbitrage-free implied volatility parameterization
+  with application to the valuation of volatility derivatives.
+\newblock Presentation at Global Derivatives \& Risk Management, Madrid.
+
+\bibitem[Glasserman, 2004]{glasserman2004}
+Glasserman, P. (2004).
+\newblock {\em Monte Carlo Methods in Financial Engineering}.
+\newblock Stochastic Modelling and Applied Probability. Springer.
+
+\bibitem[Hagan et~al., 2002]{hagan2002}
+Hagan, P.~S., Kumar, D., Lesniewski, A.~S., and Woodward, D.~E. (2002).
+\newblock Managing smile risk.
+\newblock {\em Wilmott Magazine}, pages 84--108.
+
+\bibitem[Heston, 1993]{heston1993}
+Heston, S.~L. (1993).
+\newblock A closed-form solution for options with stochastic volatility with
+  applications to bond and currency options.
+\newblock {\em The Review of Financial Studies}, 6(2):327--343.
+
+\bibitem[Horvath et~al., 2021]{horvath2021}
+Horvath, B., Muguruza, A., and Tomas, M. (2021).
+\newblock Deep learning volatility: a deep neural network perspective on
+  pricing and calibration in (rough) volatility models.
+\newblock {\em Quantitative Finance}, 21(1):11--27.
+
+\bibitem[Jarrow and Rudd, 1982]{jarrow1983}
+Jarrow, R. and Rudd, A. (1982).
+\newblock Approximate option valuation for arbitrary stochastic processes.
+\newblock {\em Journal of Financial Economics}, 10(3):347--369.
+
+\bibitem[Leisen and Reimer, 1996]{leisen1996}
+Leisen, D. P.~J. and Reimer, M. (1996).
+\newblock Binomial models for option valuation--examining and improving
+  convergence.
+\newblock {\em Applied Mathematical Finance}, 3(4):319--346.
+
+\bibitem[Tian, 1993]{tian1993}
+Tian, Y. (1993).
+\newblock A modified lattice approach to option pricing.
+\newblock {\em Journal of Futures Markets}, 13(5):563--577.
+
+\bibitem[Wiese et~al., 2020]{wiese2020}
+Wiese, M., Knobloch, R., Korn, R., and Kretschmer, P. (2020).
+\newblock Quant {GANs}: Deep generation of financial time series.
+\newblock {\em Quantitative Finance}, 20(9):1419--1440.
+
+\end{thebibliography}
