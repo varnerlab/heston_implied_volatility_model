@@ -18,11 +18,11 @@
 \citation{demarta2005}
 \citation{heston1993}
 \citation{cox1979}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{2}{section.2}\protected@file@percent }
-\newlabel{sec:background}{{2}{2}{Background}{section.2}{}}
 \citation{jumphmm2025}
 \citation{cont2001}
 \citation{demarta2005}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{2}{section.2}\protected@file@percent }
+\newlabel{sec:background}{{2}{2}{Background}{section.2}{}}
 \citation{heston1993}
 \citation{broadie1996}
 \citation{cox1979}
@@ -45,22 +45,22 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Modified Heston variance process}{4}{subsection.3.2}\protected@file@percent }
 \newlabel{sec:theta_function}{{3.2}{4}{Modified Heston variance process}{subsection.3.2}{}}
 \newlabel{eq:heston_modified}{{3}{4}{Modified Heston variance process}{equation.3}{}}
+\newlabel{eq:theta}{{4}{4}{Modified Heston variance process}{equation.4}{}}
 \citation{andersen2008}
-\newlabel{eq:theta}{{4}{5}{Modified Heston variance process}{equation.4}{}}
+\citation{horvath2021}
 \newlabel{eq:theta_calibration}{{5}{5}{Modified Heston variance process}{equation.5}{}}
 \newlabel{eq:psi}{{6}{5}{Modified Heston variance process}{equation.6}{}}
 \newlabel{eq:v0}{{7}{5}{Modified Heston variance process}{equation.7}{}}
 \newlabel{eq:mood}{{8}{5}{Modified Heston variance process}{equation.8}{}}
 \newlabel{eq:euler}{{9}{5}{Modified Heston variance process}{equation.9}{}}
-\citation{horvath2021}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Neural surrogate for $\psi $}{6}{subsection.3.3}\protected@file@percent }
 \newlabel{sec:psi_nn}{{3.3}{6}{Neural surrogate for $\psi $}{subsection.3.3}{}}
 \newlabel{eq:psi_nn}{{10}{6}{Neural surrogate for $\psi $}{equation.10}{}}
 \newlabel{eq:nn_loss}{{11}{6}{Neural surrogate for $\psi $}{equation.11}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Calibration and Validation}{7}{section.4}\protected@file@percent }
-\newlabel{sec:calibration}{{4}{7}{Calibration and Validation}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Sector-specific neural calibration on the 31-ticker ladder}{7}{subsection.4.1}\protected@file@percent }
-\newlabel{sec:ladder}{{4.1}{7}{Sector-specific neural calibration on the 31-ticker ladder}{subsection.4.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Calibration and Validation}{6}{section.4}\protected@file@percent }
+\newlabel{sec:calibration}{{4}{6}{Calibration and Validation}{section.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Sector-specific neural calibration on the 31-ticker ladder}{6}{subsection.4.1}\protected@file@percent }
+\newlabel{sec:ladder}{{4.1}{6}{Sector-specific neural calibration on the 31-ticker ladder}{subsection.4.1}{}}
 \@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Three-way overall RMSE comparison on the 31-ticker ladder (234{,}549 observations across fifteen capture dates). The parametric baseline fit a single global set of five $\beta $ parameters; the shared NN replaced the parametric $\psi $ with one global network; the sector NN used one network per sector. All three models fitted one $\theta _{\text  {ticker}}$ per ticker jointly with the shape parameters.}}{7}{table.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
 \newlabel{tab:three_way}{{1}{7}{Three-way overall RMSE comparison on the 31-ticker ladder (234{,}549 observations across fifteen capture dates). The parametric baseline fit a single global set of five $\beta $ parameters; the shared NN replaced the parametric $\psi $ with one global network; the sector NN used one network per sector. All three models fitted one $\theta _{\text {ticker}}$ per ticker jointly with the shape parameters}{table.caption.2}{}}
@@ -82,8 +82,8 @@
 \newlabel{fig:gs_paths}{{3}{13}{Forward GS share-price paths and short option premium paths for the real GS 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days. Top row: share path with $K_p = \$890$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$970$ marked (left) and short-call premium (right), with the top 1--5\% by terminal price overlaid in green; the most extreme 1\% are omitted from the overlay so the figure is not dominated by spike outliers, but the underlying summary statistics use the full top 5\%. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$16.51 put, \$16.09 call)}{figure.caption.6}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Path-conditional implied volatility at the put strike (left) and call strike (right) over the 31-day horizon for the GS scenario. Both panels showed IV rising into expiry: at fixed $\log (K/S)$, shrinking $(T-t)$ pushed the standardised moneyness deeper into the wing of $\psi _{\mathrm  {NN}}$, which the per-ticker network learned to be progressively higher and steeper at short horizons. Tail-binned paths (red, green) showed an additional rise driven by $S_t$ moving away from $K$ and, on the put side, leverage coupling lifting $v_t$ on down-paths.}}{14}{figure.caption.7}\protected@file@percent }
 \newlabel{fig:gs_iv}{{4}{14}{Path-conditional implied volatility at the put strike (left) and call strike (right) over the 31-day horizon for the GS scenario. Both panels showed IV rising into expiry: at fixed $\log (K/S)$, shrinking $(T-t)$ pushed the standardised moneyness deeper into the wing of $\psi _{\mathrm {NN}}$, which the per-ticker network learned to be progressively higher and steeper at short horizons. Tail-binned paths (red, green) showed an additional rise driven by $S_t$ moving away from $K$ and, on the put side, leverage coupling lifting $v_t$ on down-paths}{figure.caption.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Terminal P\&L distributions per contract (1{,}000 paths, log-y) for the GS scenario. Both legs showed the short-premium signature: a tall spike of paths keeping the full premium, and a long left tail. The short call's left tail was substantially fatter than the put's despite a smaller premium received.}}{14}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:gs_pnl}{{5}{14}{Terminal P\&L distributions per contract (1{,}000 paths, log-y) for the GS scenario. Both legs showed the short-premium signature: a tall spike of paths keeping the full premium, and a long left tail. The short call's left tail was substantially fatter than the put's despite a smaller premium received}{figure.caption.8}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Terminal P\&L distributions per contract (1{,}000 paths, log-y) for the GS scenario. Both legs showed the same short-premium pattern: most paths kept the full premium, and a long left tail held the loss-making paths. The short call's left tail was substantially fatter than the put's despite a smaller premium received.}}{14}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:gs_pnl}{{5}{14}{Terminal P\&L distributions per contract (1{,}000 paths, log-y) for the GS scenario. Both legs showed the same short-premium pattern: most paths kept the full premium, and a long left tail held the loss-making paths. The short call's left tail was substantially fatter than the put's despite a smaller premium received}{figure.caption.8}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Cross-ticker validation: LLY}{14}{subsection.5.1}\protected@file@percent }
 \newlabel{sec:lly_scenario}{{5.1}{14}{Cross-ticker validation: LLY}{subsection.5.1}{}}
 \citation{cont2002}
@@ -93,10 +93,10 @@
 \@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{15}{section.6}\protected@file@percent }
 \newlabel{sec:discussion}{{6}{15}{Discussion and Future Work}{section.6}{}}
 \citation{buehler2019}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{17}{section.7}\protected@file@percent }
-\newlabel{sec:conclusion}{{7}{17}{Conclusion}{section.7}{}}
 \bibstyle{abbrvnat}
 \bibdata{references}
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{17}{section.7}\protected@file@percent }
+\newlabel{sec:conclusion}{{7}{17}{Conclusion}{section.7}{}}
 \bibcite{jumphmm2025}{{1}{2026}{{Alswaidan and Varner}}{{}}}
 \bibcite{andersen2008}{{2}{2008}{{Andersen}}{{}}}
 \bibcite{bayer2019}{{3}{2018}{{Bayer and Stemper}}{{}}}
@@ -148,6 +148,6 @@
 \newlabel{fig:lly_paths}{{S2}{25}{Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days; analogue of GS Fig.~\ref {fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call)}{figure.caption.19}{}}
 \@writefile{lof}{\contentsline {figure}{\numberline {S3}{\ignorespaces Path-conditional IV at $K_{\text  {put}}$ and $K_{\text  {call}}$ over the 31-day horizon; analogue of GS Fig.~\ref {fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}}{25}{figure.caption.20}\protected@file@percent }
 \newlabel{fig:lly_iv}{{S3}{25}{Path-conditional IV at $K_{\text {put}}$ and $K_{\text {call}}$ over the 31-day horizon; analogue of GS Fig.~\ref {fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell}{figure.caption.20}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {S4}{\ignorespaces Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref {fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt  {T-t}$ Vega decay both reproduced the GS signatures.}}{26}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:lly_greeks}{{S4}{26}{Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref {fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt {T-t}$ Vega decay both reproduced the GS signatures}{figure.caption.21}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {S4}{\ignorespaces Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref {fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt  {T-t}$ Vega decay both reproduced the patterns seen on GS.}}{26}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:lly_greeks}{{S4}{26}{Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref {fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt {T-t}$ Vega decay both reproduced the patterns seen on GS}{figure.caption.21}{}}
 \gdef \@abspage@last{26}

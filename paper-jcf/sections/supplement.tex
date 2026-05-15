@@ -255,7 +255,7 @@ Premium kept in full         & $77.4\%$  & $75.7\%$  \\
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_short_greeks.pdf}
-\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref{fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt{T-t}$ Vega decay both reproduced the GS signatures.}
+\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref{fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt{T-t}$ Vega decay both reproduced the patterns seen on GS.}
 \label{fig:lly_greeks}
 \end{figure}
 
@@ -290,7 +290,7 @@ Cells were selected deterministically from the $31 \times 15$ corpus after the p
 
 \begin{table}[ht]
 \centering
-\caption{Multi-cell LoRA sweep. Per-cell base, V0 (level-only), and V1 (rank-2 LoRA + level) RMSE on the day's ladder slice, with V1 adapter-norm summaries on the three Dense layers. V1 reduced RMSE on every cell (no overfit) and dominated V0 across the board; improvements scaled with base RMSE. The five GS control cells (bottom block) saw V1 perturbations near zero, the right ``no-op'' behaviour.}\label{tab:lora_sweep}
+\caption{Multi-cell LoRA sweep. Per-cell base, V0 (level-only), and V1 (rank-2 LoRA + level) RMSE on the day's ladder slice, with V1 adapter-norm summaries on the three Dense layers. V1 reduced RMSE on every cell (no overfit) and beat V0 across the board; improvements scaled with base RMSE. The five GS control cells (bottom block) saw V1 perturbations near zero, the desired behaviour on days the base already fit well.}\label{tab:lora_sweep}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrrrrrr}
 \toprule
@@ -315,7 +315,7 @@ WFC  & 2026-04-27 & 144 &  7.50 &  7.44 &  5.72 & $-0.03$ & 0.75 & 1.57 & 0.29 \
 SPY  & 2026-04-21 & 2{,}701 &  7.14 &  6.89 &  5.61 & $+0.08$ & 0.65 & 2.20 & 0.14 \\
 JNJ  & 2026-05-11 & 128 &  6.78 &  6.00 &  4.40 & $+0.01$ & 0.30 & 1.38 & 0.29 \\
 \midrule
-\multicolumn{10}{l}{\emph{Control cells (5 lowest base RMSE; near-no-op V1 behaviour)}} \\
+\multicolumn{10}{l}{\emph{Control cells (5 lowest base RMSE; near-zero V1 perturbation)}} \\
 GS   & 2026-04-22 & 583 &  4.13 &  4.01 &  3.15 & $-0.01$ & 1.10 & 2.15 & 0.74 \\
 GS   & 2026-04-23 & 447 &  3.79 &  3.66 &  3.08 & $+0.04$ & 0.47 & 1.06 & 0.55 \\
 GS   & 2026-04-16 & 806 &  3.70 &  3.70 &  3.22 & $+0.07$ & 0.61 & 2.70 & 1.51 \\

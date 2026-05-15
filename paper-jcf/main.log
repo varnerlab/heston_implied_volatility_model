@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  14 MAY 2026 16:02
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  15 MAY 2026 11:26
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main
+**main.tex
 (./main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -563,19 +563,16 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 
-[8]) (./sections/calibration.tex
+[8]
 
-[9]
-Overfull \hbox (105.61287pt too wide) in paragraph at lines 12--22
- [][] 
- []
-
-
+[9]) (./sections/calibration.tex
 
 [10]
 
 [11]
-<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=344, 1505.625pt x 8
+
+[12]
+<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=355, 1505.625pt x 8
 03.0pt>
 File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
  pdf)
@@ -585,8 +582,8 @@ Package pdftex.def Info: sections/figures/ladder_per_ticker_nn_smile_panels.pdf
 (pdftex.def)             Requested size: 469.75502pt x 250.53255pt.
 
 
-[12 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
-<sections/figures/ladder_price_error_three_tickers.pdf, id=353, 1204.5pt x 903.
+[13 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
+<sections/figures/ladder_price_error_three_tickers.pdf, id=364, 1204.5pt x 903.
 375pt>
 File: sections/figures/ladder_price_error_three_tickers.pdf Graphic file (type 
 pdf)
@@ -596,14 +593,14 @@ Package pdftex.def Info: sections/figures/ladder_price_error_three_tickers.pdf
 (pdftex.def)             Requested size: 469.75502pt x 352.31483pt.
 
 
-[13]) (./sections/scenarios.tex
-
-[14]
+[14]) (./sections/scenarios.tex
 
 [15]
+
+[16]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 8.
-<sections/figures/gs/gs_short_paths.pdf, id=384, 1505.625pt x 1104.125pt>
+<sections/figures/gs/gs_short_paths.pdf, id=394, 1505.625pt x 1104.125pt>
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
@@ -611,14 +608,14 @@ line 34.
 (pdftex.def)             Requested size: 469.75502pt x 344.48224pt.
 
 
-[16]
-<sections/figures/gs/gs_iv_trajectories.pdf, id=394, 1505.625pt x 602.25pt>
+[17]
+<sections/figures/gs/gs_iv_trajectories.pdf, id=403, 1505.625pt x 602.25pt>
 File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
 put line 43.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
-<sections/figures/gs/gs_short_pnl_distributions.pdf, id=398, 1505.625pt x 602.2
+<sections/figures/gs/gs_short_pnl_distributions.pdf, id=407, 1505.625pt x 602.2
 5pt>
 File: sections/figures/gs/gs_short_pnl_distributions.pdf Graphic file (type pdf
 )
@@ -628,8 +625,8 @@ ed on input line 54.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
 
 
-[17]
-<sections/figures/lly/lly_short_pnl_distributions.pdf, id=408, 1505.625pt x 602
+[18]
+<sections/figures/lly/lly_short_pnl_distributions.pdf, id=417, 1505.625pt x 602
 .25pt>
 File: sections/figures/lly/lly_short_pnl_distributions.pdf Graphic file (type p
 df)
@@ -639,9 +636,7 @@ used on input line 67.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
 
 
-[18]) (./sections/adaptive_recalibration.tex
-
-[19]
+[19]) (./sections/adaptive_recalibration.tex
 
 [20]
 
@@ -713,7 +708,7 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 [36]
 
 [37]
-<sections/figures/gs/gs_short_greeks.pdf, id=603, 1505.625pt x 1505.625pt>
+<sections/figures/gs/gs_short_greeks.pdf, id=597, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
@@ -722,19 +717,19 @@ Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
 
 
 [38]
-<sections/figures/lly/lly_short_paths.pdf, id=624, 1505.625pt x 1104.125pt>
+<sections/figures/lly/lly_short_paths.pdf, id=618, 1505.625pt x 1104.125pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
 t line 243.
 (pdftex.def)             Requested size: 469.75502pt x 344.48224pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=627, 1505.625pt x 602.25pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=621, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
 input line 250.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
-<sections/figures/lly/lly_short_greeks.pdf, id=630, 1505.625pt x 1505.625pt>
+<sections/figures/lly/lly_short_greeks.pdf, id=624, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
@@ -743,7 +738,7 @@ ut line 257.
 
 
 [39]
-<sections/figures/lora_sweep_summary.pdf, id=640, 1304.875pt x 1003.75pt>
+<sections/figures/lora_sweep_summary.pdf, id=634, 1304.875pt x 1003.75pt>
 File: sections/figures/lora_sweep_summary.pdf Graphic file (type pdf)
 <use sections/figures/lora_sweep_summary.pdf>
 Package pdftex.def Info: sections/figures/lora_sweep_summary.pdf  used on input
@@ -757,13 +752,13 @@ Overfull \hbox (52.6872pt too wide) in paragraph at lines 345--355
 
 
 [40]
-<sections/figures/lora_arbitrage_audit.pdf, id=647, 1304.875pt x 582.175pt>
+<sections/figures/lora_arbitrage_audit.pdf, id=641, 1304.875pt x 582.175pt>
 File: sections/figures/lora_arbitrage_audit.pdf Graphic file (type pdf)
 <use sections/figures/lora_arbitrage_audit.pdf>
 Package pdftex.def Info: sections/figures/lora_arbitrage_audit.pdf  used on inp
 ut line 363.
 (pdftex.def)             Requested size: 469.75502pt x 209.58284pt.
-<sections/figures/lora_trigger_roc.pdf, id=649, 2107.875pt x 702.625pt>
+<sections/figures/lora_trigger_roc.pdf, id=643, 2107.875pt x 702.625pt>
 File: sections/figures/lora_trigger_roc.pdf Graphic file (type pdf)
 <use sections/figures/lora_trigger_roc.pdf>
 Package pdftex.def Info: sections/figures/lora_trigger_roc.pdf  used on input l
@@ -796,16 +791,16 @@ L3 programming layer <2025-01-18>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: E0CF6B6F284CB79829F57F756E891D7F;9641.
+(rerunfilecheck)             Checksum: E6B1AA0070F63C26874A6BD2096E8191;9659.
  ) 
 Here is how much of TeX's memory you used:
  13992 strings out of 473190
  223904 string characters out of 5715801
- 667461 words of memory out of 5000000
+ 668585 words of memory out of 5000000
  36884 multiletter control sequences out of 15000+600000
  569101 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,18n,79p,3020b,607s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,18n,79p,3024b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -828,10 +823,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on main.pdf (48 pages, 4756932 bytes).
+Output written on main.pdf (48 pages, 4753557 bytes).
 PDF statistics:
- 820 PDF objects out of 1000 (max. 8388607)
- 696 compressed objects within 7 object streams
+ 814 PDF objects out of 1000 (max. 8388607)
+ 690 compressed objects within 7 object streams
  154 named destinations out of 1000 (max. 500000)
  370 words of extra memory for PDF output out of 10000 (max. 10000000)
 
