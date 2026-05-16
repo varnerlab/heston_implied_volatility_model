@@ -8,7 +8,7 @@ scenarios all sat in event-free windows by construction.
 
 The scenario uses the per-ticker ψ_NN INTC surface (calibrated across all
 15 dates with no earnings-feature awareness), the calibration-collapsed
-\bar{θ}_INTC, and the same Heston backbone as GS/LLY (κ=2.0, σ_v=0.5, ρ=-0.6).
+\bar{θ}_INTC, and the same Heston backbone as GS/LLY (κ=15.0, σ_v=0.5, ρ=-0.6).
 Per the §5 Algorithm 1 note, the regime-state and mood multipliers are
 held inactive, so the simulator has *no* mechanism to anticipate the
 04-22 print — and the honest finding is that path-conditional pricing

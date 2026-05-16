@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  15 MAY 2026 20:11
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  15 MAY 2026 20:45
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -240,7 +240,10 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip57
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/setspace/setspace.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/setspace/setspace.sty
 Package: setspace 2022/12/04 v6.7b set line spacing
 )
 (/usr/local/texlive/2025/texmf-dist/tex/latex/preprint/authblk.sty
@@ -423,24 +426,24 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 31.
-LaTeX Font Info:    ... okay on input line 31.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 32.
+LaTeX Font Info:    ... okay on input line 32.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -512,19 +515,19 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 Package color Info: Driver file: pdftex.def on input line 149.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 31.
+Package hyperref Info: Link coloring ON on input line 32.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 34.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 35.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 34.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 35.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
@@ -598,18 +601,22 @@ c} <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
 [15]) (./sections/scenarios.tex
 
 [16]
+
+[17 <./sections/figures/ladder_price_error_three_tickers.pdf>]
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
 put line 8.
-<sections/figures/gs/gs_short_paths.pdf, id=402, 1505.625pt x 1104.125pt>
+
+
+[18
+
+]
+<sections/figures/gs/gs_short_paths.pdf, id=414, 1505.625pt x 1104.125pt>
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
 line 34.
 (pdftex.def)             Requested size: 469.75502pt x 344.48224pt.
-
-
-[17]
-<sections/figures/gs/gs_iv_trajectories.pdf, id=411, 1505.625pt x 602.25pt>
+<sections/figures/gs/gs_iv_trajectories.pdf, id=416, 1505.625pt x 602.25pt>
 File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
@@ -617,8 +624,8 @@ put line 43.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
 
 
-[18]
-<sections/figures/gs/gs_short_pnl_distributions.pdf, id=422, 1505.625pt x 602.2
+[19]
+<sections/figures/gs/gs_short_pnl_distributions.pdf, id=428, 1505.625pt x 602.2
 5pt>
 File: sections/figures/gs/gs_short_pnl_distributions.pdf Graphic file (type pdf
 )
@@ -626,7 +633,10 @@ File: sections/figures/gs/gs_short_pnl_distributions.pdf Graphic file (type pdf
 Package pdftex.def Info: sections/figures/gs/gs_short_pnl_distributions.pdf  us
 ed on input line 54.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
-<sections/figures/lly/lly_short_pnl_distributions.pdf, id=425, 1505.625pt x 602
+
+
+[20]
+<sections/figures/lly/lly_short_pnl_distributions.pdf, id=436, 1505.625pt x 602
 .25pt>
 File: sections/figures/lly/lly_short_pnl_distributions.pdf Graphic file (type p
 df)
@@ -636,52 +646,51 @@ used on input line 67.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
 
 
-[19]
+[21]) (./sections/adaptive_recalibration.tex
 
-[20]) (./sections/adaptive_recalibration.tex
+[22]
 
-[21]
+[23 <./sections/figures/gs/gs_short_paths.pdf>]
 
-[22]) (./sections/discussion.tex
+[24 <./sections/figures/gs/gs_iv_trajectories.pdf> <./sections/figures/gs/gs_sh
+ort_pnl_distributions.pdf>]
 
-[23]
+[25 <./sections/figures/lly/lly_short_pnl_distributions.pdf>]
 
-[24]) (./sections/conclusion.tex
+[26
 
-[25])
+]) (./sections/discussion.tex
+
+[27]
+
+[28]) (./sections/conclusion.tex
+
+[29])
+
+[30]
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-49.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 49.
+50.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 50.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 49.
+(Font)              for symbol `textbraceleft' on input line 50.
 
 
-Overfull \hbox (37.12592pt too wide) in paragraph at lines 49--50
+Overfull \hbox (37.12592pt too wide) in paragraph at lines 50--51
 \OT1/cmr/m/n/10.95 for-ward sce-nar-ios; and per-scenario sim-u-la-tion caches 
 (\OMS/cmtt/m/n/10.95 f\OT1/cmtt/m/n/10.95 ticker\OMS/cmtt/m/n/10.95 g[]\OT1/cmt
 t/m/n/10.95 short[]premium[]simulation[]cache.jld2\OT1/cmr/m/n/10.95 )
  []
 
+(./main.bbl
 
+[31]
 
-[26] (./main.bbl
+[32])
 
-[27])
-
-[28]
-
-[29 <./sections/figures/ladder_price_error_three_tickers.pdf>]
-
-[30 <./sections/figures/gs/gs_short_paths.pdf>]
-
-[31 <./sections/figures/gs/gs_iv_trajectories.pdf> <./sections/figures/gs/gs_sh
-ort_pnl_distributions.pdf>]
-
-[32 <./sections/figures/lly/lly_short_pnl_distributions.pdf>]
-(./sections/supplement.tex
+[33] (./sections/supplement.tex
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 1.
@@ -708,11 +717,11 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 
-[33
+[34
 
 ]
 
-[34]
+[35]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 (hyperref)                removing `math shift' on input line 129.
@@ -727,30 +736,36 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 
 
 
-[35]
-
 [36]
 
 [37]
-<sections/figures/gs/gs_short_greeks.pdf, id=607, 1505.625pt x 1505.625pt>
+
+[38]
+
+[39]
+
+[40
+
+]
+<sections/figures/gs/gs_short_greeks.pdf, id=619, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
  line 225.
 (pdftex.def)             Requested size: 469.75502pt x 469.74852pt.
-<sections/figures/lly/lly_short_paths.pdf, id=620, 1505.625pt x 1104.125pt>
+<sections/figures/lly/lly_short_paths.pdf, id=632, 1505.625pt x 1104.125pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
 t line 257.
 (pdftex.def)             Requested size: 469.75502pt x 344.48224pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=623, 1505.625pt x 602.25pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=635, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
 input line 264.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
-<sections/figures/lly/lly_short_greeks.pdf, id=626, 1505.625pt x 1505.625pt>
+<sections/figures/lly/lly_short_greeks.pdf, id=638, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
@@ -758,27 +773,42 @@ ut line 271.
 (pdftex.def)             Requested size: 469.75502pt x 469.74852pt.
 
 
-[38]
-<sections/figures/lora_sweep_summary.pdf, id=637, 1304.875pt x 1003.75pt>
+[41]
+
+[42]
+
+[43]
+
+[44 <./sections/figures/gs/gs_short_greeks.pdf>]
+
+[45 <./sections/figures/lly/lly_short_paths.pdf>]
+
+[46 <./sections/figures/lly/lly_iv_trajectories.pdf>]
+
+[47 <./sections/figures/lly/lly_short_greeks.pdf>]
+<sections/figures/lora_sweep_summary.pdf, id=679, 1304.875pt x 1003.75pt>
 File: sections/figures/lora_sweep_summary.pdf Graphic file (type pdf)
 <use sections/figures/lora_sweep_summary.pdf>
 Package pdftex.def Info: sections/figures/lora_sweep_summary.pdf  used on input
  line 348.
 (pdftex.def)             Requested size: 469.75502pt x 361.34973pt.
 
-
-[39]
 Overfull \hbox (52.6872pt too wide) in paragraph at lines 359--369
  [][] 
  []
 
-<sections/figures/lora_arbitrage_audit.pdf, id=643, 1304.875pt x 582.175pt>
+<sections/figures/lora_arbitrage_audit.pdf, id=681, 1304.875pt x 582.175pt>
 File: sections/figures/lora_arbitrage_audit.pdf Graphic file (type pdf)
 <use sections/figures/lora_arbitrage_audit.pdf>
 Package pdftex.def Info: sections/figures/lora_arbitrage_audit.pdf  used on inp
 ut line 377.
 (pdftex.def)             Requested size: 469.75502pt x 209.58284pt.
-<sections/figures/lora_trigger_roc.pdf, id=644, 2107.875pt x 702.625pt>
+
+
+[48
+
+]
+<sections/figures/lora_trigger_roc.pdf, id=686, 2107.875pt x 702.625pt>
 File: sections/figures/lora_trigger_roc.pdf Graphic file (type pdf)
 <use sections/figures/lora_trigger_roc.pdf>
 Package pdftex.def Info: sections/figures/lora_trigger_roc.pdf  used on input l
@@ -786,25 +816,13 @@ ine 403.
 (pdftex.def)             Requested size: 469.75502pt x 156.58282pt.
 )
 
-[40]
+[49]
 
-[41]
+[50]
 
-[42 <./sections/figures/gs/gs_short_greeks.pdf>]
+[51 <./sections/figures/lora_sweep_summary.pdf>]
 
-[43]
-
-[44 <./sections/figures/lly/lly_short_paths.pdf>]
-
-[45 <./sections/figures/lly/lly_iv_trajectories.pdf>]
-
-[46 <./sections/figures/lly/lly_short_greeks.pdf>]
-
-[47]
-
-[48 <./sections/figures/lora_sweep_summary.pdf>]
-
-[49 <./sections/figures/lora_arbitrage_audit.pdf> <./sections/figures/lora_trig
+[52 <./sections/figures/lora_arbitrage_audit.pdf> <./sections/figures/lora_trig
 ger_roc.pdf>] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
@@ -814,20 +832,17 @@ L3 programming layer <2025-01-18>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 73619C49D47D7F5CCACBF79EEB78B029;10033.
  ) 
 Here is how much of TeX's memory you used:
- 14013 strings out of 473190
- 224177 string characters out of 5715801
- 694941 words of memory out of 5000000
- 36899 multiletter control sequences out of 15000+600000
+ 14045 strings out of 473190
+ 224919 string characters out of 5715801
+ 660777 words of memory out of 5000000
+ 36924 multiletter control sequences out of 15000+600000
  571712 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,18n,79p,3024b,591s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,18n,79p,3024b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -850,10 +865,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on main.pdf (49 pages, 4714953 bytes).
+Output written on main.pdf (52 pages, 4741504 bytes).
 PDF statistics:
- 826 PDF objects out of 1000 (max. 8388607)
- 701 compressed objects within 8 object streams
- 159 named destinations out of 1000 (max. 500000)
+ 838 PDF objects out of 1000 (max. 8388607)
+ 710 compressed objects within 8 object streams
+ 162 named destinations out of 1000 (max. 500000)
  378 words of extra memory for PDF output out of 10000 (max. 10000000)
 

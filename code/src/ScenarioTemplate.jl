@@ -11,7 +11,7 @@ module so the only per-ticker code is a ~30-line driver that builds a
 
 Public API:
 - `ScenarioSpec(ticker, anchor_date, T_days, K_put, K_call, …)`
-- `HestonSpec(; kappa=2.0, sigma_v=0.5, rho=-0.6, r_free=0.0425, q_div=0.0,
+- `HestonSpec(; kappa=15.0, sigma_v=0.5, rho=-0.6, r_free=0.0425, q_div=0.0,
                n_steps_lr=201)`
 - `run_short_scenario(spec, hspec; nn_cache_path, port_path, ladder_dir,
                sim_cache_path, resim=false, sector=nothing, use_per_ticker=true,
@@ -64,7 +64,7 @@ Base.@kwdef struct ScenarioSpec
 end
 
 Base.@kwdef struct HestonSpec
-    kappa::Float64 = 2.0
+    kappa::Float64 = 15.0
     sigma_v::Float64 = 0.5
     rho::Float64 = -0.6
     r_free::Float64 = 0.0425

@@ -12,7 +12,7 @@ sector + liquidity profiles:
 
 Strikes for each ticker are pulled from the 2026-04-28 capture at the
 closest ~30Δ, ~30-DTE pair (expiry 2026-05-29). The Heston backbone is
-the same κ=2.0, σ_v=0.5, ρ=-0.6 as the GS/LLY scenarios so the comparison
+the same κ=15.0, σ_v=0.5, ρ=-0.6 as the GS/LLY scenarios so the comparison
 is fair.
 
 Output:

@@ -47,7 +47,7 @@ spec = ScenarioSpec(
     fig_subdir="gs",
 )
 
-hspec = HestonSpec()  # κ=2.0, σ_v=0.5, ρ=-0.6, r=0.0425, q=0, N_LR=201
+hspec = HestonSpec()  # κ=15.0, σ_v=0.5, ρ=-0.6, r=0.0425, q=0, N_LR=201
 
 result = run_short_scenario(spec, hspec;
                             nn_cache_path=NN_CACHE,
