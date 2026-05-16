@@ -7,7 +7,7 @@ The generator produced synthetic American option prices through a three-stage pi
     &\underbrace{\text{JumpHMM}(\text{prices})}_{\text{Stage 1}}
     \;\to\; \{S_t,\, s_t,\, \text{jumps}\}
     \;\to\; \underbrace{dv \text{ process}}_{\text{Stage 2}}
-    \;\to\; \sigma_{\text{imp}} = \sqrt{v_t} \nonumber\\
+    \;\to\; \sigma_{\text{imp}}^2 = v_t \nonumber\\
     &\quad\to\; \underbrace{\text{CRR}(S_t,\, \sigma_{\text{imp}},\, K,\, \text{DTE},\, r_f)}_{\text{Stage 3}}
     \;\to\; P_{\text{american}}
 \end{align}
@@ -35,11 +35,14 @@ The function $\psi$ captured the shape of the IV surface with five parameters:
 \end{equation}
 where $\tau = \max(\mathrm{DTE}, 1)$ and $m = K/S$. The parameter $\beta_1$ controlled the linear term-structure decay; $\beta_2$ controlled the skew (negative values produced put skew, with OTM puts having higher IV than OTM calls); $\beta_3$ captured the DTE-skew interaction (the skew flattened at longer maturities); $\beta_4$ controlled the smile curvature; and $\beta_5$ controlled the DTE curvature, capturing the U-shaped ATM term structure where short-dated and long-dated IV were both elevated relative to intermediate maturities.
 
-Rather than specifying a separate initial variance $v_0$, we initialized the variance process at its mean-reversion target:
+Rather than specifying a separate initial variance $v_0$, we initialized the variance process directly at the per-contract mean-reversion target so that the entry IV surface inherited the smile, skew, and term structure encoded in $\psi$ without a separate IV-surface input at simulation time:
 \begin{equation}\label{eq:v0}
-    v_0 = \theta(s_0,\; \mathrm{DTE},\; K/S_0,\; M_0)
+    v_0 \;=\; \theta(i,\,0;\,K) \;=\; \theta_{i,\,s_0}\,\bigl(1+\gamma M_0\bigr)\,\psi\bigl(\mathrm{DTE}_0,\, K/S_0,\, e_{i,0},\, e^{\text{peer}}_{i,0}\bigr)
 \end{equation}
-This ensured that each (ticker, strike, DTE) triple started at its own equilibrium implied volatility. The initial IV surface inherited the smile, skew, and term structure encoded in $\psi$ without requiring additional IV data at simulation time; $\psi$ itself was calibrated once on a multi-date ladder corpus via the loss in~\eqref{eq:nn_loss}, after which forward simulation propagated IV path-conditionally with no further IV inputs. Different contracts on the same underlying received different $v_0$ values, and the variance process immediately began mean-reverting around its local $\theta(t)$. The value of this design choice lay in eliminating $v_0$ as a free parameter: the model did not require a separate calibration of the initial IV surface, as it was determined by construction from $\theta$.
+\begin{equation}\label{eq:sigma_path}
+    \sigma_t^2(K,\, S_t) \;=\; v_t
+\end{equation}
+The per-contract IV was the variance state itself: $\psi$ entered the model only through the time-varying mean-reversion target $\theta(i,t;K)$ in~\eqref{eq:theta} that drove the SDE drift, not as a separate multiplicative factor on $v_t$, so $v_t$ was a per-contract process and every (ticker, $K$, $\mathrm{DTE}$) triple obtained its own variance trajectory under the same Brownian forcing with a contract-specific drift target. By construction $\sigma_0^2 = v_0 = \theta(i,0;K)$ recovered the calibrated decomposition~\eqref{eq:sigma_model} at the contract's entry capture, and the variance process immediately began mean-reverting around the same $\theta(i,t;K)$ at every subsequent step as the regime state, aggregate mood, and moneyness evolved. The value of this design choice lay in eliminating $v_0$ as a free parameter: the entry-time IV was determined by construction from $\theta_i$ and the calibrated $\psi$ surface, with $\psi$ itself trained once on the multi-date ladder corpus via the loss in~\eqref{eq:nn_loss}.
 
 The market mood $M_t$ was defined as the fraction of tickers currently occupying tail HMM states, where $N$ was the JumpHMM state count and $N_{\text{tail}}$ denoted the number of extreme states at each end of the state space (inherited from the JumpHMM fit):
 \begin{equation}\label{eq:mood}
@@ -53,7 +56,11 @@ The reflecting boundary allowed $\theta$ to vary freely across HMM states withou
 
 \subsection{Neural surrogate for $\psi$}\label{sec:psi_nn}
 
-The parametric form of $\psi$ in equation~\eqref{eq:psi} used five shape parameters shared across all contracts on a given ticker. When the model was applied to a broad universe spanning multiple sectors, this global shape became a bottleneck: the semiconductor smile geometry differed systematically from mega-cap ETFs, healthcare names carried idiosyncratic event risk, and energy tickers inherited commodity-driven skew patterns not expressible by a five-term log-polynomial. We therefore replaced the parametric $\psi$ with a neural surrogate~\cite{horvath2021}, keeping the multiplicative decomposition $\sigma_{\text{model}}^2 = \theta_{\text{ticker}} \cdot \psi$ but allowing the shape to be data-driven and adding two scheduled-event inputs $(e,\,e^{\text{peer}})$ that captured pre-earnings IV expansion and same-sector earnings spillover:
+The parametric form of $\psi$ in equation~\eqref{eq:psi} used five shape parameters shared across all contracts on a given ticker. When the model was applied to a broad universe spanning multiple sectors, this global shape became a bottleneck: the semiconductor smile geometry differed systematically from mega-cap ETFs, healthcare names carried idiosyncratic event risk, and energy tickers inherited commodity-driven skew patterns not expressible by a five-term log-polynomial. We therefore replaced the parametric $\psi$ with a neural surrogate~\cite{horvath2021}, keeping the multiplicative decomposition
+\begin{equation}\label{eq:sigma_model}
+    \sigma_{\text{model}}^2 \;=\; \theta_{\text{ticker}} \cdot \psi
+\end{equation}
+in which $\sigma_{\text{model}}$ was the model's per-contract implied-volatility prediction at strike $K$ and time-to-maturity $\tau$ on capture date $t$, expressed in the same Black-Scholes convention the market data providers used to report IV on the option chain, fitted against $\text{IV}_{\text{market}}$ by the loss in~\eqref{eq:nn_loss}, and supplied to the lattice pricer as its single diffusion-volatility input, so $\sigma_{\text{model}}$ played the dual role of calibration target and pricing-stage diffusion vol. We allowed the shape to be data-driven and added two scheduled-event inputs $(e,\,e^{\text{peer}})$ that captured pre-earnings IV expansion and same-sector earnings spillover:
 \begin{equation}\label{eq:psi_nn}
     \psi_{\text{NN}}(\ln\tau,\,\ln m,\,e,\,e^{\text{peer}}) = \exp\!\bigl(\mathrm{NN}(\ln\tau,\,\ln m,\,e,\,e^{\text{peer}})\bigr)
 \end{equation}

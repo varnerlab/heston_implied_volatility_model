@@ -257,35 +257,82 @@ function _simulate_paths(spec::ScenarioSpec, hspec::HestonSpec, model::_Restored
         S_paths[2:end, p] .= prices[1:spec.T_days]
     end
 
-    println("Evolving CIR variance with leverage coupling (κ=$(hspec.kappa), σ_v=$(hspec.sigma_v), ρ=$(hspec.rho))...")
-    v_paths = Array{Float64}(undef, spec.T_days + 1, n_actual)
-    v_paths[1, :] .= model.theta_bar
+    println("Evolving per-contract CIR variance with leverage coupling (κ=$(hspec.kappa), σ_v=$(hspec.sigma_v), ρ=$(hspec.rho))...")
+    # Variance floor: 0.5% IV equivalent. Path A's per-contract target θ̄·ψ for
+    # deep-OTM strikes on low-IV tickers (e.g. SPY put) is small enough that an
+    # unfloored CIR with σ_v=0.5 can stall the LR pricer with σ → 0.
+    VAR_FLOOR = 2.5e-5
+    v_put_paths  = Array{Float64}(undef, spec.T_days + 1, n_actual)
+    v_call_paths = Array{Float64}(undef, spec.T_days + 1, n_actual)
+    # v_0 = θ(i,0;K) = θ̄ · ψ at each contract's entry coordinates (Path A).
+    psi_put_0  = _psi(model.psi_nn, model.standardizer, spec.K_put,  S_0, spec.T_days)
+    psi_call_0 = _psi(model.psi_nn, model.standardizer, spec.K_call, S_0, spec.T_days)
+    v_put_paths[1,  :] .= model.theta_bar * psi_put_0
+    v_call_paths[1, :] .= model.theta_bar * psi_call_0
+
     rng = MersenneTwister(spec.seed + 1)
     Δt = 1.0 / 365.0
     sqrtΔt = sqrt(Δt)
     rho2 = sqrt(1.0 - hspec.rho^2)
+    # Reference variance for the Z_S decoder: the per-ticker level √θ̄, so the
+    # leverage standardisation does not depend on which contract we are pricing.
+    σ_ref = sqrt(max(model.theta_bar, 1e-8))
+
     for p in 1:n_actual
         for t in 2:(spec.T_days + 1)
             Δlogs = log(S_paths[t, p] / S_paths[t-1, p])
-            σ_prev = sqrt(max(v_paths[t-1, p], 1e-8))
-            Z_S = (Δlogs - hspec.r_free * Δt) / (σ_prev * sqrtΔt + 1e-12)
+            Z_S = (Δlogs - hspec.r_free * Δt) / (σ_ref * sqrtΔt + 1e-12)
             Z_S = clamp(Z_S, -6.0, 6.0)
             Z_v_indep = randn(rng)
             Z_v = hspec.rho * Z_S + rho2 * Z_v_indep
-            v_prev = v_paths[t-1, p]
-            dv = hspec.kappa * (model.theta_bar - v_prev) * Δt +
-                 hspec.sigma_v * sqrt(max(v_prev, 1e-10)) * sqrtΔt * Z_v
-            v_paths[t, p] = max(v_prev + dv, 1e-10)
+
+            # Per-contract drift target θ(i,t;K) = θ̄ · ψ(K, S_{t-1}, DTE_remaining).
+            dte_remaining = max(spec.T_days - (t - 2), 1)
+            psi_put_t  = _psi(model.psi_nn, model.standardizer, spec.K_put,
+                              S_paths[t-1, p], dte_remaining)
+            psi_call_t = _psi(model.psi_nn, model.standardizer, spec.K_call,
+                              S_paths[t-1, p], dte_remaining)
+            θ_put_t  = model.theta_bar * psi_put_t
+            θ_call_t = model.theta_bar * psi_call_t
+
+            v_put_prev  = v_put_paths[t-1, p]
+            v_call_prev = v_call_paths[t-1, p]
+            dv_put  = hspec.kappa * (θ_put_t  - v_put_prev)  * Δt +
+                      hspec.sigma_v * sqrt(max(v_put_prev,  1e-10)) * sqrtΔt * Z_v
+            dv_call = hspec.kappa * (θ_call_t - v_call_prev) * Δt +
+                      hspec.sigma_v * sqrt(max(v_call_prev, 1e-10)) * sqrtΔt * Z_v
+            v_put_paths[t,  p] = max(v_put_prev  + dv_put,  VAR_FLOOR)
+            v_call_paths[t, p] = max(v_call_prev + dv_call, VAR_FLOOR)
         end
     end
-    return S_paths, v_paths
+    return S_paths, v_put_paths, v_call_paths
 end
 
-heston_smile_iv(v, model::_RestoredModel, K, S, dte) =
-    sqrt(max(v * _psi(model.psi_nn, model.standardizer, K, S, dte), 1e-10))
+"""
+    _safe_lr_price(S, K, σ, r, T, N, otype; q)
+
+LR American pricer with a σ → 0 fallback. When σ√T is below the Peizer-Pratt
+resolution threshold (≲ 0.01), the LR `(1-p)/(1-p_bar)` step saturates to
+0/0 and returns NaN. In that regime the option price collapses to the
+discounted intrinsic at the risk-neutral forward, which we substitute
+directly. This is a numerical safeguard, not a model statement: it only
+fires when Path A's per-contract variance hits the discretization floor on
+a low-IV deep-moneyness path.
+"""
+function _safe_lr_price(S::Float64, K::Float64, σ::Float64,
+                        r::Float64, T::Float64, N::Int,
+                        otype::Symbol; q::Float64=0.0)
+    if σ * sqrt(max(T, 0.0)) < 0.01
+        F = S * exp((r - q) * T)
+        intrinsic_F = otype === :call ? max(F - K, 0.0) : max(K - F, 0.0)
+        return exp(-r * T) * intrinsic_F
+    end
+    return lr_american_price(S, K, σ, r, T, N, otype; q=q)
+end
 
 function _price_paths(spec::ScenarioSpec, hspec::HestonSpec, model::_RestoredModel,
-                      S_paths::Array{Float64,2}, v_paths::Array{Float64,2})
+                      S_paths::Array{Float64,2},
+                      v_put_paths::Array{Float64,2}, v_call_paths::Array{Float64,2})
     println("Pricing put + call at every (t, path) via Leisen-Reimer American (n_steps=$(hspec.n_steps_lr))...")
     n_actual = size(S_paths, 2)
     V_put  = Array{Float64}(undef, spec.T_days + 1, n_actual)
@@ -293,19 +340,18 @@ function _price_paths(spec::ScenarioSpec, hspec::HestonSpec, model::_RestoredMod
     for p in 1:n_actual
         for t in 0:spec.T_days
             S_t = S_paths[t+1, p]
-            v_t = v_paths[t+1, p]
             if t == spec.T_days
                 V_put[t+1, p]  = max(spec.K_put  - S_t, 0.0)
                 V_call[t+1, p] = max(S_t - spec.K_call, 0.0)
             else
                 dte_remaining = spec.T_days - t
                 T_rem_yrs = dte_remaining / 365.0
-                σ_put  = heston_smile_iv(v_t, model, spec.K_put,  S_t, dte_remaining)
-                σ_call = heston_smile_iv(v_t, model, spec.K_call, S_t, dte_remaining)
-                V_put[t+1, p]  = lr_american_price(S_t, spec.K_put,  σ_put,
+                σ_put  = sqrt(max(v_put_paths[t+1,  p], 1e-10))
+                σ_call = sqrt(max(v_call_paths[t+1, p], 1e-10))
+                V_put[t+1, p]  = _safe_lr_price(S_t, spec.K_put,  σ_put,
                                                     hspec.r_free, T_rem_yrs, hspec.n_steps_lr,
                                                     :put;  q=hspec.q_div)
-                V_call[t+1, p] = lr_american_price(S_t, spec.K_call, σ_call,
+                V_call[t+1, p] = _safe_lr_price(S_t, spec.K_call, σ_call,
                                                     hspec.r_free, T_rem_yrs, hspec.n_steps_lr,
                                                     :call; q=hspec.q_div)
             end
@@ -316,7 +362,8 @@ function _price_paths(spec::ScenarioSpec, hspec::HestonSpec, model::_RestoredMod
 end
 
 function _compute_greeks(spec::ScenarioSpec, hspec::HestonSpec, model::_RestoredModel,
-                         S_paths::Array{Float64,2}, v_paths::Array{Float64,2},
+                         S_paths::Array{Float64,2},
+                         v_put_paths::Array{Float64,2}, v_call_paths::Array{Float64,2},
                          V_put::Array{Float64,2}, V_call::Array{Float64,2})
     n_actual = size(S_paths, 2)
     H_S_FRAC = 0.015
@@ -336,9 +383,8 @@ function _compute_greeks(spec::ScenarioSpec, hspec::HestonSpec, model::_Restored
             dte = spec.T_days - t
             T_rem = dte / 365.0
             S_t = S_paths[t+1, p]
-            v_t = v_paths[t+1, p]
-            σ_p = heston_smile_iv(v_t, model, spec.K_put,  S_t, dte)
-            σ_c = heston_smile_iv(v_t, model, spec.K_call, S_t, dte)
+            σ_p = sqrt(max(v_put_paths[t+1,  p], 1e-10))
+            σ_c = sqrt(max(v_call_paths[t+1, p], 1e-10))
             σ_put_paths[t+1,  p] = σ_p * 100
             σ_call_paths[t+1, p] = σ_c * 100
 
@@ -347,19 +393,19 @@ function _compute_greeks(spec::ScenarioSpec, hspec::HestonSpec, model::_Restored
             σ_c_lo = max(σ_c - D_SIGMA, 1e-4)
 
             V_pS0 = V_put[t+1, p]
-            V_pSp = lr_american_price(S_t + h, spec.K_put, σ_p,           hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
-            V_pSm = lr_american_price(S_t - h, spec.K_put, σ_p,           hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
-            V_pσp = lr_american_price(S_t,     spec.K_put, σ_p + D_SIGMA, hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
-            V_pσm = lr_american_price(S_t,     spec.K_put, σ_p_lo,        hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
+            V_pSp = _safe_lr_price(S_t + h, spec.K_put, σ_p,           hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
+            V_pSm = _safe_lr_price(S_t - h, spec.K_put, σ_p,           hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
+            V_pσp = _safe_lr_price(S_t,     spec.K_put, σ_p + D_SIGMA, hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
+            V_pσm = _safe_lr_price(S_t,     spec.K_put, σ_p_lo,        hspec.r_free, T_rem, hspec.n_steps_lr, :put; q=hspec.q_div)
             Δ_put_paths[t+1, p]    = (V_pSp - V_pSm) / (2h)
             Γ_put_paths[t+1, p]    = (V_pSp - 2*V_pS0 + V_pSm) / (h^2)
             Vega_put_paths[t+1, p] = (V_pσp - V_pσm) / (2 * D_SIGMA * 100)
 
             V_cS0 = V_call[t+1, p]
-            V_cSp = lr_american_price(S_t + h, spec.K_call, σ_c,           hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
-            V_cSm = lr_american_price(S_t - h, spec.K_call, σ_c,           hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
-            V_cσp = lr_american_price(S_t,     spec.K_call, σ_c + D_SIGMA, hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
-            V_cσm = lr_american_price(S_t,     spec.K_call, σ_c_lo,        hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
+            V_cSp = _safe_lr_price(S_t + h, spec.K_call, σ_c,           hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
+            V_cSm = _safe_lr_price(S_t - h, spec.K_call, σ_c,           hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
+            V_cσp = _safe_lr_price(S_t,     spec.K_call, σ_c + D_SIGMA, hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
+            V_cσm = _safe_lr_price(S_t,     spec.K_call, σ_c_lo,        hspec.r_free, T_rem, hspec.n_steps_lr, :call; q=hspec.q_div)
             Δ_call_paths[t+1, p]    = (V_cSp - V_cSm) / (2h)
             Γ_call_paths[t+1, p]    = (V_cSp - 2*V_cS0 + V_cSm) / (h^2)
             Vega_call_paths[t+1, p] = (V_cσp - V_cσm) / (2 * D_SIGMA * 100)
@@ -418,6 +464,8 @@ function run_short_scenario(spec::ScenarioSpec, hspec::HestonSpec;
             nn_iv_call*100)
 
     # Try cache first (matches the cache contract from gs_short_premium_simulation.jl).
+    # Path-A caches carry separate per-contract variance trajectories; pre-Path-A
+    # caches that only stored a single `v_paths` key are auto-invalidated below.
     sim_cache_valid = !resim && isfile(sim_cache_path)
     if sim_cache_valid
         cache = JLD2.load(sim_cache_path)
@@ -427,23 +475,25 @@ function run_short_scenario(spec::ScenarioSpec, hspec::HestonSpec;
              get(cache, "ticker_prior_ccgr_pct", NaN) ≈ spec.ticker_prior_ccgr_pct &&
              get(cache, "heston_rho", NaN) ≈ hspec.rho &&
              get(cache, "heston_kappa", NaN) ≈ hspec.kappa &&
-             get(cache, "heston_sigma_v", NaN) ≈ hspec.sigma_v
+             get(cache, "heston_sigma_v", NaN) ≈ hspec.sigma_v &&
+             haskey(cache, "v_put_paths") && haskey(cache, "v_call_paths")
         if ok
             println("Cache hit: loading prior simulation from $(basename(sim_cache_path))")
-            S_paths = cache["S_paths"]
-            v_paths = cache["v_paths"]
-            V_put   = cache["V_put"]
-            V_call  = cache["V_call"]
+            S_paths      = cache["S_paths"]
+            v_put_paths  = cache["v_put_paths"]
+            v_call_paths = cache["v_call_paths"]
+            V_put        = cache["V_put"]
+            V_call       = cache["V_call"]
         else
             println("Cache parameters drifted from current spec — resimulating.")
             sim_cache_valid = false
         end
     end
     if !sim_cache_valid
-        S_paths, v_paths = _simulate_paths(spec, hspec, model, S_0, port_path)
-        V_put, V_call = _price_paths(spec, hspec, model, S_paths, v_paths)
+        S_paths, v_put_paths, v_call_paths = _simulate_paths(spec, hspec, model, S_0, port_path)
+        V_put, V_call = _price_paths(spec, hspec, model, S_paths, v_put_paths, v_call_paths)
         JLD2.jldsave(sim_cache_path;
-            S_paths=S_paths, v_paths=v_paths,
+            S_paths=S_paths, v_put_paths=v_put_paths, v_call_paths=v_call_paths,
             V_put=V_put, V_call=V_call,
             S_0=S_0, K_put=spec.K_put, K_call=spec.K_call,
             theta_bar=theta_bar,
@@ -460,7 +510,7 @@ function run_short_scenario(spec::ScenarioSpec, hspec::HestonSpec;
     model_fv_call_t0 = V_call[1, 1]
 
     greeks = if compute_greeks
-        _compute_greeks(spec, hspec, model, S_paths, v_paths, V_put, V_call)
+        _compute_greeks(spec, hspec, model, S_paths, v_put_paths, v_call_paths, V_put, V_call)
     else
         (fill(NaN, size(S_paths)), fill(NaN, size(S_paths)),
          fill(NaN, size(S_paths)), fill(NaN, size(S_paths)),
@@ -496,7 +546,7 @@ function run_short_scenario(spec::ScenarioSpec, hspec::HestonSpec;
     return (
         spec=spec, hspec=hspec,
         S_0=S_0, theta_bar=theta_bar, nn_source=src,
-        S_paths=S_paths, v_paths=v_paths,
+        S_paths=S_paths, v_put_paths=v_put_paths, v_call_paths=v_call_paths,
         V_put=V_put, V_call=V_call,
         σ_put_paths=σ_put_paths, σ_call_paths=σ_call_paths,
         Δ_put_paths=Δ_put_paths, Δ_call_paths=Δ_call_paths,

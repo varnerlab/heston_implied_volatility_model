@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  15 MAY 2026 11:10
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  15 MAY 2026 20:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -573,35 +573,30 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 [2]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 2
-1.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
 
 [3]) (./sections/methods.tex
 
 [4]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 54.
-
+[5]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\psi' on input line 54.
+(hyperref)                removing `math shift' on input line 57.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 54.
+(hyperref)                removing `\psi' on input line 57.
 
 
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 57.
 
-[5]) (./sections/calibration.tex
+) (./sections/calibration.tex
 
 [6]
 
 [7]
-<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=250, 1505.625pt x 8
+<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=259, 1505.625pt x 8
 03.0pt>
 File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
  pdf)
@@ -609,7 +604,14 @@ File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
 Package pdftex.def Info: sections/figures/ladder_per_ticker_nn_smile_panels.pdf
   used on input line 33.
 (pdftex.def)             Requested size: 397.48499pt x 211.9853pt.
-<sections/figures/ladder_price_error_three_tickers.pdf, id=252, 1204.5pt x 903.
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 3
+7.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
+
+[8]
+<sections/figures/ladder_price_error_three_tickers.pdf, id=268, 1204.5pt x 903.
 375pt>
 File: sections/figures/ladder_price_error_three_tickers.pdf Graphic file (type 
 pdf)
@@ -618,34 +620,28 @@ Package pdftex.def Info: sections/figures/ladder_price_error_three_tickers.pdf
  used on input line 41.
 (pdftex.def)             Requested size: 397.48499pt x 298.11467pt.
 
+
+[9 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[8]
-Underfull \vbox (badness 3849) has occurred while \output is active []
-
-
-
-[9 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
-
 [10 <./sections/figures/ladder_price_error_three_tickers.pdf>])
 (./sections/scenarios.tex
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 8.
-
-Underfull \vbox (badness 3019) has occurred while \output is active []
-
-
 
 [11]
-<sections/figures/gs/gs_short_paths.pdf, id=285, 1505.625pt x 1104.125pt>
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 8.
+<sections/figures/gs/gs_short_paths.pdf, id=294, 1505.625pt x 1104.125pt>
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
 line 33.
 (pdftex.def)             Requested size: 397.48499pt x 291.4798pt.
-<sections/figures/gs/gs_iv_trajectories.pdf, id=287, 1505.625pt x 602.25pt>
+
+
+[12]
+<sections/figures/gs/gs_iv_trajectories.pdf, id=305, 1505.625pt x 602.25pt>
 File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
@@ -653,8 +649,8 @@ put line 42.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 
 
-[12]
-<sections/figures/gs/gs_short_pnl_distributions.pdf, id=300, 1505.625pt x 602.2
+[13 <./sections/figures/gs/gs_short_paths.pdf>]
+<sections/figures/gs/gs_short_pnl_distributions.pdf, id=317, 1505.625pt x 602.2
 5pt>
 File: sections/figures/gs/gs_short_pnl_distributions.pdf Graphic file (type pdf
 )
@@ -663,15 +659,10 @@ Package pdftex.def Info: sections/figures/gs/gs_short_pnl_distributions.pdf  us
 ed on input line 53.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 
-Underfull \vbox (badness 1028) has occurred while \output is active []
-
-
-
-[13 <./sections/figures/gs/gs_short_paths.pdf>]
 
 [14 <./sections/figures/gs/gs_iv_trajectories.pdf> <./sections/figures/gs/gs_sh
 ort_pnl_distributions.pdf>]
-<sections/figures/lly/lly_short_pnl_distributions.pdf, id=319, 1505.625pt x 602
+<sections/figures/lly/lly_short_pnl_distributions.pdf, id=327, 1505.625pt x 602
 .25pt>
 File: sections/figures/lly/lly_short_pnl_distributions.pdf Graphic file (type p
 df)
@@ -686,61 +677,82 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[16]) (./sections/conclusion.tex) (./main.bbl
-Underfull \vbox (badness 10000) has occurred while \output is active []
+[16]) (./sections/conclusion.tex)
 
-
-
-[17]
+[17] (./main.bbl
 
 [18])
 
 [19] (./sections/supplement.tex
 
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `\sigma' on input line 1.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `superscript' on input line 1.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1.
+
+
+
 [20
 
 ]
-Underfull \vbox (badness 6542) has occurred while \output is active []
-
-
 
 [21]
-<sections/figures/gs/gs_short_greeks.pdf, id=397, 1505.625pt x 1505.625pt>
+
+[22]
+<sections/figures/gs/gs_short_greeks.pdf, id=425, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
- line 158.
+ line 172.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
-<sections/figures/lly/lly_short_paths.pdf, id=411, 1505.625pt x 1104.125pt>
+<sections/figures/lly/lly_short_paths.pdf, id=438, 1505.625pt x 1104.125pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
-t line 190.
+t line 204.
 (pdftex.def)             Requested size: 397.48499pt x 291.4798pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=414, 1505.625pt x 602.25pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=441, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
-input line 197.
+input line 211.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/lly/lly_short_greeks.pdf, id=417, 1505.625pt x 1505.625pt>
+<sections/figures/lly/lly_short_greeks.pdf, id=444, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
-ut line 204.
+ut line 218.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
 )
 
-[22]
-
 [23]
 
-[24 <./sections/figures/gs/gs_short_greeks.pdf>]
+[24]
 
-[25 <./sections/figures/lly/lly_short_paths.pdf> <./sections/figures/lly/lly_iv
+[25 <./sections/figures/gs/gs_short_greeks.pdf>]
+
+[26 <./sections/figures/lly/lly_short_paths.pdf> <./sections/figures/lly/lly_iv
 _trajectories.pdf>]
 
-[26 <./sections/figures/lly/lly_short_greeks.pdf>] (./main.aux)
+[27 <./sections/figures/lly/lly_short_greeks.pdf>] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -750,35 +762,40 @@ L3 programming layer <2025-01-18>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 0EA969B075825B18CDBD4D82BDC5FCF1;5234.
+(rerunfilecheck)             Checksum: C3EAD4BE21D87463C80BE0244BBCAD10;5608.
  ) 
 Here is how much of TeX's memory you used:
- 13668 strings out of 473190
- 218186 string characters out of 5715801
- 644180 words of memory out of 5000000
- 36602 multiletter control sequences out of 15000+600000
- 578963 words of font info for 79 fonts, out of 8000000 for 9000
+ 13701 strings out of 473190
+ 218550 string characters out of 5715801
+ 643459 words of memory out of 5000000
+ 36621 multiletter control sequences out of 15000+600000
+ 582979 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,18n,79p,2764b,588s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,18n,79p,2764b,580s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></u
-sr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
-/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/l
-ocal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/loca
-l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/t
-exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/te
-xlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texl
-ive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
-e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive
-/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texm
-f-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fon
-ts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (26 pages, 4431619 bytes).
+/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></
+usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></us
+r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
+local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/lo
+cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
+l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/
+texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/tex
+live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2
+025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
+25/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2025
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/te
+xmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/202
+5/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-di
+st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/t
+ype1/urw/times/utmri8a.pfb>
+Output written on main.pdf (27 pages, 4427668 bytes).
 PDF statistics:
- 537 PDF objects out of 1000 (max. 8388607)
- 456 compressed objects within 5 object streams
- 104 named destinations out of 1000 (max. 500000)
- 227 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 586 PDF objects out of 1000 (max. 8388607)
+ 495 compressed objects within 5 object streams
+ 109 named destinations out of 1000 (max. 500000)
+ 235 words of extra memory for PDF output out of 10000 (max. 10000000)
 
