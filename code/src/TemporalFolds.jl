@@ -25,8 +25,8 @@ include("EarningsCalendar.jl")
 using .EarningsCalendar
 
 export SECTORS, ETF_TICKERS, EQUITY_TICKERS
-export load_earnings_calendar, load_split, attach_earnings_features!,
-       near_earnings_mask, compute_standardizer
+export load_earnings_calendar, load_split, resolve_day, EXTENDED_DAYS,
+       attach_earnings_features!, near_earnings_mask, compute_standardizer
 export train_sector_nn, predict_sector_nn, run_fold
 export rmse
 
@@ -53,6 +53,44 @@ const EQUITY_TICKERS = Set([t for t in keys(SECTORS) if !(t in ETF_TICKERS)])
 
 const D2E_CLIP = 30          # clamp days-to-earnings to this magnitude
 const EARNINGS_WINDOW = 3    # ±days for "near earnings" exclusion
+
+# ============================================================================
+# Extended corpus — 58 capture dates, 2026-04-14 .. 2026-07-17
+#
+# The first 15 entries are the frozen arm living in data/ladder; entries 16..58
+# live in data/ladder_extended. Consumers resolve each name across both roots
+# via `resolve_day`, so this list is layout-agnostic.
+#
+# Gaps are real: 04-30, 05-04, 05-05, 05-07, 06-05, 06-08 and 06-09 were not
+# captured. 05-25 (Memorial Day) and 07-03 (Independence Day observed) are
+# market holidays.
+# ============================================================================
+
+const EXTENDED_DAYS = [
+    # --- frozen 15-date arm (data/ladder) -----------------------------------
+    "options-04-14-2026", "options-04-15-2026", "options-04-16-2026",
+    "options-04-17-2026", "options-04-21-2026", "options-04-22-2026",
+    "options-04-23-2026", "options-04-24-2026", "options-04-27-2026",
+    "options-04-28-2026", "options-04-29-2026", "options-05-01-2026",
+    "options-05-06-2026", "options-05-08-2026", "options-05-11-2026",
+    # --- extension (data/ladder_extended) -----------------------------------
+    "options-05-12-2026", "options-05-13-2026", "options-05-14-2026",
+    "options-05-15-2026", "options-05-18-2026", "options-05-19-2026",
+    "options-05-20-2026", "options-05-21-2026", "options-05-22-2026",
+    "options-05-26-2026", "options-05-27-2026", "options-05-28-2026",
+    "options-05-29-2026", "options-06-01-2026", "options-06-02-2026",
+    "options-06-03-2026", "options-06-04-2026", "options-06-10-2026",
+    "options-06-11-2026", "options-06-12-2026", "options-06-15-2026",
+    "options-06-16-2026", "options-06-17-2026", "options-06-18-2026",
+    "options-06-22-2026", "options-06-23-2026", "options-06-24-2026",
+    "options-06-25-2026", "options-06-26-2026", "options-06-29-2026",
+    "options-06-30-2026", "options-07-01-2026", "options-07-02-2026",
+    "options-07-06-2026", "options-07-07-2026", "options-07-08-2026",
+    "options-07-09-2026", "options-07-10-2026", "options-07-13-2026",
+    "options-07-14-2026", "options-07-15-2026", "options-07-16-2026",
+    "options-07-17-2026",
+]
+@assert length(EXTENDED_DAYS) == 58
 
 # ============================================================================
 # Data loading
@@ -85,16 +123,29 @@ function load_ladder(filepath::String, day_date::Date)
 end
 
 """
-    load_split(ladder_dir, day_dirs) → DataFrame
+    resolve_day(roots, day) → String
 
-Load every `*_dte_ladder_*.csv` under each named day-directory and stack
-into a single DataFrame with `ticker, S, moneyness, obs_date, sector` columns
-added.
+Locate day-directory `day` across `roots` and return its full path. Raises if
+it is absent from every root, and raises if more than one root supplies it —
+both are silent corpus-corruption modes, so neither is a warn-and-continue.
 """
-function load_split(ladder_dir::AbstractString, day_dirs::Vector{<:AbstractString})
+function resolve_day(roots::Vector{<:AbstractString}, day::AbstractString)
+    hits = [joinpath(r, day) for r in roots if isdir(joinpath(r, day))]
+    if isempty(hits)
+        error("day directory '$(day)' not found in any root: " *
+              join(roots, ", "))
+    elseif length(hits) > 1
+        error("day directory '$(day)' found in multiple roots: " *
+              join(hits, ", "))
+    end
+    return hits[1]
+end
+
+function load_split(roots::Vector{<:AbstractString},
+                    day_dirs::Vector{<:AbstractString})
     frames = DataFrame[]
     for d in day_dirs
-        full = joinpath(ladder_dir, d)
+        full = resolve_day(roots, d)
         day_date = dir_to_date(d)
         for f in readdir(full)
             endswith(f, ".csv") && occursin("_dte_ladder_", f) || continue
@@ -106,6 +157,17 @@ function load_split(ladder_dir::AbstractString, day_dirs::Vector{<:AbstractStrin
     out[!, :sector] = [get(SECTORS, t, "Other") for t in out.ticker]
     return out
 end
+
+"""
+    load_split(ladder_dir, day_dirs) → DataFrame
+
+Load every `*_dte_ladder_*.csv` under each named day-directory and stack
+into a single DataFrame with `ticker, S, moneyness, obs_date, sector` columns
+added.
+"""
+# Single-root callers delegate, keeping one implementation of the load body.
+load_split(ladder_dir::AbstractString, day_dirs::Vector{<:AbstractString}) =
+    load_split([String(ladder_dir)], day_dirs)
 
 load_earnings_calendar(path::AbstractString) = load_earnings(String(path))
 
