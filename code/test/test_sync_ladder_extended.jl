@@ -63,6 +63,15 @@ using .SyncLadderExtended
             sdk = joinpath(tmp, "sdk"); mkpath(sdk)
             @test_throws ErrorException sync_extended(
                 sdk_dir=sdk, dest_dir=joinpath(tmp, "data", "ladder"))
+            # Path-normalization bypasses: these all resolve to the same
+            # frozen root as "data/ladder" even though they don't string-match
+            # the raw guard, so they must be rejected too.
+            @test_throws ErrorException sync_extended(
+                sdk_dir=sdk, dest_dir=joinpath(tmp, "data", "ladder") * "/")
+            @test_throws ErrorException sync_extended(
+                sdk_dir=sdk, dest_dir=joinpath(tmp, "data", "ladder", "."))
+            @test_throws ErrorException sync_extended(
+                sdk_dir=sdk, dest_dir=joinpath(tmp, "data", "ladder", "..", "ladder"))
             # The legitimate destination shares the "ladder" prefix but is
             # not the frozen root itself, so it must be allowed.
             @test isempty(sync_extended(

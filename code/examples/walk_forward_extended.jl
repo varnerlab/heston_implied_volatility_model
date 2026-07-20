@@ -14,7 +14,11 @@ for the 43 new dates. `walk_forward_temporal.jl` is untouched and still
 reproduces the 15-date result independently.
 
 Environment:
-    WF_K_MAX    cap on k, for smoke runs (default 57, the full sweep)
+    WF_K_MAX    caps the number of folds (default 57, the full sweep). The
+                corpus load happens before the fold loop, so this does NOT
+                reduce corpus loading time -- a capped run still loads the
+                full 58-date, ~986k-observation corpus, which must be
+                present regardless of the cap.
     WF_CONFIGS  "sector" (default) runs only the 2-input sector model;
                 "both" also runs the 4-input earnings-aware model
 
@@ -58,7 +62,7 @@ const CONFIGS = get(ENV, "WF_CONFIGS", "sector") == "both" ? ALL_CONFIGS : ALL_C
 
 const K_MAX = parse(Int, get(ENV, "WF_K_MAX", "57"))
 const K_RANGE = 5:K_MAX
-@assert K_MAX <= length(EXTENDED_DAYS) - 1
+@assert 5 <= K_MAX <= length(EXTENDED_DAYS) - 1 "WF_K_MAX must be in 5:$(length(EXTENDED_DAYS) - 1); K_MAX < 5 produces an empty K_RANGE"
 
 println("Loading earnings calendar from $(EARNINGS_CSV) ...")
 cal = load_earnings_calendar(EARNINGS_CSV)
@@ -88,6 +92,9 @@ for k in K_RANGE
     test_df  = _split_by_dirnames(all_data, EXTENDED_DAYS[k+1:k+1])
     test_date = TemporalFolds.dir_to_date(EXTENDED_DAYS[k+1])
 
+    # Guard against a malformed or truncated capture day, not an expected
+    # occurrence: across the completed 53-fold sweep this never fired -- the
+    # minimum observed n_test_obs was 11,379.
     if nrow(test_df) < 500
         @printf("  SKIP k=%2d (%s): only %d test obs\n",
                 k, test_date, nrow(test_df))

@@ -141,6 +141,15 @@ function resolve_day(roots::Vector{<:AbstractString}, day::AbstractString)
     return hits[1]
 end
 
+"""
+    load_split(roots::Vector{<:AbstractString}, day_dirs) → DataFrame
+
+Canonical implementation. Resolves each entry in `day_dirs` across `roots`
+via `resolve_day`, loads every `*_dte_ladder_*.csv` under each resolved
+directory, and stacks the per-day frames into a single DataFrame with
+`ticker, S, moneyness, obs_date, sector` columns added. The single-root
+method below delegates to this one.
+"""
 function load_split(roots::Vector{<:AbstractString},
                     day_dirs::Vector{<:AbstractString})
     frames = DataFrame[]

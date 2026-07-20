@@ -58,7 +58,8 @@ chronologically by capture date.
 function sync_extended(; sdk_dir::AbstractString = DEFAULT_SDK_DIR,
                          dest_dir::AbstractString,
                          dry_run::Bool = false)
-    if occursin(Regex("(^|/)ladder\$"), rstrip(String(dest_dir), '/'))
+    normalized_dest = rstrip(normpath(abspath(String(dest_dir))), '/')
+    if occursin(Regex("(^|/)ladder\$"), normalized_dest)
         error("refusing to write into the frozen 15-date root: $(dest_dir)")
     end
     isdir(sdk_dir) || error("SDK data directory not found: $(sdk_dir)")
