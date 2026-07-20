@@ -1,0 +1,68 @@
+^D]0;Julia]0;JuliaLoading earnings calendar from /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../data/earnings/earnings_calendar.csv ...
+  loaded 28 tickers
+Loading extended corpus across 2 roots ...
+  986492 obs, 31 tickers, 58 dates
+  k= 5 sector_2in    test=2026-04-22 train= 7.61% test=10.47% gap=+2.87% e=Y
+  k= 6 sector_2in    test=2026-04-23 train= 8.05% test=17.45% gap=+9.41% e=Y
+  k= 7 sector_2in    test=2026-04-24 train= 9.34% test= 7.79% gap=-1.55% e=Y
+  k= 8 sector_2in    test=2026-04-27 train= 9.16% test=12.57% gap=+3.41% e=Y
+  k= 9 sector_2in    test=2026-04-28 train= 9.42% test=12.86% gap=+3.44% e=Y
+  k=10 sector_2in    test=2026-04-29 train= 9.78% test=13.12% gap=+3.34% e=Y
+  k=11 sector_2in    test=2026-05-01 train=10.11% test=10.08% gap=-0.03% e=Y
+  k=12 sector_2in    test=2026-05-06 train=10.10% test=11.28% gap=+1.18% e=Y
+  k=13 sector_2in    test=2026-05-08 train=10.18% test=10.82% gap=+0.64% e=Y
+  k=14 sector_2in    test=2026-05-11 train=10.21% test=10.89% gap=+0.68% e=N
+  k=15 sector_2in    test=2026-05-12 train=10.24% test=11.30% gap=+1.06% e=N
+  k=16 sector_2in    test=2026-05-13 train=10.30% test= 9.57% gap=-0.73% e=N
+  k=17 sector_2in    test=2026-05-14 train=10.25% test= 9.79% gap=-0.46% e=N
+  k=18 sector_2in    test=2026-05-15 train=10.21% test= 9.62% gap=-0.60% e=N
+  k=19 sector_2in    test=2026-05-18 train=10.18% test= 9.10% gap=-1.08% e=Y
+  k=20 sector_2in    test=2026-05-19 train=10.12% test= 9.24% gap=-0.88% e=Y
+  k=21 sector_2in    test=2026-05-20 train=10.07% test= 9.61% gap=-0.46% e=Y
+  k=22 sector_2in    test=2026-05-21 train=10.05% test= 8.65% gap=-1.40% e=Y
+  k=23 sector_2in    test=2026-05-22 train= 9.98% test= 8.69% gap=-1.29% e=Y
+  k=24 sector_2in    test=2026-05-26 train= 9.93% test= 9.74% gap=-0.19% e=N
+  k=25 sector_2in    test=2026-05-27 train= 9.92% test=10.06% gap=+0.14% e=N
+  k=26 sector_2in    test=2026-05-28 train= 9.92% test= 9.13% gap=-0.79% e=N
+  k=27 sector_2in    test=2026-05-29 train= 9.89% test= 9.45% gap=-0.44% e=N
+  k=28 sector_2in    test=2026-06-01 train= 9.87% test= 9.96% gap=+0.09% e=Y
+  k=29 sector_2in    test=2026-06-02 train= 9.87% test=10.09% gap=+0.22% e=Y
+  k=30 sector_2in    test=2026-06-03 train= 9.88% test=14.52% gap=+4.64% e=Y
+  k=31 sector_2in    test=2026-06-04 train=10.09% test= 9.46% gap=-0.63% e=Y
+  k=32 sector_2in    test=2026-06-10 train=10.07% test=15.31% gap=+5.25% e=N
+  k=33 sector_2in    test=2026-06-11 train=10.26% test=10.30% gap=+0.04% e=N
+  k=34 sector_2in    test=2026-06-12 train=10.26% test= 8.93% gap=-1.33% e=N
+  k=35 sector_2in    test=2026-06-15 train=10.22% test= 9.05% gap=-1.17% e=N
+  k=36 sector_2in    test=2026-06-16 train=10.18% test= 9.47% gap=-0.72% e=N
+  k=37 sector_2in    test=2026-06-17 train=10.16% test=11.05% gap=+0.89% e=N
+  k=38 sector_2in    test=2026-06-18 train=10.19% test= 8.55% gap=-1.63% e=N
+  k=39 sector_2in    test=2026-06-22 train=10.14% test=11.11% gap=+0.97% e=Y
+  k=40 sector_2in    test=2026-06-23 train=10.17% test=11.15% gap=+0.98% e=Y
+  k=41 sector_2in    test=2026-06-24 train=10.19% test=19.25% gap=+9.06% e=Y
+  k=42 sector_2in    test=2026-06-25 train=10.45% test=10.21% gap=-0.24% e=Y
+  k=43 sector_2in    test=2026-06-26 train=10.44% test= 8.91% gap=-1.53% e=Y
+  k=44 sector_2in    test=2026-06-29 train=10.41% test= 8.85% gap=-1.56% e=N
+  k=45 sector_2in    test=2026-06-30 train=10.39% test= 8.87% gap=-1.51% e=N
+  k=46 sector_2in    test=2026-07-01 train=10.36% test= 9.27% gap=-1.08% e=N
+  k=47 sector_2in    test=2026-07-02 train=10.33% test= 7.68% gap=-2.66% e=N
+  k=48 sector_2in    test=2026-07-06 train=10.29% test= 8.36% gap=-1.93% e=N
+  k=49 sector_2in    test=2026-07-07 train=10.25% test= 9.02% gap=-1.23% e=N
+  k=50 sector_2in    test=2026-07-08 train=10.23% test=10.51% gap=+0.28% e=N
+  k=51 sector_2in    test=2026-07-09 train=10.23% test=10.02% gap=-0.22% e=N
+  k=52 sector_2in    test=2026-07-10 train=10.23% test=10.05% gap=-0.18% e=N
+  k=53 sector_2in    test=2026-07-13 train=10.23% test= 9.92% gap=-0.30% e=Y
+  k=54 sector_2in    test=2026-07-14 train=10.22% test= 9.51% gap=-0.71% e=Y
+  k=55 sector_2in    test=2026-07-15 train=10.20% test= 9.60% gap=-0.61% e=Y
+  k=56 sector_2in    test=2026-07-16 train=10.19% test= 9.99% gap=-0.20% e=Y
+  k=57 sector_2in    test=2026-07-17 train=10.19% test=10.14% gap=-0.05% e=Y
+
+[csv] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/walk_forward_extended_summary.csv
+
+================================================================================
+  EXTENDED WALK-FORWARD SUMMARY  (53 folds)
+================================================================================
+  sector_2in     median test  9.92%   median gap -0.24%   mean gap +0.36%
+[fig] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/walk_forward_extended_gap.pdf
+[fig] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/walk_forward_extended_gap.png
+
+Done.
