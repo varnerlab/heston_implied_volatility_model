@@ -2,19 +2,26 @@
 Expanding-window walk-forward across the 58-date extended ladder corpus.
 
 For k = 5..57, train on the first k capture dates and test on the unseen date
-k+1, giving 53 folds. Two configurations run per fold: the 2-input sector model
-(matching `walk_forward_temporal.jl`) and the 4-input earnings-aware model.
+k+1, giving 53 folds. By default only the 2-input sector model runs per fold
+(matching `walk_forward_temporal.jl`); the 4-input earnings-aware model is
+deferred because the current corpus window falls in the trough between
+earnings seasons and cannot support a replication claim for it. Set
+WF_CONFIGS=both to also run the 4-input config once the corpus covers the
+Q2 earnings season.
 
 Reads two roots — `data/ladder` for the 15-date arm and `data/ladder_extended`
 for the 43 new dates. `walk_forward_temporal.jl` is untouched and still
 reproduces the 15-date result independently.
 
 Environment:
-    WF_K_MAX   cap on k, for smoke runs (default 57, the full sweep)
+    WF_K_MAX    cap on k, for smoke runs (default 57, the full sweep)
+    WF_CONFIGS  "sector" (default) runs only the 2-input sector model;
+                "both" also runs the 4-input earnings-aware model
 
 Run:
     julia --project=. examples/walk_forward_extended.jl
     WF_K_MAX=16 julia --project=. examples/walk_forward_extended.jl
+    WF_CONFIGS=both julia --project=. examples/walk_forward_extended.jl
 """
 
 using CSV
@@ -36,10 +43,18 @@ const EARNINGS_CSV = joinpath(@__DIR__, "..", "data", "earnings",
                               "earnings_calendar.csv")
 const FIG_DIR = joinpath(@__DIR__, "..", "figures")
 
-const CONFIGS = [
+# The 2026-05-12..2026-07-17 corpus window sits in the trough between
+# quarterly earnings seasons: only 11 earnings events total, 6 of them on the
+# final three capture days (monthly counts: Apr 17, May 9, Jun 2, Jul 18). The
+# Q2 season lands 2026-07-22..2026-08-05, just past the end of the corpus, so
+# the 4-input earnings-aware config cannot support a replication claim here.
+# It is deferred until the corpus covers the Q2 season; set WF_CONFIGS=both
+# to re-enable it.
+const ALL_CONFIGS = [
     (name = "sector_2in",   n_inputs = 2),
     (name = "earnings_4in", n_inputs = 4),
 ]
+const CONFIGS = get(ENV, "WF_CONFIGS", "sector") == "both" ? ALL_CONFIGS : ALL_CONFIGS[1:1]
 
 const K_MAX = parse(Int, get(ENV, "WF_K_MAX", "57"))
 const K_RANGE = 5:K_MAX
