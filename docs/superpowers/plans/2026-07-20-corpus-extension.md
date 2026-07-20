@@ -917,7 +917,17 @@ println("folds: ", length(unique(df.k)))
 println("configs: ", unique(df.config))
 println("any non-finite: ", any(!isfinite, df.test_rmse))'
 ```
-Expected: 106 rows, 53 folds, both config names, and `any non-finite: false`. Fewer than 53 folds means some were skipped for low test-observation counts — the run log names which and why.
+Expected: **53 rows**, 53 folds, config name `sector_2in` only, and `any non-finite: false`. Fewer than 53 folds means some were skipped for low test-observation counts — the run log names which and why.
+
+> **Scope change, 2026-07-20 (after Task 5).** The plan originally ran two
+> configurations for 106 rows. Task 5's refresh found only 11 earnings events in
+> the 05-12 to 07-17 window, not the ~25 estimated here: that window sits in the
+> trough between quarterly reporting seasons (monthly counts Apr 17, May 9,
+> Jun 2, Jul 18), and the Q2 season lands 07-22 to 08-05, just past the end of
+> the corpus. The 4-input earnings-aware configuration cannot support a
+> replication claim on such a window, so it is deferred and gated behind
+> `WF_CONFIGS=both` rather than removed. Re-enable it after a re-sync that
+> covers the Q2 season.
 
 - [ ] **Step 3: Read out the headline comparison**
 
