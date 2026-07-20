@@ -8,3 +8,7 @@ using HestonIV
     include("test_crr_tree.jl")
     include("test_calibration.jl")
 end
+
+@testset "Corpus tooling" begin
+    include("test_sync_ladder_extended.jl")
+end
