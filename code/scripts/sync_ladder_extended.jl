@@ -52,7 +52,8 @@ end
 
 Copy every post-cutoff capture directory from `sdk_dir` into `dest_dir`,
 renamed to four-digit-year form. Skips directories already present, so it is
-idempotent. Returns the project-form names actually copied, sorted.
+idempotent. Returns the project-form names actually copied, sorted
+chronologically by capture date.
 """
 function sync_extended(; sdk_dir::AbstractString = DEFAULT_SDK_DIR,
                          dest_dir::AbstractString,
@@ -62,14 +63,16 @@ function sync_extended(; sdk_dir::AbstractString = DEFAULT_SDK_DIR,
     end
     isdir(sdk_dir) || error("SDK data directory not found: $(sdk_dir)")
 
+    eligible = filter(should_sync, readdir(sdk_dir))
+    sort!(eligible; by = sdk_dir_date)
+
     copied = String[]
-    for d in sort(readdir(sdk_dir))
-        should_sync(d) || continue
+    dry_run || mkpath(dest_dir)
+    for d in eligible
         target_name = sdk_to_project_dirname(d)
         target = joinpath(dest_dir, target_name)
         isdir(target) && continue
         if !dry_run
-            mkpath(dest_dir)
             cp(joinpath(sdk_dir, d), target)
         end
         push!(copied, target_name)

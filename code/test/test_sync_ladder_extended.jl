@@ -63,6 +63,25 @@ using .SyncLadderExtended
             sdk = joinpath(tmp, "sdk"); mkpath(sdk)
             @test_throws ErrorException sync_extended(
                 sdk_dir=sdk, dest_dir=joinpath(tmp, "data", "ladder"))
+            # The legitimate destination shares the "ladder" prefix but is
+            # not the frozen root itself, so it must be allowed.
+            @test isempty(sync_extended(
+                sdk_dir=sdk, dest_dir=joinpath(tmp, "data", "ladder_extended")))
+        end
+    end
+
+    @testset "returns chronological order across a year boundary" begin
+        mktempdir() do tmp
+            sdk = joinpath(tmp, "sdk"); dest = joinpath(tmp, "dest")
+            # Lexical sort would put "options-01-05-27" before
+            # "options-12-15-26" (month digit "0" < "1"); chronological
+            # order must put it after.
+            for d in ["options-01-05-27", "options-12-15-26"]
+                mkpath(joinpath(sdk, d))
+                write(joinpath(sdk, d, "AAPL_dte_ladder_x.csv"), "a\n1\n")
+            end
+            copied = sync_extended(sdk_dir=sdk, dest_dir=dest)
+            @test copied == ["options-12-15-2026", "options-01-05-2027"]
         end
     end
 end
