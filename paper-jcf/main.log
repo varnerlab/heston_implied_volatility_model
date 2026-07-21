@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  15 MAY 2026 20:45
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  21 JUL 2026 12:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -747,25 +747,25 @@ Package hyperref Warning: Token not allowed in a PDF string (Unicode):
 [40
 
 ]
-<sections/figures/gs/gs_short_greeks.pdf, id=619, 1505.625pt x 1505.625pt>
+<sections/figures/gs/gs_short_greeks.pdf, id=617, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
  line 225.
 (pdftex.def)             Requested size: 469.75502pt x 469.74852pt.
-<sections/figures/lly/lly_short_paths.pdf, id=632, 1505.625pt x 1104.125pt>
+<sections/figures/lly/lly_short_paths.pdf, id=630, 1505.625pt x 1104.125pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
 t line 257.
 (pdftex.def)             Requested size: 469.75502pt x 344.48224pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=635, 1505.625pt x 602.25pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=633, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
 input line 264.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
-<sections/figures/lly/lly_short_greeks.pdf, id=638, 1505.625pt x 1505.625pt>
+<sections/figures/lly/lly_short_greeks.pdf, id=636, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
@@ -786,7 +786,7 @@ ut line 271.
 [46 <./sections/figures/lly/lly_iv_trajectories.pdf>]
 
 [47 <./sections/figures/lly/lly_short_greeks.pdf>]
-<sections/figures/lora_sweep_summary.pdf, id=679, 1304.875pt x 1003.75pt>
+<sections/figures/lora_sweep_summary.pdf, id=677, 1304.875pt x 1003.75pt>
 File: sections/figures/lora_sweep_summary.pdf Graphic file (type pdf)
 <use sections/figures/lora_sweep_summary.pdf>
 Package pdftex.def Info: sections/figures/lora_sweep_summary.pdf  used on input
@@ -797,7 +797,7 @@ Overfull \hbox (52.6872pt too wide) in paragraph at lines 359--369
  [][] 
  []
 
-<sections/figures/lora_arbitrage_audit.pdf, id=681, 1304.875pt x 582.175pt>
+<sections/figures/lora_arbitrage_audit.pdf, id=679, 1304.875pt x 582.175pt>
 File: sections/figures/lora_arbitrage_audit.pdf Graphic file (type pdf)
 <use sections/figures/lora_arbitrage_audit.pdf>
 Package pdftex.def Info: sections/figures/lora_arbitrage_audit.pdf  used on inp
@@ -808,7 +808,7 @@ ut line 377.
 [48
 
 ]
-<sections/figures/lora_trigger_roc.pdf, id=686, 2107.875pt x 702.625pt>
+<sections/figures/lora_trigger_roc.pdf, id=684, 2107.875pt x 702.625pt>
 File: sections/figures/lora_trigger_roc.pdf Graphic file (type pdf)
 <use sections/figures/lora_trigger_roc.pdf>
 Package pdftex.def Info: sections/figures/lora_trigger_roc.pdf  used on input l
@@ -832,17 +832,20 @@ L3 programming layer <2025-01-18>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
+
+LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
+
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 73619C49D47D7F5CCACBF79EEB78B029;10033.
  ) 
 Here is how much of TeX's memory you used:
  14045 strings out of 473190
  224919 string characters out of 5715801
- 660777 words of memory out of 5000000
+ 661777 words of memory out of 5000000
  36924 multiletter control sequences out of 15000+600000
  571712 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,18n,79p,3024b,609s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,18n,79p,3024b,601s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -865,10 +868,10 @@ f-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on main.pdf (52 pages, 4741504 bytes).
+Output written on main.pdf (52 pages, 4743397 bytes).
 PDF statistics:
- 838 PDF objects out of 1000 (max. 8388607)
- 710 compressed objects within 8 object streams
+ 836 PDF objects out of 1000 (max. 8388607)
+ 708 compressed objects within 8 object streams
  162 named destinations out of 1000 (max. 500000)
  378 words of extra memory for PDF output out of 10000 (max. 10000000)
 
