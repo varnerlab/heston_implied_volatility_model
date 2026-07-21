@@ -34,3 +34,9 @@ nvda-options-data/
 code/venv/
 __pycache__/
 *.pyc
+
+# macOS Finder cruft
+.DS_Store
+
+# Stray LaTeX runs from the repo root
+texput.log
