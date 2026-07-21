@@ -78,7 +78,7 @@ const NN_CACHE   = joinpath(@__DIR__, "..", "figures",
                              "calibrate_ladders_per_ticker_nn_cache.jld2")
 const PORT_PATH  = joinpath(@__DIR__, "..", "data",
                              "pretrained-portfolio-surrogate.jld2")
-const OUT_DIR    = joinpath(@__DIR__, "..", "..", "paper", "sections",
+const OUT_DIR    = joinpath(@__DIR__, "..", "..", "paper-jcf", "sections",
                              "figures", "avgo")
 
 # ---------- Load standardisation constants + S_0 ------------------------------

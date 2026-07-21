@@ -117,7 +117,7 @@ const HESTON_RHO     = -0.6   # leverage: dW_v ~ ρ·dW_S + √(1-ρ²)·dW_v_in
 # Paths
 const LADDER_DIR     = joinpath(@__DIR__, "..", "data", "ladder")
 const FIG_CACHE_DIR  = joinpath(@__DIR__, "..", "figures")    # cached NN + sim artifacts
-const PLOT_DIR       = joinpath(@__DIR__, "..", "..", "paper", "sections", "figures", "avgo")
+const PLOT_DIR       = joinpath(@__DIR__, "..", "..", "paper-jcf", "sections", "figures", "avgo")
 const NN_CACHE       = joinpath(FIG_CACHE_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 const SIM_CACHE      = joinpath(FIG_CACHE_DIR, "avgo_short_premium_simulation_cache.jld2")
 const PORT_PATH      = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-surrogate.jld2")
@@ -707,9 +707,10 @@ out_E_pdf = joinpath(PLOT_DIR, "avgo_short_greeks.pdf")
 out_E_png = joinpath(PLOT_DIR, "avgo_short_greeks.png")
 savefig(p_E, out_E_pdf); savefig(p_E, out_E_png)
 
-# Output goes directly to paper/sections/figures/avgo/ — no promote_figures()
-# step needed (and promote_figures only knows about the flat code/figures →
-# paper/sections/figures/ mapping, which would flag these as unreferenced).
+# Output goes directly to paper-jcf/sections/figures/avgo/ — no promote_figures()
+# step needed. promote_figures() owns the flat code/figures/ namespace; nested
+# per-ticker figures like these are written into the paper tree by the scenario
+# scripts themselves, and it deliberately leaves them alone.
 
 # ============================================================================
 # Summary

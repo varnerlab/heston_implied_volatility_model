@@ -620,13 +620,5 @@ println("="^70)
 @printf("  Tickers improved over sector NN: %d  |  regressed: %d\n",
         improved_count, regressed_count)
 
-# Promote the single figure this script owns. Avoid promote_figures() while the
-# paper figure set is being rebuilt — the .tex still references stale names that
-# would otherwise be re-pulled into paper/sections/figures/.
-let smile_pdf = joinpath(PLOT_DIR, "ladder_per_ticker_nn_smile_panels.pdf"),
-    paper_dir = abspath(joinpath(@__DIR__, "..", "..", "paper", "sections", "figures"))
-
-    mkpath(paper_dir)
-    cp(smile_pdf, joinpath(paper_dir, "ladder_per_ticker_nn_smile_panels.pdf"); force=true)
-    println("\n[promote] copied ladder_per_ticker_nn_smile_panels.pdf -> paper/sections/figures/")
-end
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()
