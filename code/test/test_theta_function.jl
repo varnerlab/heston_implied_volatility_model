@@ -91,4 +91,14 @@ using HestonIV
         @test path[3] ≈ 0.0
         @test path[4] ≈ 1.0    # all tails
     end
+
+    @testset "ψ — five-term form includes (ln DTE)² curvature" begin
+        # β₅ carries the term-structure curvature; with all other terms zero and
+        # DTE = e, ψ = exp(β₅ · (ln e)²) = exp(β₅).
+        β = [0.0, 0.0, 0.0, 0.0, 1.0]
+        @test ψ(β, exp(1.0), 1.0) ≈ exp(1.0)
+        # Backward compatibility: 3- and 4-element β treat missing terms as zero.
+        @test ψ([0.0, 0.0, 0.0], 30.0, 1.0) ≈ 1.0
+        @test ψ([0.0, 0.0, 0.0, 0.0], 30.0, 1.0) ≈ 1.0
+    end
 end

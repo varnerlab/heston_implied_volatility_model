@@ -107,10 +107,15 @@ end
     price_contract(S, contract, σ, r; n_steps=200, q=0.0) → Float64
 
 Price an OptionContract given current underlying price and IV.
+
+`contract.DTE` is calendar days to expiration, converted to years with a
+365-day calendar — the same convention the ladder corpus and ScenarioTemplate
+use throughout. (Trading-step counts are a separate concept; see `n_sim_steps`
+in Pipeline.jl.)
 """
 function price_contract(S::Float64, contract::OptionContract, σ::Float64,
                         r::Float64; n_steps::Int=200, q::Float64=0.0)::Float64
-    T = contract.DTE / 252.0  # convert trading days to years
+    T = contract.DTE / 365.0  # calendar DTE → years
     if contract.style == :american
         return crr_american_price(S, contract.K, σ, r, T, n_steps,
                                   contract.option_type; q=q)

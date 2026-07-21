@@ -90,11 +90,20 @@ end
     end
 
     @testset "price_contract — dispatch on style" begin
-        contract_amer = OptionContract(100.0, 252, :put, :american)  # 1 trading year
+        contract_amer = OptionContract(100.0, 252, :put, :american)
         contract_euro = OptionContract(100.0, 252, :put, :european)
         S, σ, r = 100.0, 0.25, 0.05
         amer = price_contract(S, contract_amer, σ, r; n_steps=200)
         euro = price_contract(S, contract_euro, σ, r; n_steps=200)
         @test amer >= euro - 1e-9
+    end
+
+    @testset "price_contract — DTE is calendar days (365-day year)" begin
+        # The ladder corpus and ScenarioTemplate both treat DTE as calendar days
+        # with a 365-day year; price_contract must use the same convention.
+        contract = OptionContract(100.0, 365, :call, :european)
+        S, σ, r = 100.0, 0.25, 0.05
+        direct = crr_european_price(S, 100.0, σ, r, 1.0, 200, :call)
+        @test price_contract(S, contract, σ, r; n_steps=200) ≈ direct
     end
 end

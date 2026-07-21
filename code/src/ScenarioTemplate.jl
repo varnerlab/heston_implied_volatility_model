@@ -41,6 +41,40 @@ using HestonIV: lr_american_price
 export ScenarioSpec, HestonSpec, run_short_scenario, render_scenario_figures
 
 # ============================================================================
+# Cache validation
+# ============================================================================
+
+"""
+    _cache_matches(cache, ref; rtol=1e-9) → Bool
+
+True iff `cache` contains every key of `ref` with a matching value. Numbers
+compare with `isapprox`, everything else with `==`. A missing key counts as a
+mismatch, so caches written before a config field existed invalidate loudly
+instead of silently serving stale simulations.
+"""
+function _cache_matches(cache::AbstractDict, ref::AbstractDict; rtol::Float64=1e-9)::Bool
+    for (k, v) in ref
+        haskey(cache, k) || return false
+        c = cache[k]
+        if v isa Number && c isa Number
+            isapprox(c, v; rtol=rtol) || return false
+        else
+            c == v || return false
+        end
+    end
+    return true
+end
+
+"""
+    _psi_checksum(nn) → Float64
+
+Cheap content checksum of a Flux network's weights (sum of absolute values of
+the flattened parameter vector). Stored with each simulation cache so a
+regenerated ψ_NN invalidates caches built from the old weights.
+"""
+_psi_checksum(nn)::Float64 = sum(abs, Flux.destructure(nn)[1])
+
+# ============================================================================
 # Specs
 # ============================================================================
 
@@ -464,18 +498,32 @@ function run_short_scenario(spec::ScenarioSpec, hspec::HestonSpec;
             nn_iv_call*100)
 
     # Try cache first (matches the cache contract from gs_short_premium_simulation.jl).
-    # Path-A caches carry separate per-contract variance trajectories; pre-Path-A
-    # caches that only stored a single `v_paths` key are auto-invalidated below.
+    # The reference dict must cover EVERY input that changes the simulation:
+    # market anchor, strikes, drift prior, variance dynamics, clock/horizon,
+    # path count, seed, rates, pricer depth, and the ψ_NN weights themselves.
+    # Caches written before a field existed fail the check and resimulate.
+    psi_checksum = _psi_checksum(psi_nn)
+    cache_ref = Dict{String,Any}(
+        "S_0"                   => S_0,
+        "K_put"                 => spec.K_put,
+        "K_call"                => spec.K_call,
+        "ticker_prior_ccgr_pct" => spec.ticker_prior_ccgr_pct,
+        "heston_rho"            => hspec.rho,
+        "heston_kappa"          => hspec.kappa,
+        "heston_sigma_v"        => hspec.sigma_v,
+        "T_days"                => spec.T_days,
+        "n_paths"               => spec.n_paths,
+        "seed"                  => spec.seed,
+        "r_free"                => hspec.r_free,
+        "q_div"                 => hspec.q_div,
+        "n_steps_lr"            => hspec.n_steps_lr,
+        "theta_bar"             => theta_bar,
+        "psi_src"               => src,
+        "psi_checksum"          => psi_checksum)
     sim_cache_valid = !resim && isfile(sim_cache_path)
     if sim_cache_valid
         cache = JLD2.load(sim_cache_path)
-        ok = get(cache, "S_0", NaN) ≈ S_0 &&
-             get(cache, "K_put", NaN) ≈ spec.K_put &&
-             get(cache, "K_call", NaN) ≈ spec.K_call &&
-             get(cache, "ticker_prior_ccgr_pct", NaN) ≈ spec.ticker_prior_ccgr_pct &&
-             get(cache, "heston_rho", NaN) ≈ hspec.rho &&
-             get(cache, "heston_kappa", NaN) ≈ hspec.kappa &&
-             get(cache, "heston_sigma_v", NaN) ≈ hspec.sigma_v &&
+        ok = _cache_matches(cache, cache_ref) &&
              haskey(cache, "v_put_paths") && haskey(cache, "v_call_paths")
         if ok
             println("Cache hit: loading prior simulation from $(basename(sim_cache_path))")
@@ -498,7 +546,10 @@ function run_short_scenario(spec::ScenarioSpec, hspec::HestonSpec;
             S_0=S_0, K_put=spec.K_put, K_call=spec.K_call,
             theta_bar=theta_bar,
             heston_kappa=hspec.kappa, heston_sigma_v=hspec.sigma_v, heston_rho=hspec.rho,
-            ticker_prior_ccgr_pct=spec.ticker_prior_ccgr_pct, seed=spec.seed)
+            ticker_prior_ccgr_pct=spec.ticker_prior_ccgr_pct, seed=spec.seed,
+            T_days=spec.T_days, n_paths=spec.n_paths,
+            r_free=hspec.r_free, q_div=hspec.q_div, n_steps_lr=hspec.n_steps_lr,
+            psi_src=src, psi_checksum=psi_checksum)
         println("[cache] saved -> $(sim_cache_path)")
     end
 

@@ -10,7 +10,7 @@ of the JumpHMM state, days to expiration, moneyness, and aggregate market mood:
 
     θ(t) = θ_{s_t} · (1 + γ·M_t) · ψ(DTE, K/S_t)
 
-where ψ = exp(β₁·ln(DTE) + β₂·ln(K/S) + β₃·ln(DTE)·ln(K/S))
+where ψ = exp(β₁·ln(DTE) + β₂·ln(K/S) + β₃·ln(DTE)·ln(K/S) + β₄·(ln(K/S))² + β₅·(ln(DTE))²)
 """
 module HestonIV
 

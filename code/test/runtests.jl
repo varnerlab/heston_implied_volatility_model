@@ -14,3 +14,8 @@ end
     include("test_temporal_folds_roots.jl")
     include("test_promote_figures.jl")
 end
+
+@testset "Baselines and scenario tooling" begin
+    include("test_sabr.jl")
+    include("test_scenario_cache.jl")
+end
