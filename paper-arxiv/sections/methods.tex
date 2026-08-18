@@ -1,75 +1,122 @@
 \section{Methods}\label{sec:methods}
 
-\subsection{Pipeline overview}
+\subsection{Pipeline}
 
-The generator produced synthetic American option prices through a three-stage pipeline:
-\begin{align}\label{eq:pipeline}
-    &\underbrace{\text{JumpHMM}(\text{prices})}_{\text{Stage 1}}
-    \;\to\; \{S_t,\, s_t,\, \text{jumps}\}
-    \;\to\; \underbrace{dv \text{ process}}_{\text{Stage 2}}
-    \;\to\; \sigma_{\text{imp}}^2 = v_t \nonumber\\
-    &\quad\to\; \underbrace{\text{CRR}(S_t,\, \sigma_{\text{imp}},\, K,\, \text{DTE},\, r_f)}_{\text{Stage 3}}
-    \;\to\; P_{\text{american}}
-\end{align}
-This ordering was dictated by data flow: the JumpHMM produced the price paths and regime-state sequences that the Heston process required as inputs, and the Heston process produced the IV values that the CRR tree required for pricing. Each stage was self-contained, so the pipeline could be run forward without iteration or feedback from downstream stages.
-
-\subsection{Modified Heston variance process}\label{sec:theta_function}
-
-We modified the standard Heston process~\eqref{eq:heston_standard} by making the mean-reversion target time-varying:
-\begin{equation}\label{eq:heston_modified}
-    dv = \kappa\bigl(\theta(t) - v\bigr)\,dt + \sigma_v \sqrt{v}\,dW_v
+The generator passed information through three stages. The complete data flow was:
+\begin{equation}\label{eq:pipeline}
+    \text{JumpHMM stock path}
+    \longrightarrow \text{contract IV factor}
+    \longrightarrow \text{American lattice price and Greeks}.
 \end{equation}
-The mean-reversion target decomposed into a per-ticker base level, an aggregate market mood modulator, and a contract-specific smile and term-structure adjustment that included a scheduled-event indicator:
-\begin{equation}\label{eq:theta}
-    \theta(i, t) = \theta_{i,\,s_t} \cdot \bigl(1 + \gamma \cdot M_t\bigr) \cdot \psi\bigl(\mathrm{DTE}_t,\; K/S_t,\; e_{i,t},\; e^{\text{peer}}_{i,t}\bigr)
-\end{equation}
-where $\theta_{i,\,s_t}$ was a per-ticker, regime-dependent variance level (one value per ticker $i$ per HMM state $s_t$); $\gamma \geq 0$ was the market mood sensitivity controlling how strongly aggregate stress elevated IV; $M_t \in [0, 1]$ was the aggregate market mood; and $\psi$ was the smile, term-structure, and event-shape adjustment with two earnings-event inputs $e_{i,t}$ (signed days from $t$ to ticker $i$'s nearest earnings print) and $e^{\text{peer}}_{i,t}$ (the minimum of $|e_{j,t}|$ over same-sector equity peers $j \neq i$). The regime-dependent base $\theta_{i,\,s_t}$ linked the Heston process directly to the JumpHMM state sequence for forward simulation: when the HMM transitioned into a tail state (via a Poisson jump or an extreme Markov transition), $\theta_{i,\,s_t}$ rose, elevating the IV target. This mechanism produced the leverage effect as an emergent property of the return dynamics rather than as a separate model component: large negative returns drove the HMM into low-numbered tail states with $p_{\text{neg}} \approx 0.52$, which in turn elevated $\theta$. For the IV-surface calibration that follows, we restricted~\eqref{eq:theta} to the operational form
-\begin{equation}\label{eq:theta_calibration}
-    \theta_{\text{cal}}(i, t) = \theta_i \cdot \psi\bigl(\mathrm{DTE}_t,\; K/S_t,\; e_{i,t},\; e^{\text{peer}}_{i,t}\bigr)
-\end{equation}
-in which $\gamma = 0$ (the aggregate mood multiplier was reserved for forward simulation with simulated state paths) and the per-state level $\theta_{i,\,s_t}$ collapsed to a single per-ticker level $\theta_i$ (since the calibration corpus consisted of observation-day IV surfaces rather than state-conditioned histories). Both restrictions were transparent to $\psi$, so the shape function carried over without modification when the full state-and-mood mechanism was reactivated for simulation.
+The stages were run forward without feedback from the lattice. Market option data entered only when the IV surface was fitted offline. A simulated step did not require a contemporaneous option quote.
 
-The function $\psi$ captured the shape of the IV surface with five parameters:
+\subsection{JumpHMM stock-path generator}
+
+The Jump Hidden Markov Model (JumpHMM) was developed to generate equity returns with heavy tails, weak linear autocorrelation, and persistent volatility clustering~\cite{jumphmm2025,cont2001}. It discretizes excess growth rates into latent states. Each state emits from a location-scale Student-$t$ distribution, and a jump mechanism increases visits to tail states. A Student-$t$ copula can couple several fitted marginals and preserve cross-asset tail dependence~\cite{demarta2005}. In this study, the single-ticker scenario drivers used pretrained JumpHMM marginals. JumpHMM determined the stock path and therefore the terminal option payoff.
+
+\subsection{Offline IV-surface calibration}
+
+SABR and SVI represent IV smiles with low-dimensional parametric functions~\cite{hagan2002,gatheral2004}. Neural representations can fit a broader range of surface shapes~\cite{horvath2021,bayer2019}, but unconstrained networks do not automatically satisfy static no-arbitrage conditions. We compared a five-parameter log-polynomial with global, sector-specific, and per-ticker neural surfaces. Positivity was enforced by exponentiating the network output. Calendar monotonicity and strike convexity were not imposed, so positivity alone did not establish an arbitrage-free surface.
+
+For ticker $i$, calendar days to expiration $\tau$, and moneyness $m=K/S$, the parametric surface used the positive shape function:
 \begin{equation}\label{eq:psi}
-    \psi(\tau,\; m) = \exp\!\Big(\beta_1 \ln\tau + \beta_2 \ln m + \beta_3 \ln\tau\,\ln m + \beta_4 (\ln m)^2 + \beta_5 (\ln\tau)^2\Big)
+ \psi_{\beta}(\tau,m)=\exp\!\left[
+ \beta_1\ln\tau+\beta_2\ln m+\beta_3\ln\tau\ln m
+ +\beta_4(\ln m)^2+\beta_5(\ln\tau)^2\right].
 \end{equation}
-where $\tau = \max(\mathrm{DTE}, 1)$ and $m = K/S$. The parameter $\beta_1$ controlled the linear term-structure decay; $\beta_2$ controlled the skew (negative values produced put skew, with OTM puts having higher IV than OTM calls); $\beta_3$ captured the DTE-skew interaction (the skew flattened at longer maturities); $\beta_4$ controlled the smile curvature; and $\beta_5$ controlled the DTE curvature, capturing the U-shaped ATM term structure where short-dated and long-dated IV were both elevated relative to intermediate maturities.
-
-Rather than specifying a separate initial variance $v_0$, we initialized the variance process directly at the per-contract mean-reversion target so that the entry IV surface inherited the smile, skew, and term structure encoded in $\psi$ without requiring any external IV data:
-\begin{equation}\label{eq:v0}
-    v_0 \;=\; \theta(i,\,0;\,K) \;=\; \theta_{i,\,s_0}\,\bigl(1+\gamma M_0\bigr)\,\psi\bigl(\mathrm{DTE}_0,\, K/S_0,\, e_{i,0},\, e^{\text{peer}}_{i,0}\bigr)
-\end{equation}
-\begin{equation}\label{eq:sigma_path}
-    \sigma_t^2(K,\, S_t) \;=\; v_t
-\end{equation}
-The per-contract IV was the variance state itself: $\psi$ entered the model only through the time-varying mean-reversion target $\theta(i,t;K)$ in~\eqref{eq:theta} that drove the SDE drift, not as a separate multiplicative factor on $v_t$, so $v_t$ was a per-contract process and every (ticker, $K$, $\mathrm{DTE}$) triple obtained its own variance trajectory under the same Brownian forcing with a contract-specific drift target. By construction $\sigma_0^2 = v_0 = \theta(i,0;K)$ recovered the calibrated decomposition~\eqref{eq:sigma_model} at the contract's entry capture, and the variance process immediately began mean-reverting around the same $\theta(i,t;K)$ at every subsequent step as the regime state, aggregate mood, and moneyness evolved. The value of this design choice lay in eliminating $v_0$ as a free parameter: the entry-time IV was determined by construction from $\theta_i$ and the calibrated $\psi$ surface.
-
-The market mood $M_t$ was defined as the fraction of tickers currently occupying tail HMM states, where $N$ was the JumpHMM state count and $N_{\text{tail}}$ denoted the number of extreme states at each end of the state space (inherited from the JumpHMM fit):
-\begin{equation}\label{eq:mood}
-    M_t = \frac{1}{N_{\text{tickers}}} \sum_{i=1}^{N_{\text{tickers}}} \mathbf{1}\!\left\{s_t^{(i)} \leq N_{\text{tail}} \;\text{or}\; s_t^{(i)} > N - N_{\text{tail}}\right\}
-\end{equation}
-This signal was fully endogenous to the JumpHMM copula model; it required no external data (e.g., VIX) and introduced no circularity. When multiple tickers simultaneously occupied tail states, the mood rose, elevating $\theta$ and thus IV across all contracts, so that correlated IV spikes during market stress events emerged by construction. The variance process was discretized via Euler-Maruyama with a daily time step $\Delta t = 1/252$ and a hard floor at $v_{\min} = (0.005)^2$, a $0.5\%$-IV equivalent:
-\begin{equation}\label{eq:euler}
-    v_{t+1} = \max\!\Bigl( v_t + \kappa\bigl(\theta_t - v_t\bigr)\Delta t + \sigma_v \sqrt{\max(v_t, 0)}\,\sqrt{\Delta t}\, Z_t,\; v_{\min} \Bigr), \quad Z_t \sim \mathcal{N}(0, 1)
-\end{equation}
-The floor kept the variance strictly positive and allowed $\theta$ to vary freely across HMM states without requiring the Feller condition $2\kappa\theta > \sigma_v^2$ to hold at every timestep~\cite{andersen2008}, a practical necessity since tail states could drive $\theta$ to values where the Feller condition would otherwise have been violated. American option prices were computed from the resulting IV using a CRR binomial tree with 200 steps per contract, a depth chosen because the price oscillation amplitude across that range fell below $\$0.05$ on the contracts of interest, well inside the bid-ask spread of the underlying market.
-
-\subsection{Neural surrogate for $\psi$}\label{sec:psi_nn}
-
-The parametric form of $\psi$ in equation~\eqref{eq:psi} used five shape parameters shared across all contracts on a given ticker. When the model was applied to a broad universe spanning multiple sectors, this global shape became a bottleneck: the semiconductor smile geometry differed systematically from mega-cap ETFs, healthcare names carried idiosyncratic event risk, and energy tickers inherited commodity-driven skew patterns not expressible by a five-term log-polynomial. We therefore replaced the parametric $\psi$ with a neural surrogate~\cite{horvath2021}, keeping the multiplicative decomposition
+The corresponding IV prediction was defined by a ticker level and the surface shape:
 \begin{equation}\label{eq:sigma_model}
-    \sigma_{\text{model}}^2 \;=\; \theta_{\text{ticker}} \cdot \psi
+    \widehat\sigma_i^2(\tau,m)=\theta_i\,\psi(\tau,m),
+    \qquad \theta_i>0,\quad \psi(\tau,m)>0.
 \end{equation}
-in which $\sigma_{\text{model}}$ was the model's per-contract implied-volatility prediction at strike $K$ and time-to-maturity $\tau$ on capture date $t$, expressed in the same Black-Scholes convention the market data providers used to report IV on the option chain, fitted against $\text{IV}_{\text{market}}$ by the loss in~\eqref{eq:nn_loss}, and supplied to the lattice pricer as its single diffusion-volatility input, so $\sigma_{\text{model}}$ played the dual role of calibration target and pricing-stage diffusion vol. We allowed the shape to be data-driven and added two scheduled-event inputs $(e,\,e^{\text{peer}})$ that captured pre-earnings IV expansion and same-sector earnings spillover:
+This expression is also the observation-day calibration target, which we denote by:
+\begin{equation}\label{eq:theta_calibration}
+    \theta_{\mathrm{cal}}(i,\tau,m)=\theta_i\,\psi(\tau,m).
+\end{equation}
+
+The neural models replaced the log-polynomial with a positive network output. For the two-input fits, the surface was:
 \begin{equation}\label{eq:psi_nn}
-    \psi_{\text{NN}}(\ln\tau,\,\ln m,\,e,\,e^{\text{peer}}) = \exp\!\bigl(\mathrm{NN}(\ln\tau,\,\ln m,\,e,\,e^{\text{peer}})\bigr)
+    \psi_{\mathrm{NN}}(\tau,m;w)
+    =\exp\!\left[\mathrm{NN}\!\left(
+    \operatorname{std}(\ln\tau),\operatorname{std}(\ln m);w\right)\right].
 \end{equation}
-where each input was standardized to its training-set mean and standard deviation before entering the network. The earnings inputs were the signed clipped days-to-earnings for the contract's ticker, $e = \mathrm{clip}(\Delta_{\text{earn}}^{(i)},\,-30,\,30)$, and the minimum absolute days-to-earnings over same-sector equity peers excluding self, $e^{\text{peer}} = \min_{j \neq i,\, c(j)=c(i)} |\Delta_{\text{earn}}^{(j)}|$ (clipped to 30). The peer feature carried the sector-coupling signal: a ticker $j$ in the same sector printing on day $t$ contributed $e^{\text{peer}} = 0$ for all of $i$'s contracts that day, which let the network learn the IV-spillover shape characteristic of the sector. For ETFs (no own earnings), $e$ was set equal to $e^{\text{peer}}$ taken over the full equity universe. The network produced $\ln\psi$ so that $\psi > 0$ by construction, preserving the log-Gaussian interpretation of the smile surface used in the parametric form. Each sector network was a two-hidden-layer multilayer perceptron with $\tanh$ activations. The pooled-surface fits used the two surface inputs ($2 \to 16 \to 16 \to 1$, 337 parameters, for groups with $\geq 2000$ observations; $2 \to 8 \to 8 \to 1$, 105 parameters, for smaller groups), and the earnings-aware configuration appended the two event inputs ($4 \to 16 \to 16 \to 1$, 369 parameters; $4 \to 8 \to 8 \to 1$, 121 parameters), widths chosen to keep the observations-to-parameters ratio above 30 across all sector fits.
+Inputs were standardized using the training rows. Networks with at least 5{,}000 per-ticker observations, or 2{,}000 pooled group observations, used a $2\to16\to16\to1$ architecture with $\tanh$ activations and 337 parameters. Smaller qualified groups used $2\to8\to8\to1$ with 105 parameters.
 
-The decomposition defined a natural hierarchy of sharing. At one extreme, a single global $\psi_{\text{NN}}$ shared across all tickers assumed that smile geometry was universal and left only the variance level $\theta_{\text{ticker}}$ to distinguish names. At the other extreme, a per-ticker $\psi_{\text{NN}}$ recovered ticker-specific shape but required enough data per name to resolve the surface without overfitting. We adopted a sector-specific intermediate: one $\psi_{\text{NN}}^{(c)}$ per sector $c$, with all tickers within a sector sharing shape but each ticker retaining its own $\theta_{\text{ticker}}$. This choice reflected the empirical observation that within-sector tickers shared dominant risk factors (technology names tracked semiconductor cycles, healthcare names tracked FDA and trial catalysts, financials tracked rate expectations), so pooling shape across a sector provided a favorable bias-variance tradeoff at the current data volume. As per-ticker sample sizes grew, the same architecture supported relaxation to per-ticker networks without changing the downstream pipeline.
-
-Training minimized the mean squared IV error jointly over the network weights and the per-ticker log-variance levels $\{\ln\theta_{\text{ticker}}\}$:
+Network weights and ticker log levels were fitted jointly by minimizing IV mean squared error. The training objective was:
 \begin{equation}\label{eq:nn_loss}
-    \min_{w,\,\{\ln\theta_t\}} \;\frac{1}{n} \sum_{i=1}^{n} \Bigl(\sqrt{\theta_{t(i)} \cdot \psi_{\text{NN}}(\ln\tau_i,\,\ln m_i,\,e_i,\,e^{\text{peer}}_i;\,w)} - \text{IV}_{\text{market},i}\Bigr)^2
+ \min_{w,\{\ln\theta_i\}}
+ \frac{1}{n}\sum_{j=1}^{n}
+ \left[
+ \sqrt{\theta_{i(j)}\psi_{\mathrm{NN}}(\tau_j,m_j;w)}
+ -\sigma_{\mathrm{market},j}
+ \right]^2.
 \end{equation}
-where $t(i)$ denoted the ticker of the $i$th observation. The log-variance levels were initialized from each ticker's mean squared market IV and then updated jointly with the network weights under a single Adam optimizer, so the level and shape fits converged together rather than alternating fits of one conditional on the other. The learning rate followed a step schedule (1\mbox{e-3} $\to$ 5\mbox{e-4} at epoch 500 $\to$ 2\mbox{e-4} at 1000 $\to$ 1\mbox{e-4} at 1500), and training ran up to 2000 epochs with a best-checkpoint patience of 200 epochs on the training loss. Earnings dates were sourced from the public Yahoo Finance calendar and joined to each contract by ticker and observation date.
+The log levels were initialized from each ticker's mean squared market IV. Adam training used a decreasing learning-rate schedule, at most 2{,}000 epochs, and a best-training-loss checkpoint with patience 200. Because a constant can be shifted between $\ln\theta_i$ and the output bias of the network, these two components are not separately identified. Only their product in~\eqref{eq:sigma_model} is interpretable without an additional normalization constraint.
+
+For the earnings analysis, two standardized inputs were appended: signed days to the ticker's nearest earnings date, clipped to $[-30,30]$, and the minimum absolute earnings distance among same-sector peers, clipped to 30. The resulting $4\to16\to16\to1$ network had 369 parameters. Earnings dates came from the public Yahoo Finance calendar. These event features were evaluated only in the temporal calibration comparison and were not used in the GS and LLY scenario drivers.
+
+\subsection{Contract-specific dynamic IV factors}\label{sec:theta_function}
+
+The standard Heston model couples an asset-price diffusion to a square-root instantaneous-variance process~\cite{heston1993}. Its variance equation is:
+\begin{equation}\label{eq:heston_standard}
+    dv_t = \kappa(\theta-v_t)\,dt + \sigma_v\sqrt{v_t}\,dW_t^v .
+\end{equation}
+Here $\kappa$ is the mean-reversion rate, $\theta$ is long-run variance, and $\sigma_v$ is volatility of variance. In the standard model, the Brownian motion in~\eqref{eq:heston_standard} is correlated with the Brownian motion that drives the stock.
+
+Our use of~\eqref{eq:heston_standard} was narrower. We retained positive square-root fluctuations and mean reversion, but JumpHMM generated the stock separately. We also evolved one variance state for each contract rather than one instantaneous variance state for the underlying. The process therefore supplied a time-varying diffusion-volatility input to a constant-volatility lattice at each simulated date. It should be interpreted as a CIR-like dynamic IV factor, not as the instantaneous return variance of a standard Heston economy.
+
+Each scenario contract $a=(i,K,T)$ received a separate variance state $v_{a,t}$. Its moving mean-reversion target used the fitted surface at the current spot and remaining calendar DTE. The target was:
+\begin{equation}\label{eq:theta}
+    \bar v_{a,t}=\theta_i\,
+    \psi_{\mathrm{NN}}\!\left(\tau_t,K/S_t\right).
+\end{equation}
+The factor started exactly on the fitted entry surface:
+\begin{equation}\label{eq:v0}
+    v_{a,0}=\bar v_{a,0}.
+\end{equation}
+At each later date, the lattice IV was the square root of that contract's factor:
+\begin{equation}\label{eq:sigma_path}
+    \sigma_{a,t}=\sqrt{v_{a,t}}.
+\end{equation}
+Thus a put and call on the same stock shared the stock path and variance shock but retained different variance states and different surface targets.
+
+The JumpHMM advanced only on exchange sessions. We shifted every simulated growth-rate observation by a constant so the ensemble mean matched a prespecified annual growth prior. We then standardized the one-session simulated log returns across all paths and dates. The return shock used in the IV update was:
+\begin{equation}\label{eq:return_shock}
+    Z^S_{j,t}=\frac{\Delta\ln S_{j,t}-\overline{\Delta\ln S}}
+    {s_{\Delta\ln S}}.
+\end{equation}
+An independent standard normal shock supplied the remaining variation. The coupled factor shock was:
+\begin{equation}\label{eq:variance_shock}
+    Z^v_{j,t}=\rho Z^S_{j,t}+\sqrt{1-\rho^2}\,Z^{\perp}_{j,t},
+    \qquad Z^{\perp}_{j,t}\sim\mathcal N(0,1).
+\end{equation}
+The coefficient $\rho$ was fixed at $-0.6$. It was a return-shock coupling parameter, not a calibrated correlation between two Brownian motions in a standard Heston model.
+
+We used a hard-floor Euler update with a trading-year step $\Delta t=1/252$. The update was:
+\begin{equation}\label{eq:euler}
+ v_{a,t+1}=\max\!\left\{
+ v_{a,t}+\kappa(\bar v_{a,t}-v_{a,t})\Delta t
+ +\sigma_v\sqrt{\max(v_{a,t},0)}\sqrt{\Delta t}\,Z^v_{j,t},
+ v_{\min}\right\}.
+\end{equation}
+We fixed $\kappa=15$, $\sigma_v=0.5$, and $v_{\min}=(0.005)^2$. These values were scenario assumptions, not estimates from the option corpus. The floor protected the numerical pricer when the parameters did not satisfy the Feller condition~\cite{andersen2008}.
+
+\subsection{American-option pricing, calendar clock, and terminal profit and loss}
+
+Recombining lattices price American options by backward induction and compare continuation with immediate exercise at every node~\cite{broadie1996}. The Cox--Ross--Rubinstein construction uses up and down factors based on the supplied volatility~\cite{cox1979}. Jarrow--Rudd and Tian use alternative moment matches~\cite{jarrow1983,tian1993}. Leisen--Reimer uses a Peizer--Pratt inversion that places the strike more consistently in the tree and improves finite-step convergence~\cite{leisen1996}. Both pricers used here accepted one IV value for a given contract and date; they did not generate the IV surface themselves.
+
+The GS and LLY contracts ran from April 28 to May 29, 2026. This interval contained 31 calendar days but 22 exchange-session transitions after excluding weekends and the May 25 market holiday. Calendar DTE entered the surface and lattice. JumpHMM and~\eqref{eq:euler} advanced on the 22 trading transitions. For a date with $\tau_t$ calendar days remaining, the price input used $\tau_t/365$ years.
+
+Corpus-wide dollar-price checks used a 200-step CRR American tree. Scenario marks and Greeks used a 201-step Leisen-Reimer American tree. Both stages used a constant risk-free rate of $4.25\%$ and continuous dividend yield $q=0$. At expiration, the model replaced the lattice value with intrinsic value. For a short position that received market mid $p_0$, terminal profit and loss was:
+\begin{equation}\label{eq:terminal_pnl}
+ \Pi_T^{\mathrm{put}}=p_0^{\mathrm{put}}-\max(K-S_T,0),
+ \qquad
+ \Pi_T^{\mathrm{call}}=p_0^{\mathrm{call}}-\max(S_T-K,0).
+\end{equation}
+Equation~\eqref{eq:terminal_pnl} shows that terminal profit and loss depended on the JumpHMM terminal stock price, strike, and premium. Dynamic IV affected interim option marks and Greeks, but not a held-to-expiration payoff.
+
+Greeks were calculated by central finite differences on the same Leisen-Reimer pricer. Spot bumps were $\pm1.5\%$ of spot for delta and gamma. Volatility bumps were $\pm0.005$, and Vega was reported per one volatility percentage point. We assumed execution at the observed mid, no transaction costs, no margin constraint, no early assignment before the plotted horizon, and no discrete dividends.
+
+\subsection{Inactive extensions}
+
+The repository also contains a proposed state-dependent level and aggregate tail-state mood multiplier. Those terms were held inactive in every experiment reported here. The present results evaluate the fitted level-times-surface model and the fixed return-shock coupling only. Testing state- and mood-dependent IV requires state-conditioned option histories and remains outside this study.

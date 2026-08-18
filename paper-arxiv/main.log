@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  21 JUL 2026 12:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  17 AUG 2026 16:46
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main.tex
+**main
 (./main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -262,7 +262,10 @@ Document Style algorithmicx 1.2 - a greatly improved `algorithmic' style
 \ALG@tmplength=\skip61
 )
 Document Style - pseudocode environments for use with the `algorithmicx' style
-) (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
+) (/usr/local/texlive/2025/texmf-dist/tex/latex/placeins/placeins.sty
+Package: placeins 2005/04/18  v 2.2
+)
+(/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/kvsetkeys/kvsetkeys.sty
@@ -400,7 +403,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \Hy@SectionHShift=\skip62
 )
 LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 2
-1.
+2.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
@@ -412,24 +415,24 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 21.
-LaTeX Font Info:    ... okay on input line 21.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 22.
+LaTeX Font Info:    ... okay on input line 22.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -533,32 +536,32 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 Package color Info: Driver file: pdftex.def on input line 149.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 21.
+Package hyperref Info: Link coloring ON on input line 22.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 24.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 25.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 24.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 25.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-24.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 24.
+25.
+LaTeX Font Info:    No file OMScmtt.fd. on input line 25.
 
 
 LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 (Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 24.
+(Font)              for symbol `textbraceleft' on input line 25.
 
 (./sections/abstract.tex) (./sections/introduction.tex
 
@@ -567,208 +570,139 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}])
-(./sections/background.tex
-Underfull \vbox (badness 10000) has occurred while \output is active []
+(./sections/methods.tex
+Underfull \vbox (badness 3954) has occurred while \output is active []
 
 
 
 [2]
 
-[3]) (./sections/methods.tex
+[3]
 
-[4]
+[4]) (./sections/results.tex
 
 [5]
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 57.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\psi' on input line 57.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 57.
-
-) (./sections/calibration.tex
-
-[6]
-
-[7]
-<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=259, 1505.625pt x 8
+<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=233, 1505.625pt x 8
 03.0pt>
 File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
  pdf)
 <use sections/figures/ladder_per_ticker_nn_smile_panels.pdf>
 Package pdftex.def Info: sections/figures/ladder_per_ticker_nn_smile_panels.pdf
-  used on input line 33.
+  used on input line 37.
 (pdftex.def)             Requested size: 397.48499pt x 211.9853pt.
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 3
-7.
- (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
-
-
-[8]
-<sections/figures/ladder_price_error_three_tickers.pdf, id=267, 1204.5pt x 903.
+<sections/figures/ladder_price_error_three_tickers.pdf, id=235, 1204.5pt x 903.
 375pt>
 File: sections/figures/ladder_price_error_three_tickers.pdf Graphic file (type 
 pdf)
 <use sections/figures/ladder_price_error_three_tickers.pdf>
 Package pdftex.def Info: sections/figures/ladder_price_error_three_tickers.pdf 
- used on input line 41.
+ used on input line 45.
 (pdftex.def)             Requested size: 397.48499pt x 298.11467pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-
-[9 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
-Underfull \vbox (badness 4832) has occurred while \output is active []
-
-
-
-[10 <./sections/figures/ladder_price_error_three_tickers.pdf>])
+[6 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
 (./sections/scenarios.tex
 
-[11]
+[7 <./sections/figures/ladder_price_error_three_tickers.pdf>]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 7
+.
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 8.
-<sections/figures/gs/gs_short_paths.pdf, id=294, 1505.625pt x 1104.125pt>
+put line 14.
+<sections/figures/gs/gs_short_paths.pdf, id=259, 1505.625pt x 1104.125pt>
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
-line 33.
-(pdftex.def)             Requested size: 397.48499pt x 291.4798pt.
+line 39.
+(pdftex.def)             Requested size: 357.73405pt x 262.3335pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[12]
-<sections/figures/gs/gs_iv_trajectories.pdf, id=304, 1505.625pt x 602.25pt>
+[8]
+<sections/figures/gs/gs_iv_trajectories.pdf, id=269, 1505.625pt x 602.25pt>
 File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
-put line 42.
+put line 48.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
 
-
-
-[13 <./sections/figures/gs/gs_short_paths.pdf>]
-<sections/figures/gs/gs_short_pnl_distributions.pdf, id=316, 1505.625pt x 602.2
+[9 <./sections/figures/gs/gs_short_paths.pdf> <./sections/figures/gs/gs_iv_traj
+ectories.pdf>]
+<sections/figures/gs/gs_short_pnl_distributions.pdf, id=282, 1505.625pt x 602.2
 5pt>
 File: sections/figures/gs/gs_short_pnl_distributions.pdf Graphic file (type pdf
 )
 <use sections/figures/gs/gs_short_pnl_distributions.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_pnl_distributions.pdf  us
-ed on input line 53.
+ed on input line 57.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-
-
-[14 <./sections/figures/gs/gs_iv_trajectories.pdf> <./sections/figures/gs/gs_sh
-ort_pnl_distributions.pdf>]
-<sections/figures/lly/lly_short_pnl_distributions.pdf, id=327, 1505.625pt x 602
+<sections/figures/lly/lly_short_pnl_distributions.pdf, id=288, 1505.625pt x 602
 .25pt>
 File: sections/figures/lly/lly_short_pnl_distributions.pdf Graphic file (type p
 df)
 <use sections/figures/lly/lly_short_pnl_distributions.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_pnl_distributions.pdf  
-used on input line 66.
+used on input line 75.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 
-
-[15 <./sections/figures/lly/lly_short_pnl_distributions.pdf>])
-(./sections/discussion.tex
-Underfull \vbox (badness 1237) has occurred while \output is active []
-
-
-
-[16]) (./sections/conclusion.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[17]) (./main.bbl
+[10 <./sections/figures/gs/gs_short_pnl_distributions.pdf>]))
+(./sections/discussion.tex) (./sections/conclusion.tex
 
-[18])
+[11 <./sections/figures/lly/lly_short_pnl_distributions.pdf>]) (./main.bbl
 
-[19] (./sections/supplement.tex
+[12])
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1.
+[13] (./sections/supplement.tex
 
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `\sigma' on input line 1.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `superscript' on input line 1.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `subscript' on input line 1.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 1.
-
-
-
-[20
+[14
 
 ]
 
-[21]
-
-[22]
-<sections/figures/gs/gs_short_greeks.pdf, id=425, 1505.625pt x 1505.625pt>
+[15]
+<sections/figures/gs/gs_short_greeks.pdf, id=340, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
  line 172.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
-<sections/figures/lly/lly_short_paths.pdf, id=438, 1505.625pt x 1104.125pt>
+<sections/figures/lly/lly_short_paths.pdf, id=344, 1505.625pt x 1104.125pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
-t line 204.
+t line 208.
 (pdftex.def)             Requested size: 397.48499pt x 291.4798pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=441, 1505.625pt x 602.25pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=345, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
-input line 211.
+input line 215.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/lly/lly_short_greeks.pdf, id=444, 1505.625pt x 1505.625pt>
+<sections/figures/lly/lly_short_greeks.pdf, id=346, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
-ut line 218.
+ut line 222.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
 )
 
-[23]
+[16]
 
-[24]
+[17 <./sections/figures/gs/gs_short_greeks.pdf>]
 
-[25 <./sections/figures/gs/gs_short_greeks.pdf>]
-
-[26 <./sections/figures/lly/lly_short_paths.pdf> <./sections/figures/lly/lly_iv
+[18 <./sections/figures/lly/lly_short_paths.pdf> <./sections/figures/lly/lly_iv
 _trajectories.pdf>]
 
-[27 <./sections/figures/lly/lly_short_greeks.pdf>] (./main.aux)
+[19 <./sections/figures/lly/lly_short_greeks.pdf>] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -777,44 +711,35 @@ L3 programming layer <2025-01-18>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: C3EAD4BE21D87463C80BE0244BBCAD10;5608.
+(rerunfilecheck)             Checksum: AE4134A9E188D40DFF6714969728FACF;3905.
  ) 
 Here is how much of TeX's memory you used:
- 13701 strings out of 473190
- 218550 string characters out of 5715801
- 643459 words of memory out of 5000000
- 36621 multiletter control sequences out of 15000+600000
- 582979 words of font info for 94 fonts, out of 8000000 for 9000
+ 13665 strings out of 473190
+ 218347 string characters out of 5715801
+ 635235 words of memory out of 5000000
+ 36609 multiletter control sequences out of 15000+600000
+ 575880 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,18n,79p,2764b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb>
-</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
-/usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></
-usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></us
-r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/
-local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/lo
-cal/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loca
-l/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/
-texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/tex
-live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texliv
-e/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2
-025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/20
-25/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2025
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/t
-exmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/te
-xmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/202
-5/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-di
-st/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/t
-ype1/urw/times/utmri8a.pfb>
-Output written on main.pdf (27 pages, 4454707 bytes).
+ 75i,12n,79p,1428b,570s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
+></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
+</usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
+usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></us
+r/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
+local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/loc
+al/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/
+texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/t
+exlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/tex
+live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texli
+ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texliv
+e/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/tex
+mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fo
+nts/type1/urw/times/utmri8a.pfb>
+Output written on main.pdf (19 pages, 3417164 bytes).
 PDF statistics:
- 586 PDF objects out of 1000 (max. 8388607)
- 495 compressed objects within 5 object streams
- 109 named destinations out of 1000 (max. 500000)
- 235 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 454 PDF objects out of 1000 (max. 8388607)
+ 389 compressed objects within 4 object streams
+ 98 named destinations out of 1000 (max. 500000)
+ 227 words of extra memory for PDF output out of 10000 (max. 10000000)
 

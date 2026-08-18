@@ -1,5 +1,6 @@
 using Test
 using Flux
+using Dates
 
 ENV["GKSwstype"] = "100"  # headless GR for the Plots dependency
 
@@ -41,5 +42,30 @@ include(joinpath(@__DIR__, "..", "src", "ScenarioTemplate.jl"))
         nn[1].weight[1, 1] += 0.5
         c2 = ScenarioTemplate._psi_checksum(nn)
         @test c1 != c2
+    end
+
+    @testset "calendar and trading clocks remain distinct" begin
+        spec = ScenarioTemplate.ScenarioSpec(
+            ticker="GS", anchor_date=Date("2026-04-28"),
+            expiry_date=Date("2026-05-29"),
+            K_put=890.0, K_call=970.0,
+            market_premium_put=16.51, market_premium_call=16.085,
+            market_iv_put=0.3125, market_iv_call=0.2893,
+            market_delta_put=-0.2951, market_delta_call=0.3278,
+            expiry_label="2026-05-29", ticker_prior_ccgr_pct=10.0,
+            market_holidays=[Date("2026-05-25")],
+        )
+        dates = ScenarioTemplate._trading_dates(spec)
+        dtes = ScenarioTemplate._calendar_dtes(spec, dates)
+        @test length(dates) - 1 == 22
+        @test first(dtes) == 31
+        @test last(dtes) == 0
+        @test Date("2026-05-25") ∉ dates
+    end
+
+    @testset "Wilson interval" begin
+        lo, hi = ScenarioTemplate._wilson_interval(50, 100)
+        @test lo ≈ 0.4038 atol=1e-4
+        @test hi ≈ 0.5962 atol=1e-4
     end
 end

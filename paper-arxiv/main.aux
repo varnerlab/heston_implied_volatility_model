@@ -3,98 +3,81 @@
 \providecommand\HyField@AuxAddToFields[1]{}
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \citation{black1973}
-\citation{hagan2002}
-\citation{gatheral2004}
-\citation{dupire1994,derman1994}
-\citation{heston1993}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{1}{section.1}\protected@file@percent }
 \newlabel{sec:introduction}{{1}{1}{Introduction}{section.1}{}}
-\citation{cont2002}
-\citation{buehler2019}
-\citation{glasserman2004}
-\citation{wiese2020}
+\citation{hagan2002,gatheral2004}
+\citation{horvath2021,bayer2019}
+\citation{dupire1994,derman1994,heston1993}
+\citation{cont2001,wiese2020}
 \citation{jumphmm2025}
-\citation{cont2001}
+\citation{cox1979,leisen1996}
+\citation{jumphmm2025,cont2001}
 \citation{demarta2005}
+\@writefile{toc}{\contentsline {section}{\numberline {2}Methods}{2}{section.2}\protected@file@percent }
+\newlabel{sec:methods}{{2}{2}{Methods}{section.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Pipeline}{2}{subsection.2.1}\protected@file@percent }
+\newlabel{eq:pipeline}{{1}{2}{Pipeline}{equation.1}{}}
+\citation{hagan2002,gatheral2004}
+\citation{horvath2021,bayer2019}
 \citation{heston1993}
-\citation{cox1979}
-\citation{jumphmm2025}
-\citation{cont2001}
-\citation{demarta2005}
-\@writefile{toc}{\contentsline {section}{\numberline {2}Background}{2}{section.2}\protected@file@percent }
-\newlabel{sec:background}{{2}{2}{Background}{section.2}{}}
-\citation{heston1993}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}JumpHMM stock-path generator}{3}{subsection.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Offline IV-surface calibration}{3}{subsection.2.3}\protected@file@percent }
+\newlabel{eq:psi}{{2}{3}{Offline IV-surface calibration}{equation.2}{}}
+\newlabel{eq:sigma_model}{{3}{3}{Offline IV-surface calibration}{equation.3}{}}
+\newlabel{eq:theta_calibration}{{4}{3}{Offline IV-surface calibration}{equation.4}{}}
+\newlabel{eq:psi_nn}{{5}{3}{Offline IV-surface calibration}{equation.5}{}}
+\newlabel{eq:nn_loss}{{6}{3}{Offline IV-surface calibration}{equation.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Contract-specific dynamic IV factors}{3}{subsection.2.4}\protected@file@percent }
+\newlabel{sec:theta_function}{{2.4}{3}{Contract-specific dynamic IV factors}{subsection.2.4}{}}
+\newlabel{eq:heston_standard}{{7}{3}{Contract-specific dynamic IV factors}{equation.7}{}}
+\citation{andersen2008}
 \citation{broadie1996}
 \citation{cox1979}
-\citation{jarrow1983}
-\citation{tian1993}
+\citation{jarrow1983,tian1993}
 \citation{leisen1996}
-\citation{leisen1996,broadie1996}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Jump Hidden Markov Model}{3}{subsection.2.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Heston stochastic variance model}{3}{subsection.2.2}\protected@file@percent }
-\newlabel{eq:heston_standard}{{1}{3}{Heston stochastic variance model}{equation.1}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Lattice models for American options}{3}{subsection.2.3}\protected@file@percent }
-\citation{hagan2002}
-\citation{gatheral2004}
-\citation{horvath2021,bayer2019}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.4}Neural representations of the implied volatility surface}{4}{subsection.2.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {3}Methods}{4}{section.3}\protected@file@percent }
-\newlabel{sec:methods}{{3}{4}{Methods}{section.3}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Pipeline overview}{4}{subsection.3.1}\protected@file@percent }
-\newlabel{eq:pipeline}{{2}{4}{Pipeline overview}{equation.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Modified Heston variance process}{4}{subsection.3.2}\protected@file@percent }
-\newlabel{sec:theta_function}{{3.2}{4}{Modified Heston variance process}{subsection.3.2}{}}
-\newlabel{eq:heston_modified}{{3}{4}{Modified Heston variance process}{equation.3}{}}
-\newlabel{eq:theta}{{4}{4}{Modified Heston variance process}{equation.4}{}}
-\citation{andersen2008}
-\newlabel{eq:theta_calibration}{{5}{5}{Modified Heston variance process}{equation.5}{}}
-\newlabel{eq:psi}{{6}{5}{Modified Heston variance process}{equation.6}{}}
-\newlabel{eq:v0}{{7}{5}{Modified Heston variance process}{equation.7}{}}
-\newlabel{eq:sigma_path}{{8}{5}{Modified Heston variance process}{equation.8}{}}
-\newlabel{eq:mood}{{9}{5}{Modified Heston variance process}{equation.9}{}}
-\newlabel{eq:euler}{{10}{5}{Modified Heston variance process}{equation.10}{}}
-\citation{horvath2021}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Neural surrogate for $\psi $}{6}{subsection.3.3}\protected@file@percent }
-\newlabel{sec:psi_nn}{{3.3}{6}{Neural surrogate for $\psi $}{subsection.3.3}{}}
-\newlabel{eq:sigma_model}{{11}{6}{Neural surrogate for $\psi $}{equation.11}{}}
-\newlabel{eq:psi_nn}{{12}{6}{Neural surrogate for $\psi $}{equation.12}{}}
-\newlabel{eq:nn_loss}{{13}{6}{Neural surrogate for $\psi $}{equation.13}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Calibration and Validation}{7}{section.4}\protected@file@percent }
-\newlabel{sec:calibration}{{4}{7}{Calibration and Validation}{section.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Sector-specific neural calibration on the 31-ticker ladder}{7}{subsection.4.1}\protected@file@percent }
-\newlabel{sec:ladder}{{4.1}{7}{Sector-specific neural calibration on the 31-ticker ladder}{subsection.4.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces Three-way overall RMSE comparison on the 31-ticker ladder (234{,}549 observations across fifteen capture dates). The parametric baseline fit a single global set of five $\beta $ parameters; the shared NN replaced the parametric $\psi $ with one global network; the sector NN used one network per sector. All three models fitted one $\theta _{\text  {ticker}}$ per ticker jointly with the shape parameters.}}{7}{table.caption.2}\protected@file@percent }
+\newlabel{eq:theta}{{8}{4}{Contract-specific dynamic IV factors}{equation.8}{}}
+\newlabel{eq:v0}{{9}{4}{Contract-specific dynamic IV factors}{equation.9}{}}
+\newlabel{eq:sigma_path}{{10}{4}{Contract-specific dynamic IV factors}{equation.10}{}}
+\newlabel{eq:return_shock}{{11}{4}{Contract-specific dynamic IV factors}{equation.11}{}}
+\newlabel{eq:variance_shock}{{12}{4}{Contract-specific dynamic IV factors}{equation.12}{}}
+\newlabel{eq:euler}{{13}{4}{Contract-specific dynamic IV factors}{equation.13}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.5}American-option pricing, calendar clock, and terminal profit and loss}{4}{subsection.2.5}\protected@file@percent }
+\newlabel{eq:terminal_pnl}{{14}{5}{American-option pricing, calendar clock, and terminal profit and loss}{equation.14}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.6}Inactive extensions}{5}{subsection.2.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {3}Results}{5}{section.3}\protected@file@percent }
+\newlabel{sec:results}{{3}{5}{Results}{section.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Cross-sectional IV-surface performance}{5}{subsection.3.1}\protected@file@percent }
+\newlabel{sec:ladder}{{3.1}{5}{Cross-sectional IV-surface performance}{subsection.3.1}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {1}{\ignorespaces In-sample IV RMSE on 234{,}549 observations. RMSE is reported in volatility percentage points. Each model fitted one ticker level jointly with its shape parameters.}}{5}{table.caption.2}\protected@file@percent }
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{tab:three_way}{{1}{7}{Three-way overall RMSE comparison on the 31-ticker ladder (234{,}549 observations across fifteen capture dates). The parametric baseline fit a single global set of five $\beta $ parameters; the shared NN replaced the parametric $\psi $ with one global network; the sector NN used one network per sector. All three models fitted one $\theta _{\text {ticker}}$ per ticker jointly with the shape parameters}{table.caption.2}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Per-ticker neural calibration on the pooled corpus}{8}{subsection.4.2}\protected@file@percent }
-\newlabel{sec:per_ticker_nn}{{4.2}{8}{Per-ticker neural calibration on the pooled corpus}{subsection.4.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Per-ticker $\psi _{\mathrm  {NN}}$ smile fits on the fifteen-date pooled corpus. Representative IV smile panels at mid-DTE for six qualified tickers spanning four sectors (SPY, NVDA, MSFT, LLY, GS, AVGO). The per-ticker network (solid black) tracked the smile shape more tightly than the sector network (dashed gray) on every panel, with the largest gap on NVDA and MSFT where the shared Tech surface flattened to accommodate AVGO's elevated wings.}}{9}{figure.caption.3}\protected@file@percent }
-\newlabel{fig:per_ticker_panels}{{1}{9}{Per-ticker $\psi _{\mathrm {NN}}$ smile fits on the fifteen-date pooled corpus. Representative IV smile panels at mid-DTE for six qualified tickers spanning four sectors (SPY, NVDA, MSFT, LLY, GS, AVGO). The per-ticker network (solid black) tracked the smile shape more tightly than the sector network (dashed gray) on every panel, with the largest gap on NVDA and MSFT where the shared Tech surface flattened to accommodate AVGO's elevated wings}{figure.caption.3}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Model-vs-market dollar pricing error (CRR American at the calibrated IV minus market mid) versus moneyness for SPY (DTE 7), NVDA (DTE 7), LLY (DTE 11), and GS (DTE 11) on the 2026-05-11 capture. Four model tiers are overlaid on each panel: parametric $\psi $ (light), sector $\psi _{\mathrm  {NN}}$ (medium), per-ticker $\psi _{\mathrm  {NN}}$ (dark), and market-IV reference (green dot-dash; yfinance IV repriced through CRR, near zero by construction). The gray ribbon was the local $\pm \tfrac  {1}{2}$ bid--ask spread band, computed per panel by partitioning the contracts into twelve equal-width moneyness bins, taking the median half-spread $(\text  {ask}-\text  {bid})/2$ within each bin, and linearly interpolating the twelve bin values onto a fine moneyness grid. A point falling inside the band was a model error smaller than the typical bid--ask spread at that moneyness, i.e., a price within the range the market itself was quoting; the band widened toward the wings because bid--ask spreads were systematically larger for deep in- and out-of-the-money contracts. The per-ticker fit dominated parametric and sector tiers on SPY and GS, matched them on NVDA, and showed a uniform positive bias on LLY consistent with the per-ticker $\psi $ encoding the time-averaged IV across fifteen capture dates and the sampled day (05-11) being calmer than the calibration-window average.}}{10}{figure.caption.4}\protected@file@percent }
-\newlabel{fig:price_error}{{2}{10}{Model-vs-market dollar pricing error (CRR American at the calibrated IV minus market mid) versus moneyness for SPY (DTE 7), NVDA (DTE 7), LLY (DTE 11), and GS (DTE 11) on the 2026-05-11 capture. Four model tiers are overlaid on each panel: parametric $\psi $ (light), sector $\psi _{\mathrm {NN}}$ (medium), per-ticker $\psi _{\mathrm {NN}}$ (dark), and market-IV reference (green dot-dash; yfinance IV repriced through CRR, near zero by construction). The gray ribbon was the local $\pm \tfrac {1}{2}$ bid--ask spread band, computed per panel by partitioning the contracts into twelve equal-width moneyness bins, taking the median half-spread $(\text {ask}-\text {bid})/2$ within each bin, and linearly interpolating the twelve bin values onto a fine moneyness grid. A point falling inside the band was a model error smaller than the typical bid--ask spread at that moneyness, i.e., a price within the range the market itself was quoting; the band widened toward the wings because bid--ask spreads were systematically larger for deep in- and out-of-the-money contracts. The per-ticker fit dominated parametric and sector tiers on SPY and GS, matched them on NVDA, and showed a uniform positive bias on LLY consistent with the per-ticker $\psi $ encoding the time-averaged IV across fifteen capture dates and the sampled day (05-11) being calmer than the calibration-window average}{figure.caption.4}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Temporal holdout and earnings-aware calibration}{10}{subsection.4.3}\protected@file@percent }
-\newlabel{sec:earnings_holdout}{{4.3}{10}{Temporal holdout and earnings-aware calibration}{subsection.4.3}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Temporal-holdout sector-NN comparison across the three configurations. The pooled control (A) reproduced the existing four-day reference number ($13.03\%$ test RMSE on the same train/test split). Excluding earnings-window observations from both train and test (B) reduced the test RMSE to $7.96\%$ and collapsed the generalization gap from $+4.99$ to $-0.06\%$ IV. Adding the earnings indicator and peer-coupling feature to the input vector (C) on the original train and test rows reduced the pooled test RMSE to $11.98\%$ and the generalization gap to $+4.36\%$.}}{11}{table.caption.5}\protected@file@percent }
-\newlabel{tab:earnings_holdout}{{2}{11}{Temporal-holdout sector-NN comparison across the three configurations. The pooled control (A) reproduced the existing four-day reference number ($13.03\%$ test RMSE on the same train/test split). Excluding earnings-window observations from both train and test (B) reduced the test RMSE to $7.96\%$ and collapsed the generalization gap from $+4.99$ to $-0.06\%$ IV. Adding the earnings indicator and peer-coupling feature to the input vector (C) on the original train and test rows reduced the pooled test RMSE to $11.98\%$ and the generalization gap to $+4.36\%$}{table.caption.5}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Forward-simulated short-premium scenarios}{11}{section.5}\protected@file@percent }
-\newlabel{sec:scenarios}{{5}{11}{Forward-simulated short-premium scenarios}{section.5}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Forward simulation of path-conditional option premia}}{12}{algorithm.1}\protected@file@percent }
-\newlabel{alg:forward_sim}{{1}{12}{Forward simulation of path-conditional option premia}{algorithm.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Forward GS share-price paths and short option premium paths for the real GS 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days. Top row: share path with $K_p = \$890$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$970$ marked (left) and short-call premium (right), with the top 1--5\% by terminal price overlaid in green; the most extreme 1\% are omitted from the overlay so the figure is not dominated by spike outliers, but the underlying summary statistics use the full top 5\%. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$16.51 put, \$16.09 call).}}{13}{figure.caption.6}\protected@file@percent }
-\newlabel{fig:gs_paths}{{3}{13}{Forward GS share-price paths and short option premium paths for the real GS 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days. Top row: share path with $K_p = \$890$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$970$ marked (left) and short-call premium (right), with the top 1--5\% by terminal price overlaid in green; the most extreme 1\% are omitted from the overlay so the figure is not dominated by spike outliers, but the underlying summary statistics use the full top 5\%. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$16.51 put, \$16.09 call)}{figure.caption.6}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Path-conditional implied volatility at the put strike (left) and call strike (right) over the 31-day horizon for the GS scenario. Both panels showed IV rising into expiry: at fixed $\log (K/S)$, shrinking $(T-t)$ moved the contract down a term structure that the per-ticker network learned to be progressively higher and steeper in the wings at short horizons. Tail-binned paths (red, green) showed an additional rise driven by $S_t$ moving away from $K$ and, on the put side, leverage coupling lifting $v_t$ on down-paths.}}{14}{figure.caption.7}\protected@file@percent }
-\newlabel{fig:gs_iv}{{4}{14}{Path-conditional implied volatility at the put strike (left) and call strike (right) over the 31-day horizon for the GS scenario. Both panels showed IV rising into expiry: at fixed $\log (K/S)$, shrinking $(T-t)$ moved the contract down a term structure that the per-ticker network learned to be progressively higher and steeper in the wings at short horizons. Tail-binned paths (red, green) showed an additional rise driven by $S_t$ moving away from $K$ and, on the put side, leverage coupling lifting $v_t$ on down-paths}{figure.caption.7}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Terminal P\&L distributions per contract (1{,}000 paths, log-y) for the GS scenario. Both legs showed the same short-premium pattern: most paths kept the full premium, and a long left tail held the loss-making paths. The short call's left tail was substantially fatter than the put's despite a smaller premium received.}}{14}{figure.caption.8}\protected@file@percent }
-\newlabel{fig:gs_pnl}{{5}{14}{Terminal P\&L distributions per contract (1{,}000 paths, log-y) for the GS scenario. Both legs showed the same short-premium pattern: most paths kept the full premium, and a long left tail held the loss-making paths. The short call's left tail was substantially fatter than the put's despite a smaller premium received}{figure.caption.8}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Cross-ticker validation: LLY}{15}{subsection.5.1}\protected@file@percent }
-\newlabel{sec:lly_scenario}{{5.1}{15}{Cross-ticker validation: LLY}{subsection.5.1}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces LLY terminal P\&L distributions per contract (1{,}000 paths, log-y), parallel to Fig.~\ref {fig:gs_pnl}. The short-premium asymmetry persisted on a ticker with substantially higher IV regime: short put kept full premium on $77.4\%$ of paths (mean P\&L $+\$14.31$); short call kept full premium on $75.7\%$ of paths (mean P\&L $+\$6.45$) with a worst-case loss of $-\$303.88$, $1.64\times $ the worst put loss and $14.6\times $ the premium itself. Full statistics in Supplementary Table~\ref {tab:lly_scenario}; share-price paths, IV trajectories, and Greek panels in the Supplementary Material.}}{15}{figure.caption.9}\protected@file@percent }
-\newlabel{fig:lly_pnl}{{6}{15}{LLY terminal P\&L distributions per contract (1{,}000 paths, log-y), parallel to Fig.~\ref {fig:gs_pnl}. The short-premium asymmetry persisted on a ticker with substantially higher IV regime: short put kept full premium on $77.4\%$ of paths (mean P\&L $+\$14.31$); short call kept full premium on $75.7\%$ of paths (mean P\&L $+\$6.45$) with a worst-case loss of $-\$303.88$, $1.64\times $ the worst put loss and $14.6\times $ the premium itself. Full statistics in Supplementary Table~\ref {tab:lly_scenario}; share-price paths, IV trajectories, and Greek panels in the Supplementary Material}{figure.caption.9}{}}
-\citation{cont2002}
-\citation{gatheral2004}
-\@writefile{toc}{\contentsline {section}{\numberline {6}Discussion and Future Work}{16}{section.6}\protected@file@percent }
-\newlabel{sec:discussion}{{6}{16}{Discussion and Future Work}{section.6}{}}
-\citation{buehler2019}
+\newlabel{tab:three_way}{{1}{5}{In-sample IV RMSE on 234{,}549 observations. RMSE is reported in volatility percentage points. Each model fitted one ticker level jointly with its shape parameters}{table.caption.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Per-ticker neural surfaces}{6}{subsection.3.2}\protected@file@percent }
+\newlabel{sec:per_ticker_nn}{{3.2}{6}{Per-ticker neural surfaces}{subsection.3.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Fitted IV smiles for six representative tickers at a middle maturity. Points show market IV, the solid curve shows the per-ticker neural surface, and the dashed curve shows the sector surface. All observations came from the fifteen-date training corpus.}}{6}{figure.caption.3}\protected@file@percent }
+\newlabel{fig:per_ticker_panels}{{1}{6}{Fitted IV smiles for six representative tickers at a middle maturity. Points show market IV, the solid curve shows the per-ticker neural surface, and the dashed curve shows the sector surface. All observations came from the fifteen-date training corpus}{figure.caption.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Temporal holdout with earnings inputs}{6}{subsection.3.3}\protected@file@percent }
+\newlabel{sec:earnings_holdout}{{3.3}{6}{Temporal holdout with earnings inputs}{subsection.3.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces CRR American price minus market mid on May 11, 2026, for SPY, NVDA, LLY, and GS. Curves show the parametric, sector, per-ticker, and market-IV reference inputs. The gray ribbon is the median local bid-ask half-spread by moneyness bin. A point inside the ribbon has an absolute pricing error below that local half-spread.}}{7}{figure.caption.4}\protected@file@percent }
+\newlabel{fig:price_error}{{2}{7}{CRR American price minus market mid on May 11, 2026, for SPY, NVDA, LLY, and GS. Curves show the parametric, sector, per-ticker, and market-IV reference inputs. The gray ribbon is the median local bid-ask half-spread by moneyness bin. A point inside the ribbon has an absolute pricing error below that local half-spread}{figure.caption.4}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Temporal-holdout comparison. RMSE and gaps are in volatility percentage points. Configuration B used different row sets from A and C.}}{7}{table.caption.5}\protected@file@percent }
+\newlabel{tab:earnings_holdout}{{2}{7}{Temporal-holdout comparison. RMSE and gaps are in volatility percentage points. Configuration B used different row sets from A and C}{table.caption.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Forward-simulated fitted illustrations}{7}{subsection.3.4}\protected@file@percent }
+\newlabel{sec:scenarios}{{3.4}{7}{Forward-simulated fitted illustrations}{subsection.3.4}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.1}GS}{8}{subsubsection.3.4.1}\protected@file@percent }
+\@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Forward simulation of contract values}}{8}{algorithm.1}\protected@file@percent }
+\newlabel{alg:forward_sim}{{1}{8}{Forward simulation of contract values}{algorithm.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces GS stock paths and long-option values for 1{,}000 trajectories from April 28 to May 29, 2026. The horizontal axis is calendar days, and the simulation contains 22 trading transitions. Red curves mark terminal-stock paths in the 1st through 5th percentiles; green curves mark the 95th through 99th percentiles. The blue horizontal lines show the market mids received by a short seller.}}{9}{figure.caption.6}\protected@file@percent }
+\newlabel{fig:gs_paths}{{3}{9}{GS stock paths and long-option values for 1{,}000 trajectories from April 28 to May 29, 2026. The horizontal axis is calendar days, and the simulation contains 22 trading transitions. Red curves mark terminal-stock paths in the 1st through 5th percentiles; green curves mark the 95th through 99th percentiles. The blue horizontal lines show the market mids received by a short seller}{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Contract-specific IV paths at the GS put strike (left) and call strike (right). The horizontal axis uses the 31-calendar-day schedule, with values updated on 22 trading transitions. Path colors follow Fig.~\ref {fig:gs_paths}.}}{9}{figure.caption.7}\protected@file@percent }
+\newlabel{fig:gs_iv}{{4}{9}{Contract-specific IV paths at the GS put strike (left) and call strike (right). The horizontal axis uses the 31-calendar-day schedule, with values updated on 22 trading transitions. Path colors follow Fig.~\ref {fig:gs_paths}}{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces GS terminal short-option P\&L per contract over 1{,}000 JumpHMM paths. The lattice IV process does not enter terminal P\&L in~\eqref  {eq:terminal_pnl}; it affects only interim values and Greeks.}}{10}{figure.caption.8}\protected@file@percent }
+\newlabel{fig:gs_pnl}{{5}{10}{GS terminal short-option P\&L per contract over 1{,}000 JumpHMM paths. The lattice IV process does not enter terminal P\&L in~\eqref {eq:terminal_pnl}; it affects only interim values and Greeks}{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.4.2}LLY}{10}{subsubsection.3.4.2}\protected@file@percent }
+\newlabel{sec:lly_scenario}{{3.4.2}{10}{LLY}{subsubsection.3.4.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces LLY terminal short-option P\&L per contract over 1{,}000 JumpHMM paths. The wider lower tail for the call came from the simulated terminal-stock distribution relative to the call strike and entry premium.}}{11}{figure.caption.9}\protected@file@percent }
+\newlabel{fig:lly_pnl}{{6}{11}{LLY terminal short-option P\&L per contract over 1{,}000 JumpHMM paths. The wider lower tail for the call came from the simulated terminal-stock distribution relative to the call strike and entry premium}{figure.caption.9}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Discussion}{11}{section.4}\protected@file@percent }
+\newlabel{sec:discussion}{{4}{11}{Discussion}{section.4}{}}
 \bibstyle{abbrvnat}
 \bibdata{references}
 \bibcite{jumphmm2025}{{1}{2026}{{Alswaidan and Varner}}{{}}}
@@ -102,57 +85,54 @@
 \bibcite{bayer2019}{{3}{2018}{{Bayer and Stemper}}{{}}}
 \bibcite{black1973}{{4}{1973}{{Black and Scholes}}{{}}}
 \bibcite{broadie1996}{{5}{1996}{{Broadie and Detemple}}{{}}}
-\bibcite{buehler2019}{{6}{2019}{{Buehler et~al.}}{{Buehler, Gonon, Teichmann, and Wood}}}
-\bibcite{cont2001}{{7}{2001}{{Cont}}{{}}}
-\bibcite{cont2002}{{8}{2002}{{Cont and da~Fonseca}}{{}}}
-\bibcite{cox1979}{{9}{1979}{{Cox et~al.}}{{Cox, Ross, and Rubinstein}}}
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusion}{18}{section.7}\protected@file@percent }
-\newlabel{sec:conclusion}{{7}{18}{Conclusion}{section.7}{}}
-\bibcite{demarta2005}{{10}{2005}{{Demarta and McNeil}}{{}}}
-\bibcite{derman1994}{{11}{1994}{{Derman and Kani}}{{}}}
-\bibcite{dupire1994}{{12}{1994}{{Dupire}}{{}}}
-\bibcite{gatheral2004}{{13}{2004}{{Gatheral}}{{}}}
-\bibcite{glasserman2004}{{14}{2004}{{Glasserman}}{{}}}
-\bibcite{hagan2002}{{15}{2002}{{Hagan et~al.}}{{Hagan, Kumar, Lesniewski, and Woodward}}}
-\bibcite{heston1993}{{16}{1993}{{Heston}}{{}}}
-\bibcite{horvath2021}{{17}{2021}{{Horvath et~al.}}{{Horvath, Muguruza, and Tomas}}}
-\bibcite{jarrow1983}{{18}{1982}{{Jarrow and Rudd}}{{}}}
-\bibcite{leisen1996}{{19}{1996}{{Leisen and Reimer}}{{}}}
-\bibcite{tian1993}{{20}{1993}{{Tian}}{{}}}
-\bibcite{wiese2020}{{21}{2020}{{Wiese et~al.}}{{Wiese, Knobloch, Korn, and Kretschmer}}}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Derivation of the per-contract variance decomposition $\sigma _t^2 = v_t$}{20}{appendix.A}\protected@file@percent }
-\newlabel{sec:supp_sigma_decomp}{{A}{20}{Derivation of the per-contract variance decomposition $\sigma _t^2 = v_t$}{appendix.A}{}}
-\newlabel{eq:level_sde}{{14}{20}{Derivation of the per-contract variance decomposition $\sigma _t^2 = v_t$}{equation.14}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {B}Sector-NN calibration: corpus partition and per-sector breakdown}{20}{appendix.B}\protected@file@percent }
-\newlabel{sec:supp_sector_nn}{{B}{20}{Sector-NN calibration: corpus partition and per-sector breakdown}{appendix.B}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {S1}{\ignorespaces Sector partition of the 31-ticker ladder. Each ticker appeared on at least one of fifteen capture dates (2026-04-14 through 2026-05-11); per-sector observation counts were pooled across dates. ETF observation counts were substantially larger than other sectors because SPY, QQQ, and IWM carried far deeper strike ladders than individual-name chains.}}{21}{table.caption.11}\protected@file@percent }
-\newlabel{tab:sector_map}{{S1}{21}{Sector partition of the 31-ticker ladder. Each ticker appeared on at least one of fifteen capture dates (2026-04-14 through 2026-05-11); per-sector observation counts were pooled across dates. ETF observation counts were substantially larger than other sectors because SPY, QQQ, and IWM carried far deeper strike ladders than individual-name chains}{table.caption.11}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {S2}{\ignorespaces Per-sector RMSE (\% IV) across the three calibration strategies on the 31-ticker ladder. The sector NN reduced RMSE in every sector over the shared NN, with the largest absolute gains in ETF and financials, where the global shape poorly represented the local geometry. Healthcare and technology retained the largest residual errors, reflecting within-sector smile heterogeneity that a single shared sector $\psi $ could not absorb.}}{21}{table.caption.12}\protected@file@percent }
-\newlabel{tab:per_sector}{{S2}{21}{Per-sector RMSE (\% IV) across the three calibration strategies on the 31-ticker ladder. The sector NN reduced RMSE in every sector over the shared NN, with the largest absolute gains in ETF and financials, where the global shape poorly represented the local geometry. Healthcare and technology retained the largest residual errors, reflecting within-sector smile heterogeneity that a single shared sector $\psi $ could not absorb}{table.caption.12}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {S3}{\ignorespaces Best and worst individual ticker fits under the sector-specific NN calibration, ranked by RMSE across all 31 tickers. The best fits were dominated by the broad-market ETFs and the deep-liquidity financials (GS, JPM); the worst fits were concentrated in technology (QCOM, MU, INTC, AMD) and healthcare (PFE, MRNA), where within-sector smile heterogeneity was largest. PFE and BMY remained the only tickers below the 2{,}000-observation per-ticker threshold.}}{21}{table.caption.13}\protected@file@percent }
-\newlabel{tab:worst_tickers}{{S3}{21}{Best and worst individual ticker fits under the sector-specific NN calibration, ranked by RMSE across all 31 tickers. The best fits were dominated by the broad-market ETFs and the deep-liquidity financials (GS, JPM); the worst fits were concentrated in technology (QCOM, MU, INTC, AMD) and healthcare (PFE, MRNA), where within-sector smile heterogeneity was largest. PFE and BMY remained the only tickers below the 2{,}000-observation per-ticker threshold}{table.caption.13}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Leave-one-date-out validation on the fifteen-date corpus}{21}{subsection.B.1}\protected@file@percent }
-\newlabel{sec:supp_loo}{{B.1}{21}{Leave-one-date-out validation on the fifteen-date corpus}{subsection.B.1}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {S4}{\ignorespaces Leave-one-date-out validation of the sector NN, holding out 2026-05-11. Per-sector train and test RMSE (\% IV) and gap (test $-$ train). The pooled gap of $+0.68\%$ IV is small relative to the in-sample RMSE itself, indicating that the architecture does not overfit the fifteen-date corpus.}}{22}{table.caption.14}\protected@file@percent }
-\newlabel{tab:loo_sector_nn}{{S4}{22}{Leave-one-date-out validation of the sector NN, holding out 2026-05-11. Per-sector train and test RMSE (\% IV) and gap (test $-$ train). The pooled gap of $+0.68\%$ IV is small relative to the in-sample RMSE itself, indicating that the architecture does not overfit the fifteen-date corpus}{table.caption.14}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {C}Holdout diagnostics motivating the earnings-aware mechanism}{22}{appendix.C}\protected@file@percent }
-\newlabel{sec:supp_earnings_diag}{{C}{22}{Holdout diagnostics motivating the earnings-aware mechanism}{appendix.C}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {D}Short-premium scenarios: P\&L statistics and cross-ticker validation}{22}{appendix.D}\protected@file@percent }
-\newlabel{sec:supp_short_premium}{{D}{22}{Short-premium scenarios: P\&L statistics and cross-ticker validation}{appendix.D}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {S5}{\ignorespaces Per-ticker test RMSE on the Tech sector across the pooled control (A) and the earnings-aware fit (C). Columns $e$ and $e^{\text  {peer}}$ report the median signed days-to-earnings and the minimum same-sector peer distance for each ticker on the holdout days. The largest gains accrued to tickers whose peers printed within the holdout (QCOM, AMD, META, MSFT, GOOG); INTC, the print-day ticker, was the one name that worsened, reflecting an unanticipated outcome that no calendar-based indicator could absorb.}}{23}{table.caption.15}\protected@file@percent }
-\newlabel{tab:tech_pivot}{{S5}{23}{Per-ticker test RMSE on the Tech sector across the pooled control (A) and the earnings-aware fit (C). Columns $e$ and $e^{\text {peer}}$ report the median signed days-to-earnings and the minimum same-sector peer distance for each ticker on the holdout days. The largest gains accrued to tickers whose peers printed within the holdout (QCOM, AMD, META, MSFT, GOOG); INTC, the print-day ticker, was the one name that worsened, reflecting an unanticipated outcome that no calendar-based indicator could absorb}{table.caption.15}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {S6}{\ignorespaces Terminal P\&L statistics from 1{,}000 GS 31-day forward simulations of the real 2026-05-29 \$890 put and \$970 call. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}}{23}{table.caption.16}\protected@file@percent }
-\newlabel{tab:gs_scenario}{{S6}{23}{Terminal P\&L statistics from 1{,}000 GS 31-day forward simulations of the real 2026-05-29 \$890 put and \$970 call. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract}{table.caption.16}{}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Path-conditional Greeks via central finite differences on the LR pricer}}{24}{algorithm.2}\protected@file@percent }
-\newlabel{alg:greeks}{{2}{24}{Path-conditional Greeks via central finite differences on the LR pricer}{algorithm.2}{}}
-\@writefile{lot}{\contentsline {table}{\numberline {S7}{\ignorespaces Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi _{\mathrm  {NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap.}}{24}{table.caption.18}\protected@file@percent }
-\newlabel{tab:lly_scenario}{{S7}{24}{Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi _{\mathrm {NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap}{table.caption.18}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {S1}{\ignorespaces Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the GS put and call strikes over the 31-day horizon, computed by central finite differences (Algorithm~\ref {alg:greeks}) on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta $/$\Gamma $, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta $. Middle: $\Gamma $, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt  {T-t}$ on every path. Tail overlays as in Fig.~\ref {fig:gs_paths}.}}{25}{figure.caption.17}\protected@file@percent }
-\newlabel{fig:gs_greeks}{{S1}{25}{Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the GS put and call strikes over the 31-day horizon, computed by central finite differences (Algorithm~\ref {alg:greeks}) on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta $/$\Gamma $, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta $. Middle: $\Gamma $, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt {T-t}$ on every path. Tail overlays as in Fig.~\ref {fig:gs_paths}}{figure.caption.17}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {S2}{\ignorespaces Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days; analogue of GS Fig.~\ref {fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call).}}{26}{figure.caption.19}\protected@file@percent }
-\newlabel{fig:lly_paths}{{S2}{26}{Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days; analogue of GS Fig.~\ref {fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call)}{figure.caption.19}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {S3}{\ignorespaces Path-conditional IV at $K_{\text  {put}}$ and $K_{\text  {call}}$ over the 31-day horizon; analogue of GS Fig.~\ref {fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}}{26}{figure.caption.20}\protected@file@percent }
-\newlabel{fig:lly_iv}{{S3}{26}{Path-conditional IV at $K_{\text {put}}$ and $K_{\text {call}}$ over the 31-day horizon; analogue of GS Fig.~\ref {fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell}{figure.caption.20}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {S4}{\ignorespaces Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref {fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt  {T-t}$ Vega decay both reproduced the patterns seen on GS.}}{27}{figure.caption.21}\protected@file@percent }
-\newlabel{fig:lly_greeks}{{S4}{27}{Leisen-Reimer American Greeks ($\Delta $, $\Gamma $, Vega) at the LLY put and call strikes; analogue of GS Fig.~\ref {fig:gs_greeks}. Short-position Greeks are the negatives of the displayed long-side values. The short-gamma spike near expiry and the $\sqrt {T-t}$ Vega decay both reproduced the patterns seen on GS}{figure.caption.21}{}}
-\gdef \@abspage@last{27}
+\bibcite{cont2001}{{6}{2001}{{Cont}}{{}}}
+\bibcite{cox1979}{{7}{1979}{{Cox et~al.}}{{Cox, Ross, and Rubinstein}}}
+\bibcite{demarta2005}{{8}{2005}{{Demarta and McNeil}}{{}}}
+\bibcite{derman1994}{{9}{1994}{{Derman and Kani}}{{}}}
+\bibcite{dupire1994}{{10}{1994}{{Dupire}}{{}}}
+\bibcite{gatheral2004}{{11}{2004}{{Gatheral}}{{}}}
+\bibcite{hagan2002}{{12}{2002}{{Hagan et~al.}}{{Hagan, Kumar, Lesniewski, and Woodward}}}
+\bibcite{heston1993}{{13}{1993}{{Heston}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion}{12}{section.5}\protected@file@percent }
+\newlabel{sec:conclusion}{{5}{12}{Conclusion}{section.5}{}}
+\bibcite{horvath2021}{{14}{2021}{{Horvath et~al.}}{{Horvath, Muguruza, and Tomas}}}
+\bibcite{jarrow1983}{{15}{1982}{{Jarrow and Rudd}}{{}}}
+\bibcite{leisen1996}{{16}{1996}{{Leisen and Reimer}}{{}}}
+\bibcite{tian1993}{{17}{1993}{{Tian}}{{}}}
+\bibcite{wiese2020}{{18}{2020}{{Wiese et~al.}}{{Wiese, Knobloch, Korn, and Kretschmer}}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}Interpretation of the Contract Variance Factor}{14}{appendix.A}\protected@file@percent }
+\newlabel{sec:supp_sigma_decomp}{{A}{14}{Interpretation of the Contract Variance Factor}{appendix.A}{}}
+\newlabel{eq:level_sde}{{15}{14}{Interpretation of the Contract Variance Factor}{equation.15}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {B}Calibration Details}{14}{appendix.B}\protected@file@percent }
+\newlabel{sec:supp_sector_nn}{{B}{14}{Calibration Details}{appendix.B}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {S1}{\ignorespaces Sector partition of the 31-ticker ladder across fifteen capture dates. Counts are filtered observations used in calibration.}}{14}{table.caption.11}\protected@file@percent }
+\newlabel{tab:sector_map}{{S1}{14}{Sector partition of the 31-ticker ladder across fifteen capture dates. Counts are filtered observations used in calibration}{table.caption.11}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {S2}{\ignorespaces In-sample RMSE by sector, in volatility percentage points. The sector network improved on the global neural network in every group, while technology and healthcare retained the largest errors.}}{14}{table.caption.12}\protected@file@percent }
+\newlabel{tab:per_sector}{{S2}{14}{In-sample RMSE by sector, in volatility percentage points. The sector network improved on the global neural network in every group, while technology and healthcare retained the largest errors}{table.caption.12}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {B.1}Single-date holdout}{14}{subsection.B.1}\protected@file@percent }
+\newlabel{sec:supp_loo}{{B.1}{14}{Single-date holdout}{subsection.B.1}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {C}Earnings-Holdout Ticker Results}{14}{appendix.C}\protected@file@percent }
+\newlabel{sec:supp_earnings_diag}{{C}{14}{Earnings-Holdout Ticker Results}{appendix.C}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {S3}{\ignorespaces Best and worst ticker-level in-sample RMSE under the sector networks. RMSE is in volatility percentage points.}}{15}{table.caption.13}\protected@file@percent }
+\newlabel{tab:worst_tickers}{{S3}{15}{Best and worst ticker-level in-sample RMSE under the sector networks. RMSE is in volatility percentage points}{table.caption.13}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {S4}{\ignorespaces Sector-network RMSE for the May 11 single-date holdout. Values and test-minus-train gaps are in volatility percentage points.}}{15}{table.caption.14}\protected@file@percent }
+\newlabel{tab:loo_sector_nn}{{S4}{15}{Sector-network RMSE for the May 11 single-date holdout. Values and test-minus-train gaps are in volatility percentage points}{table.caption.14}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {S5}{\ignorespaces Technology-ticker test RMSE for the pooled model (A) and earnings-aware model (C). Inputs $e$ and $e^{\mathrm  {peer}}$ are median signed ticker distance and minimum peer distance, in days. RMSE differences are in volatility percentage points.}}{15}{table.caption.15}\protected@file@percent }
+\newlabel{tab:tech_pivot}{{S5}{15}{Technology-ticker test RMSE for the pooled model (A) and earnings-aware model (C). Inputs $e$ and $e^{\mathrm {peer}}$ are median signed ticker distance and minimum peer distance, in days. RMSE differences are in volatility percentage points}{table.caption.15}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {D}Scenario Statistics and Greeks}{15}{appendix.D}\protected@file@percent }
+\newlabel{sec:supp_short_premium}{{D}{15}{Scenario Statistics and Greeks}{appendix.D}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {S6}{\ignorespaces GS results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar values are per contract.}}{16}{table.caption.16}\protected@file@percent }
+\newlabel{tab:gs_scenario}{{S6}{16}{GS results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar values are per contract}{table.caption.16}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Path-conditional Greeks by central finite differences}}{16}{algorithm.2}\protected@file@percent }
+\newlabel{alg:greeks}{{2}{16}{Path-conditional Greeks by central finite differences}{algorithm.2}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {S1}{\ignorespaces GS long-option delta, gamma, and Vega from the 201-step Leisen-Reimer pricer. Spot bumps were $1.5\%$ of spot, and IV bumps were 0.005. Vega is dollars per one volatility percentage point.}}{17}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:gs_greeks}{{S1}{17}{GS long-option delta, gamma, and Vega from the 201-step Leisen-Reimer pricer. Spot bumps were $1.5\%$ of spot, and IV bumps were 0.005. Vega is dollars per one volatility percentage point}{figure.caption.17}{}}
+\@writefile{lot}{\contentsline {table}{\numberline {S7}{\ignorespaces LLY results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar values are per contract.}}{17}{table.caption.18}\protected@file@percent }
+\newlabel{tab:lly_scenario}{{S7}{17}{LLY results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar values are per contract}{table.caption.18}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {S2}{\ignorespaces LLY stock paths and long-option values across 31 calendar days and 22 trading transitions. Red and green overlays identify the 1st through 5th and 95th through 99th terminal-stock percentiles.}}{18}{figure.caption.19}\protected@file@percent }
+\newlabel{fig:lly_paths}{{S2}{18}{LLY stock paths and long-option values across 31 calendar days and 22 trading transitions. Red and green overlays identify the 1st through 5th and 95th through 99th terminal-stock percentiles}{figure.caption.19}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {S3}{\ignorespaces Contract-specific LLY IV paths at the put and call strikes. The fixed negative return-shock coupling tended to raise factor shocks after lower standardized returns.}}{18}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:lly_iv}{{S3}{18}{Contract-specific LLY IV paths at the put and call strikes. The fixed negative return-shock coupling tended to raise factor shocks after lower standardized returns}{figure.caption.20}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {S4}{\ignorespaces LLY long-option delta, gamma, and Vega from the 201-step Leisen-Reimer pricer. Short-position Greeks have the opposite sign.}}{19}{figure.caption.21}\protected@file@percent }
+\newlabel{fig:lly_greeks}{{S4}{19}{LLY long-option delta, gamma, and Vega from the 201-step Leisen-Reimer pricer. Short-position Greeks have the opposite sign}{figure.caption.21}{}}
+\gdef \@abspage@last{19}

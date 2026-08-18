@@ -1,12 +1,13 @@
 TEX = pdflatex
 BIB = bibtex
 MAIN = main
+FIGURES = $(shell find sections/figures -type f \( -name '*.pdf' -o -name '*.png' \))
 
 .PHONY: all clean
 
 all: $(MAIN).pdf
 
-$(MAIN).pdf: $(MAIN).tex references.bib $(wildcard sections/*.tex) $(wildcard sections/figures/*.png)
+$(MAIN).pdf: $(MAIN).tex references.bib $(wildcard sections/*.tex) $(FIGURES)
 	-$(TEX) -interaction=nonstopmode $(MAIN)
 	-$(BIB) $(MAIN)
 	-$(TEX) -interaction=nonstopmode $(MAIN)

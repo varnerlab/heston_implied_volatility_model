@@ -1,4 +1,4 @@
-\begin{thebibliography}{21}
+\begin{thebibliography}{18}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -39,25 +39,12 @@ M.~Broadie and J.~Detemple.
   1211--1250, 1996.
 \newblock \doi{10.1093/rfs/9.4.1211}.
 
-\bibitem[Buehler et~al.(2019)Buehler, Gonon, Teichmann, and Wood]{buehler2019}
-H.~Buehler, L.~Gonon, J.~Teichmann, and B.~Wood.
-\newblock Deep hedging.
-\newblock \emph{Quantitative Finance}, 19\penalty0 (8):\penalty0 1271--1291,
-  2019.
-\newblock \doi{10.1080/14697688.2019.1571683}.
-
 \bibitem[Cont(2001)]{cont2001}
 R.~Cont.
 \newblock Empirical properties of asset returns: stylized facts and statistical
   issues.
 \newblock \emph{Quantitative Finance}, 1\penalty0 (2):\penalty0 223--236, 2001.
 \newblock \doi{10.1080/713665670}.
-
-\bibitem[Cont and da~Fonseca(2002)]{cont2002}
-R.~Cont and J.~da~Fonseca.
-\newblock Dynamics of implied volatility surfaces.
-\newblock \emph{Quantitative Finance}, 2\penalty0 (1):\penalty0 45--60, 2002.
-\newblock \doi{10.1088/1469-7688/2/1/304}.
 
 \bibitem[Cox et~al.(1979)Cox, Ross, and Rubinstein]{cox1979}
 J.~C. Cox, S.~A. Ross, and M.~Rubinstein.
@@ -88,12 +75,6 @@ J.~Gatheral.
 \newblock A parsimonious arbitrage-free implied volatility parameterization
   with application to the valuation of volatility derivatives.
 \newblock Presentation at Global Derivatives \& Risk Management, Madrid, 2004.
-
-\bibitem[Glasserman(2004)]{glasserman2004}
-P.~Glasserman.
-\newblock \emph{Monte Carlo Methods in Financial Engineering}.
-\newblock Stochastic Modelling and Applied Probability. Springer, 2004.
-\newblock \doi{10.1007/978-0-387-21617-1}.
 
 \bibitem[Hagan et~al.(2002)Hagan, Kumar, Lesniewski, and Woodward]{hagan2002}
 P.~S. Hagan, D.~Kumar, A.~S. Lesniewski, and D.~E. Woodward.
