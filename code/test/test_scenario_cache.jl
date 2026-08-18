@@ -63,6 +63,103 @@ include(joinpath(@__DIR__, "..", "src", "ScenarioTemplate.jl"))
         @test Date("2026-05-25") ∉ dates
     end
 
+    # Helpers for the paper_figure_dirs rules below.
+    _variant(tmp, v) = (mkpath(joinpath(tmp, v, "sections")); joinpath(tmp, v))
+    _cite(tmp, v, sub) = write(joinpath(tmp, v, "sections", "body.tex"),
+                               "\\includegraphics{sections/figures/$sub/x.pdf}")
+    _figdir(tmp, v, sub) = mkpath(joinpath(tmp, v, "sections", "figures", sub))
+    _target(tmp, v, sub) = joinpath(tmp, v, "sections", "figures", sub)
+
+    @testset "paper_figure_dirs returns every variant that cites the subdir" begin
+        mktempdir() do tmp
+            for v in ("paper-arxiv", "paper-jcf")
+                _variant(tmp, v); _cite(tmp, v, "gs")
+            end
+            dirs = ScenarioTemplate.paper_figure_dirs("gs"; repo_root=tmp)
+            @test Set(dirs) == Set([_target(tmp, "paper-arxiv", "gs"),
+                                    _target(tmp, "paper-jcf", "gs")])
+        end
+    end
+
+    @testset "paper_figure_dirs also keeps an existing copy fresh" begin
+        # One variant cites the figures, the other merely holds a copy from an
+        # earlier run. Both must be written, or the second one goes stale.
+        mktempdir() do tmp
+            for v in ("paper-arxiv", "paper-jcf"); _variant(tmp, v); end
+            _cite(tmp, "paper-arxiv", "lly")
+            _figdir(tmp, "paper-jcf", "lly")
+            dirs = ScenarioTemplate.paper_figure_dirs("lly"; repo_root=tmp)
+            @test Set(dirs) == Set([_target(tmp, "paper-arxiv", "lly"),
+                                    _target(tmp, "paper-jcf", "lly")])
+        end
+    end
+
+    @testset "paper_figure_dirs does not duplicate uncited scratch panels" begin
+        # The expanded cross-ticker and INTC panels are cited by neither paper.
+        # They belong only where they already live.
+        mktempdir() do tmp
+            for v in ("paper-arxiv", "paper-jcf"); _variant(tmp, v); end
+            _figdir(tmp, "paper-jcf", "spy")
+            @test ScenarioTemplate.paper_figure_dirs("spy"; repo_root=tmp) ==
+                  [_target(tmp, "paper-jcf", "spy")]
+        end
+    end
+
+    @testset "paper_figure_dirs falls back for a brand-new figure set" begin
+        mktempdir() do tmp
+            for v in ("paper-arxiv", "paper-jcf"); _variant(tmp, v); end
+            @test ScenarioTemplate.paper_figure_dirs("newticker"; repo_root=tmp) ==
+                  [_target(tmp, "paper-arxiv", "newticker")]
+        end
+    end
+
+    @testset "paper_figure_dirs skips absent variants" begin
+        mktempdir() do tmp
+            _variant(tmp, "paper-jcf"); _cite(tmp, "paper-jcf", "lly")
+            @test ScenarioTemplate.paper_figure_dirs("lly"; repo_root=tmp) ==
+                  [_target(tmp, "paper-jcf", "lly")]
+        end
+    end
+
+    @testset "paper_figure_dirs fails loudly when no variant exists" begin
+        mktempdir() do tmp
+            @test_throws ErrorException ScenarioTemplate.paper_figure_dirs("gs"; repo_root=tmp)
+        end
+    end
+
+    @testset "figure mirroring copies the prefixed set only" begin
+        mktempdir() do tmp
+            src = joinpath(tmp, "src"); mkpath(src)
+            for f in ("gs_short_paths.pdf", "gs_short_paths.png", "gs_iv_trajectories.pdf")
+                write(joinpath(src, f), "fresh-$f")
+            end
+            write(joinpath(src, "lly_short_paths.pdf"), "other ticker")
+            write(joinpath(src, "gs_notes.txt"), "not a figure")
+
+            dst = joinpath(tmp, "dst")
+            # A stale copy in the destination must be overwritten, since that is
+            # exactly the paper-jcf failure this mirroring exists to prevent.
+            mkpath(dst)
+            write(joinpath(dst, "gs_short_paths.pdf"), "stale")
+
+            names = ScenarioTemplate._mirror_figures(src, [dst], "gs")
+            @test Set(names) == Set(["gs_short_paths.pdf", "gs_short_paths.png",
+                                     "gs_iv_trajectories.pdf"])
+            @test read(joinpath(dst, "gs_short_paths.pdf"), String) == "fresh-gs_short_paths.pdf"
+            @test isfile(joinpath(dst, "gs_iv_trajectories.pdf"))
+            @test !isfile(joinpath(dst, "lly_short_paths.pdf"))
+            @test !isfile(joinpath(dst, "gs_notes.txt"))
+        end
+    end
+
+    @testset "figure mirroring is a no-op with a single destination" begin
+        mktempdir() do tmp
+            src = joinpath(tmp, "src"); mkpath(src)
+            write(joinpath(src, "gs_short_paths.pdf"), "x")
+            @test ScenarioTemplate._mirror_figures(src, String[], "gs") == String[]
+        end
+    end
+
     @testset "Wilson interval" begin
         lo, hi = ScenarioTemplate._wilson_interval(50, 100)
         @test lo ≈ 0.4038 atol=1e-4

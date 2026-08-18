@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  21 JUL 2026 12:41
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  18 AUG 2026 11:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main.tex
+**main
 (./main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -614,24 +614,24 @@ put line 8.
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
-line 34.
+line 35.
 (pdftex.def)             Requested size: 469.75502pt x 344.48224pt.
-<sections/figures/gs/gs_iv_trajectories.pdf, id=416, 1505.625pt x 602.25pt>
-File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
-<use sections/figures/gs/gs_iv_trajectories.pdf>
-Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
-put line 43.
-(pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
 
 
 [19]
-<sections/figures/gs/gs_short_pnl_distributions.pdf, id=428, 1505.625pt x 602.2
+<sections/figures/gs/gs_iv_trajectories.pdf, id=423, 1505.625pt x 602.25pt>
+File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
+<use sections/figures/gs/gs_iv_trajectories.pdf>
+Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
+put line 44.
+(pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
+<sections/figures/gs/gs_short_pnl_distributions.pdf, id=427, 1505.625pt x 602.2
 5pt>
 File: sections/figures/gs/gs_short_pnl_distributions.pdf Graphic file (type pdf
 )
 <use sections/figures/gs/gs_short_pnl_distributions.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_pnl_distributions.pdf  us
-ed on input line 54.
+ed on input line 55.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
 
 
@@ -642,7 +642,7 @@ File: sections/figures/lly/lly_short_pnl_distributions.pdf Graphic file (type p
 df)
 <use sections/figures/lly/lly_short_pnl_distributions.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_pnl_distributions.pdf  
-used on input line 67.
+used on input line 68.
 (pdftex.def)             Requested size: 469.75502pt x 187.8994pt.
 
 
@@ -832,20 +832,17 @@ L3 programming layer <2025-01-18>
 
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 73619C49D47D7F5CCACBF79EEB78B029;10033.
  ) 
 Here is how much of TeX's memory you used:
  14045 strings out of 473190
  224919 string characters out of 5715801
- 661777 words of memory out of 5000000
+ 662002 words of memory out of 5000000
  36924 multiletter control sequences out of 15000+600000
  571712 words of font info for 85 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 69i,18n,79p,3024b,601s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 69i,18n,79p,3020b,601s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
@@ -868,7 +865,7 @@ f-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2025/texmf
 -dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/local/texlive/2025/t
 exmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/20
 25/texmf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on main.pdf (52 pages, 4743397 bytes).
+Output written on main.pdf (52 pages, 3806585 bytes).
 PDF statistics:
  836 PDF objects out of 1000 (max. 8388607)
  708 compressed objects within 8 object streams

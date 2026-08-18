@@ -16,7 +16,9 @@ Public API:
 - `run_short_scenario(spec, hspec; nn_cache_path, port_path, ladder_dir,
                sim_cache_path, resim=false, sector=nothing, use_per_ticker=true,
                compute_greeks=true)`
-- `render_scenario_figures(result, spec; plot_dir)`
+- `render_scenario_figures(result, spec; plot_dir)` — `plot_dir` may be one
+  directory or several; every figure is written to all of them.
+- `paper_figure_dirs(subdir)` — that subdirectory in every paper variant
 
 The Leisen-Reimer pricer is imported from `HestonIV.lr_american_price`.
 """
@@ -38,7 +40,8 @@ using Statistics
 # We pull LR from the package so the pricer lives in one place.
 using HestonIV: lr_american_price
 
-export ScenarioSpec, VarianceSpec, HestonSpec, run_short_scenario, render_scenario_figures
+export ScenarioSpec, VarianceSpec, HestonSpec, run_short_scenario, render_scenario_figures,
+       paper_figure_dirs
 
 # ============================================================================
 # Cache validation
@@ -84,6 +87,80 @@ function _wilson_interval(successes::Integer, trials::Integer;
     half_width = z / (1 + z2_over_n) *
                  sqrt(p * (1 - p) / trials + z^2 / (4 * trials^2))
     return center - half_width, center + half_width
+end
+
+# ============================================================================
+# Figure destinations
+# ============================================================================
+
+const _REPO_ROOT = abspath(joinpath(@__DIR__, "..", ".."))
+const _PAPER_VARIANTS = ("paper-arxiv", "paper-jcf")
+
+"""True when any `.tex` under `sections_dir` includes a figure from `subdir/`."""
+function _cites_subdir(sections_dir::AbstractString, subdir::AbstractString)
+    isdir(sections_dir) || return false
+    pat = Regex("sections/figures/" * subdir * "/")
+    for (root, _, files) in walkdir(sections_dir), f in files
+        endswith(f, ".tex") || continue
+        occursin(pat, read(joinpath(root, f), String)) && return true
+    end
+    return false
+end
+
+"""
+    paper_figure_dirs(subdir; repo_root, variants)
+
+`sections/figures/<subdir>` in each paper variant that should receive this
+figure set.
+
+The scenario scripts write their figures straight into the paper tree instead
+of going through `code/figures/`, so `promote_figures` never sees them on the
+way out. A driver that names a single variant therefore leaves the other one
+holding figures from whatever run last targeted it, which is how the GS and
+LLY panels in `paper-jcf` came to disagree with `paper-arxiv`. Deriving the
+destinations here makes them a property of the repository rather than of
+whichever driver was edited last.
+
+A variant qualifies when its own `.tex` files cite the subdirectory, matching
+the rule `promote_figures` applies to flat figures, or when it already holds a
+copy that would otherwise go stale. Both papers cite `gs/` and `lly/`, so
+those render to both; the expanded cross-ticker and INTC panels are cited by
+neither and stay in the one variant that already carries them instead of being
+duplicated. A brand-new set that nothing cites yet falls back to the first
+present variant.
+
+Throws when no variant is found: a silent no-op here is exactly what hid the
+equivalent `promote_figures` bug for two months.
+"""
+function paper_figure_dirs(subdir::AbstractString;
+                           repo_root::AbstractString=_REPO_ROOT,
+                           variants=_PAPER_VARIANTS)
+    present = [v for v in variants if isdir(joinpath(repo_root, v, "sections"))]
+    isempty(present) && error(
+        "paper_figure_dirs: no paper variant found under $repo_root " *
+        "(looked for $(join(variants, ", "))). If the paper directories moved, " *
+        "update _PAPER_VARIANTS here and in code/scripts/promote_figures.jl.")
+    wanted = [v for v in present
+              if _cites_subdir(joinpath(repo_root, v, "sections"), subdir) ||
+                 isdir(joinpath(repo_root, v, "sections", "figures", subdir))]
+    isempty(wanted) && (wanted = [first(present)])
+    return [joinpath(repo_root, v, "sections", "figures", subdir) for v in wanted]
+end
+
+"""Copy every `<pref>_*.{pdf,png}` from `src` into each of `dsts`."""
+function _mirror_figures(src::AbstractString, dsts::AbstractVector{<:AbstractString},
+                         pref::AbstractString)
+    isempty(dsts) && return String[]
+    names = filter(readdir(src)) do f
+        startswith(f, pref * "_") && (endswith(f, ".pdf") || endswith(f, ".png"))
+    end
+    for d in dsts
+        mkpath(d)
+        for f in names
+            cp(joinpath(src, f), joinpath(d, f); force=true)
+        end
+    end
+    return names
 end
 
 # ============================================================================
@@ -775,7 +852,10 @@ end
 """
     render_scenario_figures(result, spec; plot_dir, prefix=nothing)
 
-Produces the five figure sets in the paper-figures directory:
+Produces the five figure sets in the paper-figures directory. `plot_dir` takes
+either one directory or several (see `paper_figure_dirs`); the figures are
+rendered once and copied to the rest, and the full destination list is
+returned.
 - `{prefix}_short_put_paths.{pdf,png}`
 - `{prefix}_short_call_paths.{pdf,png}`
 - `{prefix}_short_paths.{pdf,png}`
@@ -784,10 +864,15 @@ Produces the five figure sets in the paper-figures directory:
 - `{prefix}_short_greeks.{pdf,png}` (if Greeks present)
 """
 function render_scenario_figures(result, spec::ScenarioSpec;
-                                 plot_dir::String,
+                                 plot_dir::Union{AbstractString,AbstractVector{<:AbstractString}},
                                  prefix::Union{Nothing,String}=nothing)
     pref = prefix === nothing ? lowercase(spec.ticker) : prefix
-    mkpath(plot_dir)
+    dirs = plot_dir isa AbstractString ? [String(plot_dir)] : String.(plot_dir)
+    isempty(dirs) && error("render_scenario_figures: plot_dir resolved to no directories")
+    # Render once into the first destination, then copy; re-rendering per
+    # variant would burn the plotting cost again for byte-identical output.
+    primary = first(dirs)
+    mkpath(primary)
 
     S_paths = result.S_paths
     V_put   = result.V_put
@@ -824,8 +909,8 @@ function render_scenario_figures(result, spec::ScenarioSpec;
            label=@sprintf("Premium received  \$%.2f", spec.market_premium_put))
     p_A = plot(pA1, pA2, layout=(1, 2), size=(1500, 600), dpi=220,
                left_margin=9mm, right_margin=4mm, bottom_margin=7mm, top_margin=4mm)
-    savefig(p_A, joinpath(plot_dir, "$(pref)_short_put_paths.pdf"))
-    savefig(p_A, joinpath(plot_dir, "$(pref)_short_put_paths.png"))
+    savefig(p_A, joinpath(primary, "$(pref)_short_put_paths.pdf"))
+    savefig(p_A, joinpath(primary, "$(pref)_short_put_paths.png"))
 
     # --- B: call panel ---
     println("Rendering figure B: stock + call premium ...")
@@ -839,8 +924,8 @@ function render_scenario_figures(result, spec::ScenarioSpec;
            label=@sprintf("Premium received  \$%.2f", spec.market_premium_call))
     p_B = plot(pB1, pB2, layout=(1, 2), size=(1500, 600), dpi=220,
                left_margin=9mm, right_margin=4mm, bottom_margin=7mm, top_margin=4mm)
-    savefig(p_B, joinpath(plot_dir, "$(pref)_short_call_paths.pdf"))
-    savefig(p_B, joinpath(plot_dir, "$(pref)_short_call_paths.png"))
+    savefig(p_B, joinpath(primary, "$(pref)_short_call_paths.pdf"))
+    savefig(p_B, joinpath(primary, "$(pref)_short_call_paths.png"))
 
     # --- A+B: combined 2x2 ---
     println("Rendering figure A+B: combined 2x2 ...")
@@ -862,8 +947,8 @@ function render_scenario_figures(result, spec::ScenarioSpec;
            label=@sprintf("Premium received  \$%.2f", spec.market_premium_call))
     p_AB = plot(pAB1, pAB2, pAB3, pAB4, layout=(2, 2), size=(1500, 1100), dpi=220,
                 left_margin=9mm, right_margin=4mm, bottom_margin=7mm, top_margin=4mm)
-    savefig(p_AB, joinpath(plot_dir, "$(pref)_short_paths.pdf"))
-    savefig(p_AB, joinpath(plot_dir, "$(pref)_short_paths.png"))
+    savefig(p_AB, joinpath(primary, "$(pref)_short_paths.pdf"))
+    savefig(p_AB, joinpath(primary, "$(pref)_short_paths.png"))
 
     # --- C: P&L distributions ---
     println("Rendering figure C: terminal short P&L distributions ...")
@@ -873,8 +958,8 @@ function render_scenario_figures(result, spec::ScenarioSpec;
                      "Short $(horizon_label) 30Δ call: terminal P&L distribution")
     p_C = plot(pC1, pC2, layout=(1, 2), size=(1500, 600), dpi=220,
                left_margin=11mm, right_margin=4mm, bottom_margin=7mm, top_margin=4mm)
-    savefig(p_C, joinpath(plot_dir, "$(pref)_short_pnl_distributions.pdf"))
-    savefig(p_C, joinpath(plot_dir, "$(pref)_short_pnl_distributions.png"))
+    savefig(p_C, joinpath(primary, "$(pref)_short_pnl_distributions.pdf"))
+    savefig(p_C, joinpath(primary, "$(pref)_short_pnl_distributions.png"))
 
     # --- D: IV trajectories ---
     if !all(isnan, result.σ_put_paths)
@@ -890,8 +975,8 @@ function render_scenario_figures(result, spec::ScenarioSpec;
                           "Annualized IV (%)"; tails=both_tails, legend_pos=:topleft)
         p_D = plot(pD1, pD2, layout=(1, 2), size=(1500, 600), dpi=220,
                    left_margin=9mm, right_margin=4mm, bottom_margin=7mm, top_margin=4mm)
-        savefig(p_D, joinpath(plot_dir, "$(pref)_iv_trajectories.pdf"))
-        savefig(p_D, joinpath(plot_dir, "$(pref)_iv_trajectories.png"))
+        savefig(p_D, joinpath(primary, "$(pref)_iv_trajectories.pdf"))
+        savefig(p_D, joinpath(primary, "$(pref)_iv_trajectories.png"))
 
         # --- E: Greeks ---
         println("Rendering figure E: Greeks trajectories ...")
@@ -917,11 +1002,16 @@ function render_scenario_figures(result, spec::ScenarioSpec;
         p_E = plot(pE1, pE2, pE3, pE4, pE5, pE6, layout=(3, 2),
                    size=(1500, 1500), dpi=220,
                    left_margin=9mm, right_margin=4mm, bottom_margin=5mm, top_margin=4mm)
-        savefig(p_E, joinpath(plot_dir, "$(pref)_short_greeks.pdf"))
-        savefig(p_E, joinpath(plot_dir, "$(pref)_short_greeks.png"))
+        savefig(p_E, joinpath(primary, "$(pref)_short_greeks.pdf"))
+        savefig(p_E, joinpath(primary, "$(pref)_short_greeks.png"))
     end
 
-    return plot_dir
+    mirrored = _mirror_figures(primary, dirs[2:end], pref)
+    if length(dirs) > 1
+        println("Mirrored $(length(mirrored)) figure file(s) to $(length(dirs) - 1) " *
+                "other paper variant(s).")
+    end
+    return dirs
 end
 
 # ============================================================================

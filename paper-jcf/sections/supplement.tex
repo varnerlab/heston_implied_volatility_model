@@ -178,11 +178,11 @@ INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
 
 \section{Short-premium scenarios: P\&L statistics and cross-ticker validation}\label{sec:supp_short_premium}
 
-We tabulated the moments and tail statistics per contract for the GS 31-day forward simulation and observed the short-premium asymmetry that the main-text figures rendered qualitatively: a thin-tailed right side with a hard ceiling at the entry premium, paired with a long left tail that extended an order of magnitude beyond the median (Table~\ref{tab:gs_scenario}). The model's $t=0$ Leisen-Reimer fair value sat essentially at the market mid on both contracts (entry edge $+\$0.75$ on the put, $-\$0.02$ on the call), confirming the per-ticker $\psi_{\mathrm{NN}}$ matched the 04-28 GS market IV. The dispersion was larger on the call leg (std $\$51.58$ vs.\ $\$34.12$), and the worst-case loss on the call ($-\$484.57$) exceeded the worst put loss ($-\$323.42$) by a factor of $1.50$, despite the call collecting a smaller entry premium.
+We tabulated the moments and tail statistics per contract for the GS forward simulation over 31 calendar days and 22 trading transitions and observed the short-premium asymmetry that the main-text figures rendered qualitatively: a thin-tailed right side with a hard ceiling at the entry premium, paired with a long left tail that extended an order of magnitude beyond the median (Table~\ref{tab:gs_scenario}). The model's $t=0$ Leisen-Reimer fair value sat essentially at the market mid on both contracts (entry edge $+\$0.75$ on the put, $-\$0.02$ on the call), confirming the per-ticker $\psi_{\mathrm{NN}}$ matched the 04-28 GS market IV. The dispersion was larger on the call leg (std $\$37.17$ vs.\ $\$27.44$), and the worst-case loss on the call ($-\$277.29$) exceeded the worst put loss ($-\$176.95$) by a factor of $1.57$, despite the call collecting a smaller entry premium.
 
 \begin{table}[ht]
 \centering
-\caption{Terminal P\&L statistics from 1{,}000 GS 31-day forward simulations of the real 2026-05-29 \$890 put and \$970 call. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}
+\caption{Terminal P\&L statistics from 1{,}000 GS forward simulations of the real 2026-05-29 \$890 put and \$970 call, run over 31 calendar days and 22 trading transitions. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}
 \label{tab:gs_scenario}
 \begin{tabular}{lrr}
 \toprule
@@ -193,12 +193,12 @@ Market mid (entry premium)  & $+16.51$   & $+16.09$  \\
 Model $t=0$ fair value      & $+17.26$   & $+16.07$  \\
 Entry edge (model $-$ market) & $+0.75$  & $-0.02$   \\
 \midrule
-Mean P\&L                    &  $+1.52$  &  $-9.00$  \\
+Mean P\&L                    &  $+4.65$  &  $-1.01$  \\
 Median P\&L                  & $+16.51$  & $+16.09$  \\
-Std P\&L                     &  $34.12$  &  $51.58$  \\
-5\%-tile P\&L                & $-76.13$  & $-113.16$ \\
-Worst-case P\&L              & $-323.42$ & $-484.57$ \\
-Premium kept in full         & $72.2\%$  & $64.3\%$  \\
+Std P\&L                     &  $27.44$  &  $37.17$  \\
+5\%-tile P\&L                & $-59.61$  & $-83.67$  \\
+Worst-case P\&L              & $-176.95$ & $-277.29$ \\
+Premium kept in full         & $73.7\%$  & $68.8\%$  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -223,7 +223,7 @@ Premium kept in full         & $72.2\%$  & $64.3\%$  \\
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/gs/gs_short_greeks.pdf}
-\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the GS put and call strikes over the 31-day horizon, computed by central finite differences (Algorithm~\ref{alg:greeks}) on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta$/$\Gamma$, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta$. Middle: $\Gamma$, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt{T-t}$ on every path. Tail overlays as in Fig.~\ref{fig:gs_paths}.}
+\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the GS put and call strikes over the 31-calendar-day horizon, computed by central finite differences (Algorithm~\ref{alg:greeks}) on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta$/$\Gamma$, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta$. Middle: $\Gamma$, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt{T-t}$ on every path. Tail overlays as in Fig.~\ref{fig:gs_paths}.}
 \label{fig:gs_greeks}
 \end{figure}
 
@@ -231,7 +231,7 @@ We re-ran the GS pipeline verbatim on an LLY option pair from the same 04-28 cap
 
 \begin{table}[ht]
 \centering
-\caption{Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi_{\mathrm{NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap.}
+\caption{Terminal P\&L statistics from 1{,}000 LLY forward simulations of the real 2026-05-29 \$825 put and \$940 call, run over 31 calendar days and 22 trading transitions. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi_{\mathrm{NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap.}
 \label{tab:lly_scenario}
 \begin{tabular}{lrr}
 \toprule
@@ -242,12 +242,12 @@ Market mid (entry premium)  & $+23.30$   & $+20.76$  \\
 Model $t=0$ fair value      & $+21.95$   & $+18.96$  \\
 Entry edge (model $-$ market) & $-1.35$  & $-1.80$   \\
 \midrule
-Mean P\&L                    & $+14.31$  &  $+6.45$  \\
+Mean P\&L                    & $+16.69$  & $+11.42$  \\
 Median P\&L                  & $+23.30$  & $+20.76$  \\
-Std P\&L                     &  $23.75$  & $36.81$   \\
-5\%-tile P\&L                & $-41.54$  & $-79.68$  \\
-Worst-case P\&L              & $-185.19$ & $-303.88$ \\
-Premium kept in full         & $77.4\%$  & $75.7\%$  \\
+Std P\&L                     &  $18.78$  & $27.10$   \\
+5\%-tile P\&L                & $-22.12$  & $-47.31$  \\
+Worst-case P\&L              & $-129.43$ & $-212.60$ \\
+Premium kept in full         & $81.2\%$  & $80.3\%$  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -255,14 +255,14 @@ Premium kept in full         & $77.4\%$  & $75.7\%$  \\
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_short_paths.pdf}
-\caption{Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days; analogue of GS Fig.~\ref{fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call).}
+\caption{Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 calendar days and 22 trading transitions; analogue of GS Fig.~\ref{fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call).}
 \label{fig:lly_paths}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_iv_trajectories.pdf}
-\caption{Path-conditional IV at $K_{\text{put}}$ and $K_{\text{call}}$ over the 31-day horizon; analogue of GS Fig.~\ref{fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}
+\caption{Path-conditional IV at $K_{\text{put}}$ and $K_{\text{call}}$ over the 31-calendar-day horizon; analogue of GS Fig.~\ref{fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}
 \label{fig:lly_iv}
 \end{figure}
 
@@ -275,21 +275,21 @@ Premium kept in full         & $77.4\%$  & $75.7\%$  \\
 
 \subsection{Cross-sector short-premium scenarios on five additional tickers}\label{sec:supp_expanded_scenarios}
 
-We re-ran the short-premium scenario pipeline verbatim on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare (PFE, sector-NN fallback), and large-cap Healthcare (Table~\ref{tab:expanded_scenarios}). The short-premium asymmetry reproduced cleanly on AMD (Tech, $\sim 65\%$ IV regime), where the worst-call loss exceeded the worst-put loss by $3.2{\times}$, and collapsed to near-symmetry on SPY (ETF, balanced moneyness profile and shallow smile). The PFE row exercised the sector-NN fallback path of the framework (PFE has $1{,}300$ ladder observations, below the $2{,}000$-observation per-ticker threshold, so its $\psi_{\mathrm{NN}}$ is the Healthcare sector network rather than a per-ticker fit) and produced an operationally clean short-premium distribution despite the small absolute dollar values that the $\sim\$26$ underlying generated. JNJ reproduced the LLY-style negative entry edge on its put leg ($-\$0.98$ at model fair value below market mid), reflecting the same time-averaged-$\psi$ vs.\ capture-day-regime gap noted for LLY on 04-28.
+We re-ran the short-premium scenario pipeline verbatim on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare (PFE, sector-NN fallback), and large-cap Healthcare (Table~\ref{tab:expanded_scenarios}). The worst-call loss exceeded the worst-put loss on AMD (Tech, $\sim 65\%$ IV regime, $1.45{\times}$) and on XOM ($1.09{\times}$), while SPY, PFE, and JNJ ran the other way. Each worst-case entry is the single most extreme path out of $1{,}000$, so the sign of this ratio is not a stable ticker property; the premium-kept columns, which average over the whole ensemble, are the comparable statistics across rows. The PFE row exercised the sector-NN fallback path of the framework (PFE has $1{,}300$ ladder observations, below the $2{,}000$-observation per-ticker threshold, so its $\psi_{\mathrm{NN}}$ is the Healthcare sector network rather than a per-ticker fit) and produced an operationally clean short-premium distribution despite the small absolute dollar values that the $\sim\$26$ underlying generated. JNJ reproduced the LLY-style negative entry edge on its put leg ($-\$0.98$ at model fair value below market mid), reflecting the same time-averaged-$\psi$ vs.\ capture-day-regime gap noted for LLY on 04-28.
 
 \begin{table}[ht]
 \centering
-\caption{Short-premium scenarios on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare, and large-cap Healthcare. Each scenario was a 31-day forward simulation of $1{,}000$ paths from the ticker's pretrained JumpHMM marginal, with $30\Delta$ put and call strikes drawn from the 2026-04-28 capture and contracts expiring 2026-05-29. All five scenarios used the same Heston backbone $(\kappa, \sigma_v, \rho) = (15.0, 0.5, -0.6)$, the same $201$-step Leisen-Reimer American pricer, and identical caching/seeding as the GS and LLY scenarios; only the per-ticker $\psi_{\mathrm{NN}}$ surface, the long-run-drift anchor, and the contract specifications varied across rows. PFE's $\psi$ source is the Healthcare sector network because PFE has $1{,}300$ ladder observations, below the per-ticker fit threshold.}\label{tab:expanded_scenarios}
+\caption{Short-premium scenarios on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare, and large-cap Healthcare. Each scenario was a forward simulation of $1{,}000$ paths over 31 calendar days and 22 trading transitions from the ticker's pretrained JumpHMM marginal, with $30\Delta$ put and call strikes drawn from the 2026-04-28 capture and contracts expiring 2026-05-29. All five scenarios used the same Heston backbone $(\kappa, \sigma_v, \rho) = (15.0, 0.5, -0.6)$, the same $201$-step Leisen-Reimer American pricer, and identical caching/seeding as the GS and LLY scenarios; only the per-ticker $\psi_{\mathrm{NN}}$ surface, the long-run-drift anchor, and the contract specifications varied across rows. PFE's $\psi$ source is the Healthcare sector network because PFE has $1{,}300$ ladder observations, below the per-ticker fit threshold.}\label{tab:expanded_scenarios}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llcrrrrrrrr}
 \toprule
 Ticker & Sector & $\psi$ source & $K_p$ & $K_c$ & Edge$_p$ (\$) & Edge$_c$ (\$) & Worst$_p$ (\$) & Worst$_c$ (\$) & Kept$_p$ (\%) & Kept$_c$ (\%) \\
 \midrule
-SPY & ETF        & per-ticker & 696 & 729 & $-0.07$ & $+0.94$ & $-132.65$ & $-132.59$ & 73.8 & 59.3 \\
-XOM & Energy     & per-ticker & 145 & 160 & $-0.46$ & $+0.32$ &  $-36.19$ &  $-56.40$ & 70.4 & 72.1 \\
-AMD & Tech       & per-ticker & 300 & 365 & $+0.15$ & $-0.31$ & $-111.84$ & $-361.75$ & 68.9 & 71.8 \\
-PFE & Healthcare & sector     &  26 &  28 & $+0.18$ & $+0.30$ &   $-6.21$ &   $-5.70$ & 64.8 & 73.7 \\
-JNJ & Healthcare & per-ticker & 220 & 235 & $-0.98$ & $+0.45$ &  $-40.32$ &  $-36.42$ & 78.5 & 64.4 \\
+SPY & ETF        & per-ticker & 696 & 729 & $-0.07$ & $+0.94$ & $-201.69$ & $-106.77$ & 74.1 & 62.5 \\
+XOM & Energy     & per-ticker & 145 & 160 & $-0.46$ & $+0.32$ &  $-29.03$ &  $-31.61$ & 71.8 & 75.0 \\
+AMD & Tech       & per-ticker & 300 & 365 & $+0.15$ & $-0.31$ & $-148.68$ & $-214.89$ & 69.3 & 76.5 \\
+PFE & Healthcare & sector     &  26 &  28 & $+0.18$ & $+0.30$ &   $-6.38$ &   $-3.78$ & 63.6 & 77.5 \\
+JNJ & Healthcare & per-ticker & 220 & 235 & $-0.98$ & $+0.45$ &  $-58.69$ &  $-29.69$ & 79.9 & 68.5 \\
 \bottomrule
 \end{tabular}}
 \end{table}

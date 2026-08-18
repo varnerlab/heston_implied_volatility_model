@@ -16,7 +16,7 @@ are the same κ=15.0, σ_v=0.5, ρ=-0.6 as the GS/LLY scenarios.
 
 Output:
   code/figures/{ticker}_short_premium_simulation_cache.jld2   (sim cache)
-  paper-jcf/sections/figures/{ticker}/                        (4 fig sets)
+  paper-{arxiv,jcf}/sections/figures/{ticker}/                (4 fig sets)
   code/figures/expanded_scenarios_summary.csv                 (aggregate)
 
 Run:
@@ -37,7 +37,6 @@ const RESIM = "--resim" in ARGS
 
 const LADDER_DIR    = joinpath(@__DIR__, "..", "data", "ladder")
 const FIG_CACHE_DIR = joinpath(@__DIR__, "..", "figures")
-const PAPER_FIG_BASE = joinpath(@__DIR__, "..", "..", "paper-jcf", "sections", "figures")
 const NN_CACHE      = joinpath(FIG_CACHE_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 const PORT_PATH     = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-surrogate.jld2")
 
@@ -99,7 +98,7 @@ for (i, s) in enumerate(SPECS)
     )
 
     sim_cache = joinpath(FIG_CACHE_DIR, "$(lowercase(s.ticker))_short_premium_simulation_cache.jld2")
-    plot_dir  = joinpath(PAPER_FIG_BASE, lowercase(s.ticker))
+    plot_dirs = paper_figure_dirs(lowercase(s.ticker))  # every paper variant
 
     result = run_short_scenario(spec, hspec;
                                 nn_cache_path=NN_CACHE, port_path=PORT_PATH,
@@ -108,7 +107,7 @@ for (i, s) in enumerate(SPECS)
                                 use_per_ticker=s.per_ticker,
                                 sector=s.sector,
                                 compute_greeks=true)
-    render_scenario_figures(result, spec; plot_dir=plot_dir)
+    render_scenario_figures(result, spec; plot_dir=plot_dirs)
     print_summary(result)
 
     push!(summary_rows, merge(result.summary_row,

@@ -27,7 +27,7 @@ const RESIM = "--resim" in ARGS
 
 const LADDER_DIR    = joinpath(@__DIR__, "..", "data", "ladder")
 const FIG_CACHE_DIR = joinpath(@__DIR__, "..", "figures")
-const PLOT_DIR      = joinpath(@__DIR__, "..", "..", "paper-arxiv", "sections", "figures", "gs")
+const PLOT_DIRS     = paper_figure_dirs("gs")  # every paper variant
 const NN_CACHE      = joinpath(FIG_CACHE_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 const SIM_CACHE     = joinpath(FIG_CACHE_DIR, "gs_short_premium_simulation_cache.jld2")
 const PORT_PATH     = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-surrogate.jld2")
@@ -56,5 +56,5 @@ result = run_short_scenario(spec, hspec;
                             sim_cache_path=SIM_CACHE,
                             resim=RESIM)
 
-render_scenario_figures(result, spec; plot_dir=PLOT_DIR)
+render_scenario_figures(result, spec; plot_dir=PLOT_DIRS)
 print_summary(result)
