@@ -1,58 +1,53 @@
 \section{Results}\label{sec:results}
 
-We first report fitted and temporal-holdout IV errors, then use GS and LLY contracts to demonstrate the complete forward-simulation pipeline. The scenario results are fitted illustrations rather than additional validation experiments.
-
 \subsection{Cross-sectional IV-surface performance}\label{sec:ladder}
 
-We first asked whether added surface capacity and narrower parameter sharing reduced IV error. The corpus contained 234{,}549 observations for 31 tickers and fifteen capture dates from April 14 through May 11, 2026. We retained contracts with moneyness $K/S\in[0.80,1.20]$, positive bids, positive DTE, and reported IV between 0.01 and 2.0. The six groups were technology, healthcare, financials, energy, retail, and broad-market exchange-traded funds. Supplementary Table~\ref{tab:sector_map} gives the ticker and observation counts.
-
-We fitted three models with the common loss in~\eqref{eq:nn_loss}: one global five-parameter shape, one global neural shape, and one neural shape per sector. All three used ticker-specific level parameters and differed only in shape capacity or sharing. On the pooled training corpus, RMSE fell from 12.48 to 11.47 volatility percentage points when the global neural surface replaced the parametric surface. Sector networks reduced it further to 10.24 points (Table~\ref{tab:three_way}). These changes corresponded to relative in-sample reductions of 8.1\% and 17.9\% from the parametric reference.
+We first asked whether increasing surface capacity and narrowing parameter sharing reduced IV error. After filtering for moneyness, bid, maturity, and reported-IV validity, the calibration corpus contained 234{,}549 observations from 31 tickers across fifteen capture dates and six market groups (Supplementary Table~\ref{tab:sector_map}). We fitted a global parametric shape, a global neural shape, and a sector-specific neural shape with the common loss in~\eqref{eq:nn_loss}; all models retained ticker-specific levels, so the comparison isolated shape capacity and sharing. Replacing the global parametric surface with the global neural surface reduced pooled in-sample RMSE from 12.48 to 11.47 volatility percentage points, and sector-specific networks reduced it further to 10.24 points (Table~\ref{tab:three_way}). The corresponding reductions from the parametric reference were 8.1\% and 17.9\%, indicating that both nonlinear shape flexibility and narrower sharing improved the fitted cross section.
 
 \begin{table}[ht]
 \centering
-\caption{In-sample IV RMSE on 234{,}549 observations. RMSE is reported in volatility percentage points. Each model fitted one ticker level jointly with its shape parameters.}\label{tab:three_way}
+\caption{In-sample IV RMSE on 234{,}549 observations, reported in volatility percentage points. Each model fitted one ticker level jointly with its shape parameters. The final row used per-ticker neural surfaces for the 29 qualified tickers and sector surfaces for PFE and BMY.}\label{tab:three_way}
 \begin{tabular}{lrr}
 \toprule
 Model & RMSE & Reduction from parametric \\
 \midrule
-Parametric shape, global       & 12.48 & reference \\
-Neural shape, global           & 11.47 & 8.1\% \\
-Neural shape, six sectors      & 10.24 & 17.9\% \\
+Parametric shape, global               & 12.48 & reference \\
+Neural shape, global                   & 11.47 & 8.1\% \\
+Neural shape, six sectors              & 10.24 & 17.9\% \\
+Neural shape, per-ticker with fallback &  9.73 & 22.0\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The sector comparison showed where narrower sharing helped. Sector networks improved on the global network in all six groups, with the largest absolute reductions for exchange-traded funds and financials (Supplementary Table~\ref{tab:per_sector}). Technology and healthcare retained the largest residual RMSE. Their worst-fitting tickers included QCOM, MU, INTC, AMD, PFE, and MRNA (Supplementary Table~\ref{tab:worst_tickers}). This pattern showed that one surface per sector did not capture all within-sector variation. It did not identify a specific economic cause for each residual.
-
-We also held out May 11, retrained on the other fourteen dates, and standardized inputs using training rows only. Pooled train RMSE was 10.21 points and test RMSE was 10.89 points, a 0.68-point gap (Supplementary Table~\ref{tab:loo_sector_nn}). Energy and retail had larger gaps than the other sectors. This single date and single training seed provide a limited temporal check. They do not establish generalization across market regimes or rule out overfitting.
+The sector and temporal breakdowns show where that improvement did and did not carry. Sector networks outperformed the global neural network in every group, with the largest absolute gains in exchange-traded funds and financials, whereas technology and healthcare retained the largest residual errors (Supplementary Table~\ref{tab:per_sector}). The weakest ticker fits were concentrated in technology and healthcare, confirming that sector membership did not absorb all within-group heterogeneity (Supplementary Table~\ref{tab:worst_tickers}). When May 11 was withheld and the sector models were retrained on the other fourteen dates, pooled RMSE increased from 10.21 on the training observations to 10.89 on the holdout; energy and retail had the largest positive gaps (Supplementary Table~\ref{tab:loo_sector_nn}). This split therefore supports limited near-date transfer, but its single date and training seed do not establish generalization across market regimes or rule out overfitting.
 
 \subsection{Per-ticker neural surfaces}\label{sec:per_ticker_nn}
 
-We next asked whether data-rich tickers benefited from their own shape. Twenty-nine of the 31 tickers exceeded 2{,}000 observations and received per-ticker networks; PFE and BMY retained their sector networks. Tickers with at least 5{,}000 observations used the 337-parameter architecture, while the rest used 105 parameters. The combined model reduced pooled in-sample RMSE from 10.24 to 9.73 volatility percentage points and improved 21 of the 29 qualified tickers. JNJ, MRNA, AAPL, INTC, AMGN, MU, and NVDA had the largest reductions.
-
-The representative panels show that the per-ticker curves followed local smile differences that were averaged away by the sector surfaces (Fig.~\ref{fig:per_ticker_panels}). These are fitted comparisons on the same pooled corpus used for training. The separate ticker levels and network shapes should not be interpreted individually because the additive output bias and log level are not identified. The fitted IV product in~\eqref{eq:sigma_model}, and its prediction error, are the meaningful quantities.
+We next asked whether data-rich tickers benefited from their own smile and maturity shape. Assigning per-ticker networks where the sample threshold was met, and retaining sector networks otherwise, reduced pooled in-sample RMSE from 10.24 to 9.73 volatility percentage points (Table~\ref{tab:three_way}). Most qualified tickers improved, with the largest reductions for JNJ, MRNA, AAPL, INTC, AMGN, MU, and NVDA (Supplementary Table~\ref{tab:per_ticker_comparison}). The representative smile panels show what the aggregate metric obscures: per-ticker curves captured local curvature that the sector fits averaged away (Fig.~\ref{fig:per_ticker_panels}). Because these are fitted comparisons on the calibration corpus, they establish additional descriptive capacity rather than out-of-sample superiority. Moreover, the ticker level and neural output bias are not separately identified; only their fitted IV product in~\eqref{eq:sigma_model} and the resulting prediction error have a stable interpretation.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/ladder_per_ticker_nn_smile_panels.pdf}
 \caption{Fitted IV smiles for six representative tickers at a middle maturity. Points show market IV, the solid curve shows the per-ticker neural surface, and the dashed curve shows the sector surface. All observations came from the fifteen-date training corpus.}\label{fig:per_ticker_panels}
 \end{figure}
+\FloatBarrier
 
-We translated IV errors into dollar-price errors on the May 11 capture using a 200-step CRR American tree (Fig.~\ref{fig:price_error}). The per-ticker model placed 33\% of the plotted SPY contracts and 88\% of the plotted GS contracts inside the local bid-ask half-spread band. On NVDA, all three surface tiers remained within about $\$0.70$. All model tiers overvalued the plotted LLY contracts by about $\$2$ to $\$6$, while the market-IV reference was near zero by construction. This comparison suggested that the LLY error arose mainly from a day-specific IV-level mismatch, not from the lattice implementation. The check still used the same date that contributed to the full-corpus surface fit, so it was descriptive rather than out of sample.
+To determine whether the IV improvements translated into dollar prices, we repriced the May 11 capture with the American lattice and compared each model with the observed mid and local bid--ask half-spread (Fig.~\ref{fig:price_error}). Under the per-ticker surfaces, median absolute error was \$0.12 for SPY, \$0.13 for NVDA, \$4.01 for LLY, and \$0.46 for GS; the corresponding shares inside the half-spread were 33\%, 35\%, 30\%, and 88\% (Supplementary Table~\ref{tab:price_error_summary}). Repricing with each contract's reported market IV reduced those median errors to \$0.01, \$0.12, \$0.67, and \$0.12, respectively (Supplementary Table~\ref{tab:price_error_summary}). LLY's much larger surface-based error therefore points to a date-specific IV-level mismatch rather than a general failure of the lattice to reproduce the captured quotes. Because May 11 also entered the full-corpus fits, this exercise remains a descriptive translation from IV error to price error.
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/ladder_price_error_three_tickers.pdf}
-\caption{CRR American price minus market mid on May 11, 2026, for SPY, NVDA, LLY, and GS. Curves show the parametric, sector, per-ticker, and market-IV reference inputs. The gray ribbon is the median local bid-ask half-spread by moneyness bin. A point inside the ribbon has an absolute pricing error below that local half-spread.}\label{fig:price_error}
+\caption{CRR American price minus market mid on May 11, 2026, for SPY, NVDA, LLY, and GS. Curves show the parametric, sector, per-ticker, and market-IV reference inputs. The gray ribbon is the median local bid--ask half-spread by moneyness bin. A point inside the ribbon has an absolute pricing error below that local half-spread.}\label{fig:price_error}
 \end{figure}
+\FloatBarrier
 
 \subsection{Temporal holdout with earnings inputs}\label{sec:earnings_holdout}
 
-A separate eight-day subset tested a fixed two-day temporal holdout. The training block contained six capture days from April 14 through April 22 and 103{,}897 rows. The April 23 and April 24 test block contained 26{,}833 rows. Every test ticker appeared during training. We compared a two-input pooled model (A), a two-input model after removing rows close to ticker or peer earnings dates from both splits (B), and a four-input earnings-aware model on the original rows (C).
+The final IV experiment asked whether earnings-calendar inputs improved a fixed temporal holdout. Configuration A fitted the pooled two-input surface, Configuration B removed observations close to ticker or peer earnings dates before fitting the same surface, and Configuration C added ticker- and peer-event distances to the original rows. The training and test windows, sample sizes, and resulting errors are reported together in Table~\ref{tab:earnings_holdout}; all test tickers were represented during training. Keeping the row set fixed, the earnings-aware model reduced test RMSE from 13.03 to 11.98 volatility percentage points and narrowed the train-to-test gap from 4.99 to 4.36 points. The ticker breakdown placed the largest improvements among technology names with peer reports near the holdout dates, although INTC worsened (Supplementary Table~\ref{tab:tech_pivot}).
 
 \begin{table}[ht]
 \centering
-\caption{Temporal-holdout comparison. RMSE and gaps are in volatility percentage points. Configuration B used different row sets from A and C.}\label{tab:earnings_holdout}
+\caption{Temporal-holdout comparison. Training used six capture dates from April 14 through April 22, 2026, and testing used April 23--24; every test ticker appeared in training. RMSE and gaps are in volatility percentage points. Configuration B used different row sets from A and C.}\label{tab:earnings_holdout}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrrrrr}
 \toprule
@@ -65,8 +60,6 @@ C: earnings-aware, four inputs & 103{,}897 & 26{,}833 & 7.61 & 11.98 & $+4.36$ \
 \end{tabular}}
 \end{table}
 
-The earnings-aware model reduced test RMSE from 13.03 to 11.98 points, an absolute reduction of 1.05 points and a relative reduction of 8.1\% (Table~\ref{tab:earnings_holdout}). Its train-to-test gap fell from 4.99 to 4.36 points, a 12.6\% reduction. The largest ticker-level improvements occurred among technology names whose peers reported near the holdout dates (Supplementary Table~\ref{tab:tech_pivot}). INTC error increased, which was consistent with a calendar feature being unable to encode the realized earnings surprise.
-
-Configuration B had nearly equal train and test RMSE, but it removed most rows and changed the composition of both samples. It therefore did not show that earnings caused all of Configuration A's gap. It only showed that the retained non-event subset was easier under this split. More dates, repeated seeds, and matched-row comparisons are needed to separate event effects from changes in ticker and contract composition.
+The comparison supports a narrower conclusion than an event-causality claim. Configuration C improved the same-row holdout, so calendar proximity carried information not present in moneyness and maturity alone; however, a calendar feature cannot encode the sign or magnitude of a realized earnings surprise, as the INTC result illustrates (Supplementary Table~\ref{tab:tech_pivot}). Configuration B produced similar training and test errors only after discarding most observations and changing both sample compositions (Table~\ref{tab:earnings_holdout}). It therefore shows that the retained non-event subset was easier under this split, not that earnings observations caused the original gap. Repeated dates and seeds, together with matched-row comparisons, would be required to separate event effects from shifts in ticker and contract composition.
 
 \input{sections/scenarios}

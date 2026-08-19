@@ -11,7 +11,7 @@ At entry, $v_{a,0}=\bar v_{a,0}$ reproduces the fitted IV product exactly. There
 
 \section{Calibration Details}\label{sec:supp_sector_nn}
 
-Table~\ref{tab:sector_map} reports the corpus composition. Tables~\ref{tab:per_sector} and~\ref{tab:worst_tickers} report sector and ticker errors for the three pooled calibration tiers.
+Table~\ref{tab:sector_map} reports the corpus composition. Tables~\ref{tab:per_sector} and~\ref{tab:worst_tickers} report sector and ticker errors for the pooled calibration tiers, while Tables~\ref{tab:per_ticker_comparison} and~\ref{tab:price_error_summary} connect the per-ticker fits to the main-text IV and pricing comparisons.
 
 \begin{table}[ht]
 \centering
@@ -50,6 +50,39 @@ Technology & 15.58 & 15.31 & 14.47 &  68{,}334 \\
 
 \begin{table}[ht]
 \centering
+\caption{Largest per-ticker in-sample RMSE reductions among the 29 qualified tickers. In total, 21 qualified tickers improved and eight worsened; the combined per-ticker-plus-fallback model reduced pooled RMSE from 10.24 to 9.73 volatility percentage points. BMY and PFE retained their sector surfaces.}\label{tab:per_ticker_comparison}
+\begin{tabular}{lrrrr}
+\toprule
+Ticker & Observations & Sector NN & Per-ticker NN & Reduction \\
+\midrule
+JNJ  & 2{,}190 & 11.14 &  7.17 & 3.97 \\
+MRNA & 2{,}851 & 17.49 & 13.74 & 3.76 \\
+AAPL & 6{,}594 & 14.30 & 12.59 & 1.70 \\
+INTC & 3{,}417 & 17.78 & 16.29 & 1.49 \\
+AMGN & 3{,}383 & 13.36 & 12.14 & 1.21 \\
+MU   & 6{,}619 & 18.45 & 17.26 & 1.19 \\
+NVDA & 5{,}805 & 10.14 &  9.15 & 0.99 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
+\caption{May 11 price-error summary for the contracts plotted in Fig.~\ref{fig:price_error}. Dollar errors are absolute differences from the market mid. The per-ticker column used a per-ticker surface where qualified and a sector fallback otherwise; the market-IV reference passed each contract's reported IV to the same 200-step CRR lattice.}\label{tab:price_error_summary}
+\begin{tabular}{lrrrrrr}
+\toprule
+Ticker & DTE & $N$ & Half-spread & Per-ticker error & Inside spread & Market-IV error \\
+\midrule
+SPY  &  7 & 176 & \$0.03 & \$0.12 & 33\% & \$0.01 \\
+NVDA &  7 &  34 & \$0.04 & \$0.13 & 35\% & \$0.12 \\
+LLY  & 11 & 156 & \$2.98 & \$4.01 & 30\% & \$0.67 \\
+GS   & 11 & 145 & \$1.56 & \$0.46 & 88\% & \$0.12 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[ht]
+\centering
 \caption{Best and worst ticker-level in-sample RMSE under the sector networks. RMSE is in volatility percentage points.}\label{tab:worst_tickers}
 \begin{tabular}{llrrl}
 \toprule
@@ -72,13 +105,14 @@ Rank & Ticker & Observations & RMSE & Sector \\
 \end{tabular}
 \end{table}
 
+\FloatBarrier
 \subsection{Single-date holdout}\label{sec:supp_loo}
 
-We held out May 11, 2026, and retrained on the other fourteen dates. The holdout had 14{,}442 observations. Standardization used training rows only. Table~\ref{tab:loo_sector_nn} shows that pooled test RMSE exceeded train RMSE by 0.68 volatility percentage points, with larger gaps in energy and retail. Because this analysis used one date and one seed, it is evidence for that split only.
+We held out May 11, 2026, and retrained on the other fourteen dates. Standardization used training rows only. Table~\ref{tab:loo_sector_nn} shows that pooled test RMSE exceeded train RMSE by 0.68 volatility percentage points, with larger gaps in energy and retail. Because this analysis used one date and one seed, it is evidence for that split only.
 
 \begin{table}[ht]
 \centering
-\caption{Sector-network RMSE for the May 11 single-date holdout. Values and test-minus-train gaps are in volatility percentage points.}\label{tab:loo_sector_nn}
+\caption{Sector-network RMSE after fitting on fourteen dates and holding out the 14{,}442 observations from May 11, 2026. Values and test-minus-train gaps are in volatility percentage points.}\label{tab:loo_sector_nn}
 \begin{tabular}{lrrr}
 \toprule
 Sector & Train & Test & Gap \\
@@ -95,6 +129,7 @@ Pooled     & 10.21 & 10.89 & $+0.68$ \\
 \end{tabular}
 \end{table}
 
+\FloatBarrier
 \section{Earnings-Holdout Ticker Results}\label{sec:supp_earnings_diag}
 
 The technology-ticker breakdown showed where the four-input model changed holdout error (Table~\ref{tab:tech_pivot}). Several tickers with a peer earnings date near the holdout improved, while INTC and NVDA worsened. This pattern was consistent with a peer-calendar signal, but the shared training process did not isolate the marginal effect of either event input.
@@ -120,9 +155,33 @@ INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
 \end{tabular}
 \end{table}
 
+\FloatBarrier
 \section{Scenario Statistics and Greeks}\label{sec:supp_short_premium}
 
-Table~\ref{tab:gs_scenario} reports the GS terminal distribution. The 5\% expected shortfall is the mean P\&L among observations at or below the empirical 5\% quantile. The premium-retained interval is a two-sided 95\% Wilson interval for the binomial fraction of paths that expired out of the money.
+Table~\ref{tab:scenario_settings} collects the fixed simulation design used for both fitted illustrations, and Table~\ref{tab:gs_scenario} reports the GS contracts and terminal distributions. The 5\% expected shortfall is the mean P\&L among observations at or below the empirical 5\% quantile. The premium-retained interval is a two-sided 95\% Wilson interval for the binomial fraction of paths that expired out of the money.
+
+\begin{table}[ht]
+\centering
+\caption{Fixed simulation design shared by the GS and LLY fitted illustrations.}\label{tab:scenario_settings}
+\begin{tabular}{lr}
+\toprule
+Setting & Value \\
+\midrule
+Simulation paths & 1{,}000 \\
+Random seed & 20260429 \\
+Horizon & April 28--May 29, 2026 \\
+Calendar days & 31 \\
+Trading transitions & 22 \\
+Annual mean-growth prior & 10\% \\
+Mean-reversion rate $\kappa$ & 15 \\
+Factor volatility $\sigma_v$ & 0.5 \\
+Return--factor coupling $\rho$ & $-0.6$ \\
+Risk-free rate $r$ & 4.25\% \\
+Dividend yield $q$ & 0 \\
+Leisen--Reimer depth & 201 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 \begin{table}[ht]
 \centering
@@ -132,7 +191,10 @@ Table~\ref{tab:gs_scenario} reports the GS terminal distribution. The 5\% expect
 \toprule
 Statistic & Short put & Short call \\
 \midrule
+Initial spot                              & \multicolumn{2}{c}{$\$926.38$} \\
 Strike                                    & $\$890$          & $\$970$ \\
+Market delta                              & $-0.295$          & $+0.328$ \\
+Market IV                                 & 31.3\%            & 28.9\% \\
 Market mid                                & $+\$16.51$       & $+\$16.09$ \\
 Model entry value                         & $\$17.26$        & $\$16.07$ \\
 Model value minus market mid              & $+\$0.75$        & $-\$0.02$ \\
@@ -145,11 +207,14 @@ Standard deviation                        & $\$27.44$        & $\$37.17$ \\
 5\% expected shortfall                     & $-\$90.73$       & $-\$125.62$ \\
 Premium retained                          & 73.7\%           & 68.8\% \\
 Wilson 95\% interval                      & 70.9--76.3\%     & 65.9--71.6\% \\
+Delta-heuristic premium retained          & 70.5\%           & 67.2\% \\
+Simulated minus heuristic                 & $+3.2$ pp         & $+1.6$ pp \\
 \bottomrule
 \end{tabular}
 \end{table}
 
-The Greek calculation used the same Leisen-Reimer price function as the base mark. The finite-difference calculation was:
+\FloatBarrier
+The Greek calculation used the same Leisen--Reimer price function as the base mark. Algorithm~\ref{alg:greeks} gives the central finite differences, and Fig.~\ref{fig:gs_greeks} shows the resulting GS paths. Delta approached the terminal exercise states, gamma was largest near the strike late in the horizon, and Vega declined toward zero; the displayed values use the long-option convention.
 \begin{algorithm}[ht]
 \caption{Path-conditional Greeks by central finite differences}\label{alg:greeks}
 \begin{algorithmic}[1]
@@ -165,8 +230,6 @@ The Greek calculation used the same Leisen-Reimer price function as the base mar
 \end{algorithmic}
 \end{algorithm}
 
-The GS Greek paths from Algorithm~\ref{alg:greeks} are shown in Fig.~\ref{fig:gs_greeks}. Delta approached the terminal exercise states, gamma was largest near the strike late in the horizon, and Vega declined toward zero. The displayed values use the long-option convention.
-
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/gs/gs_short_greeks.pdf}
@@ -174,6 +237,7 @@ The GS Greek paths from Algorithm~\ref{alg:greeks} are shown in Fig.~\ref{fig:gs
 \label{fig:gs_greeks}
 \end{figure}
 
+\FloatBarrier
 The corresponding LLY terminal results are reported in Table~\ref{tab:lly_scenario}. The scenario used the same clock, path count, seed, lattice settings, and factor parameters as GS.
 
 \begin{table}[ht]
@@ -184,7 +248,10 @@ The corresponding LLY terminal results are reported in Table~\ref{tab:lly_scenar
 \toprule
 Statistic & Short put & Short call \\
 \midrule
+Initial spot                              & \multicolumn{2}{c}{$\$873.83$} \\
 Strike                                    & $\$825$          & $\$940$ \\
+Market delta                              & $-0.303$          & $+0.309$ \\
+Market IV                                 & 44.4\%            & 44.0\% \\
 Market mid                                & $+\$23.30$       & $+\$20.76$ \\
 Model entry value                         & $\$21.95$        & $\$18.96$ \\
 Model value minus market mid              & $-\$1.35$        & $-\$1.80$ \\
@@ -197,10 +264,13 @@ Standard deviation                        & $\$18.78$        & $\$27.10$ \\
 5\% expected shortfall                     & $-\$51.43$       & $-\$89.21$ \\
 Premium retained                          & 81.2\%           & 80.3\% \\
 Wilson 95\% interval                      & 78.7--83.5\%     & 77.7--82.6\% \\
+Delta-heuristic premium retained          & 69.7\%           & 69.1\% \\
+Simulated minus heuristic                 & $+11.5$ pp        & $+11.2$ pp \\
 \bottomrule
 \end{tabular}
 \end{table}
 
+\FloatBarrier
 Figures~\ref{fig:lly_paths}--\ref{fig:lly_greeks} show the LLY path outputs. They use the same plotting conventions as the GS figures.
 
 \begin{figure}[ht]

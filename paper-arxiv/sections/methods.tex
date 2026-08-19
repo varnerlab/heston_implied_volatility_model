@@ -1,6 +1,6 @@
 \section{Methods}\label{sec:methods}
 
-\subsection{Pipeline}
+\subsection{Pipeline and stock-path generation}
 
 The generator passed information through three stages. The complete data flow was:
 \begin{equation}\label{eq:pipeline}
@@ -8,17 +8,11 @@ The generator passed information through three stages. The complete data flow wa
     \longrightarrow \text{contract IV factor}
     \longrightarrow \text{American lattice price and Greeks}.
 \end{equation}
-The stages were run forward without feedback from the lattice. Market option data entered only when the IV surface was fitted offline. A simulated step did not require a contemporaneous option quote.
-
-\subsection{JumpHMM stock-path generator}
-
-The Jump Hidden Markov Model (JumpHMM) was developed to generate equity returns with heavy tails, weak linear autocorrelation, and persistent volatility clustering~\cite{jumphmm2025,cont2001}. It discretizes excess growth rates into latent states. Each state emits from a location-scale Student-$t$ distribution, and a jump mechanism increases visits to tail states. A Student-$t$ copula can couple several fitted marginals and preserve cross-asset tail dependence~\cite{demarta2005}. In this study, the single-ticker scenario drivers used pretrained JumpHMM marginals. JumpHMM determined the stock path and therefore the terminal option payoff.
+The stages were run forward without lattice feedback. Because market option data entered only during the offline IV-surface fit, a simulated step did not require a contemporaneous option quote. The first stage used pretrained single-ticker marginals from the Jump Hidden Markov Model (JumpHMM), which generates equity returns with heavy tails, weak linear autocorrelation, and persistent volatility clustering~\cite{jumphmm2025,cont2001}. JumpHMM discretizes excess growth rates into latent states with location-scale Student-$t$ emissions, while a jump mechanism increases visits to tail states. A Student-$t$ copula can couple fitted marginals and preserve cross-asset tail dependence~\cite{demarta2005}, although the scenario drivers used here were single-ticker marginals. JumpHMM determined the stock path and therefore the terminal option payoff.
 
 \subsection{Offline IV-surface calibration}
 
-SABR and SVI represent IV smiles with low-dimensional parametric functions~\cite{hagan2002,gatheral2004}. Neural representations can fit a broader range of surface shapes~\cite{horvath2021,bayer2019}, but unconstrained networks do not automatically satisfy static no-arbitrage conditions. We compared a five-parameter log-polynomial with global, sector-specific, and per-ticker neural surfaces. Positivity was enforced by exponentiating the network output. Calendar monotonicity and strike convexity were not imposed, so positivity alone did not establish an arbitrage-free surface.
-
-For ticker $i$, calendar days to expiration $\tau$, and moneyness $m=K/S$, the parametric surface used the positive shape function:
+SABR and SVI represent IV smiles with low-dimensional parametric functions~\cite{hagan2002,gatheral2004}. Neural representations can fit a broader range of surface shapes~\cite{horvath2021,bayer2019}, but unconstrained networks do not automatically satisfy static no-arbitrage conditions. We compared a five-parameter log-polynomial with global, sector-specific, and per-ticker neural surfaces. Positivity was enforced by exponentiating the network output. Calendar monotonicity and strike convexity were not imposed, so positivity alone did not establish an arbitrage-free surface. For ticker $i$, calendar days to expiration $\tau$, and moneyness $m=K/S$, the parametric comparison used the positive shape function:
 \begin{equation}\label{eq:psi}
  \psi_{\beta}(\tau,m)=\exp\!\left[
  \beta_1\ln\tau+\beta_2\ln m+\beta_3\ln\tau\ln m
@@ -40,8 +34,7 @@ The neural models replaced the log-polynomial with a positive network output. Fo
     =\exp\!\left[\mathrm{NN}\!\left(
     \operatorname{std}(\ln\tau),\operatorname{std}(\ln m);w\right)\right].
 \end{equation}
-Inputs were standardized using the training rows. Networks with at least 5{,}000 per-ticker observations, or 2{,}000 pooled group observations, used a $2\to16\to16\to1$ architecture with $\tanh$ activations and 337 parameters. Smaller qualified groups used $2\to8\to8\to1$ with 105 parameters.
-
+Inputs were standardized using the training rows. Networks with at least 5{,}000 per-ticker observations, or 2{,}000 pooled group observations, used a $2\to16\to16\to1$ architecture with $\tanh$ activations and 337 parameters. Smaller qualified groups used $2\to8\to8\to1$ with 105 parameters. For the earnings analysis, we appended two standardized inputs: signed days to the ticker's nearest earnings date, clipped to $[-30,30]$, and the minimum absolute earnings distance among same-sector peers, clipped to 30. The resulting $4\to16\to16\to1$ network had 369 parameters. Earnings dates came from the public Yahoo Finance calendar. These event features were evaluated only in the temporal calibration comparison and were not used in the GS and LLY scenario drivers.
 Network weights and ticker log levels were fitted jointly by minimizing IV mean squared error. The training objective was:
 \begin{equation}\label{eq:nn_loss}
  \min_{w,\{\ln\theta_i\}}
@@ -53,17 +46,13 @@ Network weights and ticker log levels were fitted jointly by minimizing IV mean 
 \end{equation}
 The log levels were initialized from each ticker's mean squared market IV. Adam training used a decreasing learning-rate schedule, at most 2{,}000 epochs, and a best-training-loss checkpoint with patience 200. Because a constant can be shifted between $\ln\theta_i$ and the output bias of the network, these two components are not separately identified. Only their product in~\eqref{eq:sigma_model} is interpretable without an additional normalization constraint.
 
-For the earnings analysis, two standardized inputs were appended: signed days to the ticker's nearest earnings date, clipped to $[-30,30]$, and the minimum absolute earnings distance among same-sector peers, clipped to 30. The resulting $4\to16\to16\to1$ network had 369 parameters. Earnings dates came from the public Yahoo Finance calendar. These event features were evaluated only in the temporal calibration comparison and were not used in the GS and LLY scenario drivers.
-
 \subsection{Contract-specific dynamic IV factors}\label{sec:theta_function}
 
 The standard Heston model couples an asset-price diffusion to a square-root instantaneous-variance process~\cite{heston1993}. Its variance equation is:
 \begin{equation}\label{eq:heston_standard}
     dv_t = \kappa(\theta-v_t)\,dt + \sigma_v\sqrt{v_t}\,dW_t^v .
 \end{equation}
-Here $\kappa$ is the mean-reversion rate, $\theta$ is long-run variance, and $\sigma_v$ is volatility of variance. In the standard model, the Brownian motion in~\eqref{eq:heston_standard} is correlated with the Brownian motion that drives the stock.
-
-Our use of~\eqref{eq:heston_standard} was narrower. We retained positive square-root fluctuations and mean reversion, but JumpHMM generated the stock separately. We also evolved one variance state for each contract rather than one instantaneous variance state for the underlying. The process therefore supplied a time-varying diffusion-volatility input to a constant-volatility lattice at each simulated date. It should be interpreted as a CIR-like dynamic IV factor, not as the instantaneous return variance of a standard Heston economy.
+Here $\kappa$ is the mean-reversion rate, $\theta$ is long-run variance, and $\sigma_v$ is volatility of variance. In the standard model, the Brownian motion in~\eqref{eq:heston_standard} is correlated with the Brownian motion that drives the stock. Our use of this process was narrower: we retained positive square-root fluctuations and mean reversion, but JumpHMM generated the stock separately, and we evolved one variance state for each contract rather than one instantaneous variance state for the underlying. The process therefore supplied a time-varying diffusion-volatility input to a constant-volatility lattice at each simulated date. It should be interpreted as a CIR-like dynamic IV factor, not as the instantaneous return variance of a standard Heston economy.
 
 Each scenario contract $a=(i,K,T)$ received a separate variance state $v_{a,t}$. Its moving mean-reversion target used the fitted surface at the current spot and remaining calendar DTE. The target was:
 \begin{equation}\label{eq:theta}
@@ -79,8 +68,7 @@ At each later date, the lattice IV was the square root of that contract's factor
     \sigma_{a,t}=\sqrt{v_{a,t}}.
 \end{equation}
 Thus a put and call on the same stock shared the stock path and variance shock but retained different variance states and different surface targets.
-
-The JumpHMM advanced only on exchange sessions. We shifted every simulated growth-rate observation by a constant so the ensemble mean matched a prespecified annual growth prior. We then standardized the one-session simulated log returns across all paths and dates. The return shock used in the IV update was:
+To couple these factors to the return paths, the JumpHMM advanced only on exchange sessions. We shifted every simulated growth-rate observation by a constant so the ensemble mean matched a prespecified annual growth prior. We then standardized the one-session simulated log returns across all paths and dates. The return shock used in the IV update was:
 \begin{equation}\label{eq:return_shock}
     Z^S_{j,t}=\frac{\Delta\ln S_{j,t}-\overline{\Delta\ln S}}
     {s_{\Delta\ln S}}.
@@ -91,21 +79,18 @@ An independent standard normal shock supplied the remaining variation. The coupl
     \qquad Z^{\perp}_{j,t}\sim\mathcal N(0,1).
 \end{equation}
 The coefficient $\rho$ was fixed at $-0.6$. It was a return-shock coupling parameter, not a calibrated correlation between two Brownian motions in a standard Heston model.
-
-We used a hard-floor Euler update with a trading-year step $\Delta t=1/252$. The update was:
+We then used a hard-floor Euler update with a trading-year step $\Delta t=1/252$. The update was:
 \begin{equation}\label{eq:euler}
  v_{a,t+1}=\max\!\left\{
  v_{a,t}+\kappa(\bar v_{a,t}-v_{a,t})\Delta t
  +\sigma_v\sqrt{\max(v_{a,t},0)}\sqrt{\Delta t}\,Z^v_{j,t},
  v_{\min}\right\}.
 \end{equation}
-We fixed $\kappa=15$, $\sigma_v=0.5$, and $v_{\min}=(0.005)^2$. These values were scenario assumptions, not estimates from the option corpus. The floor protected the numerical pricer when the parameters did not satisfy the Feller condition~\cite{andersen2008}.
+We fixed $\kappa=15$, $\sigma_v=0.5$, and $v_{\min}=(0.005)^2$. These values were scenario assumptions, not estimates from the option corpus. The floor protected the numerical pricer when the parameters did not satisfy the Feller condition~\cite{andersen2008}. Although the repository also contains a proposed state-dependent level and aggregate tail-state mood multiplier, these terms remained inactive in every reported experiment. The results therefore evaluate only the fitted level-times-surface model and fixed return-shock coupling. Evaluating state- and mood-dependent IV would require state-conditioned option histories and remained outside this study.
 
 \subsection{American-option pricing, calendar clock, and terminal profit and loss}
 
-Recombining lattices price American options by backward induction and compare continuation with immediate exercise at every node~\cite{broadie1996}. The Cox--Ross--Rubinstein construction uses up and down factors based on the supplied volatility~\cite{cox1979}. Jarrow--Rudd and Tian use alternative moment matches~\cite{jarrow1983,tian1993}. Leisen--Reimer uses a Peizer--Pratt inversion that places the strike more consistently in the tree and improves finite-step convergence~\cite{leisen1996}. Both pricers used here accepted one IV value for a given contract and date; they did not generate the IV surface themselves.
-
-The GS and LLY contracts ran from April 28 to May 29, 2026. This interval contained 31 calendar days but 22 exchange-session transitions after excluding weekends and the May 25 market holiday. Calendar DTE entered the surface and lattice. JumpHMM and~\eqref{eq:euler} advanced on the 22 trading transitions. For a date with $\tau_t$ calendar days remaining, the price input used $\tau_t/365$ years.
+Recombining lattices price American options by backward induction and compare continuation with immediate exercise at every node~\cite{broadie1996}. The Cox--Ross--Rubinstein construction uses up and down factors based on the supplied volatility~\cite{cox1979}. Jarrow--Rudd and Tian use alternative moment matches~\cite{jarrow1983,tian1993}. Leisen--Reimer uses a Peizer--Pratt inversion that places the strike more consistently in the tree and improves finite-step convergence~\cite{leisen1996}. Both pricers used here accepted one IV value for a given contract and date; they did not generate the IV surface themselves. The GS and LLY contracts ran from April 28 to May 29, 2026, an interval with 31 calendar days but only 22 exchange-session transitions after excluding weekends and the May 25 market holiday. Calendar DTE entered the surface and lattice, whereas JumpHMM and~\eqref{eq:euler} advanced on the 22 trading transitions. For a date with $\tau_t$ calendar days remaining, the price input used $\tau_t/365$ years.
 
 Corpus-wide dollar-price checks used a 200-step CRR American tree. Scenario marks and Greeks used a 201-step Leisen-Reimer American tree. Both stages used a constant risk-free rate of $4.25\%$ and continuous dividend yield $q=0$. At expiration, the model replaced the lattice value with intrinsic value. For a short position that received market mid $p_0$, terminal profit and loss was:
 \begin{equation}\label{eq:terminal_pnl}
@@ -114,9 +99,4 @@ Corpus-wide dollar-price checks used a 200-step CRR American tree. Scenario mark
  \Pi_T^{\mathrm{call}}=p_0^{\mathrm{call}}-\max(S_T-K,0).
 \end{equation}
 Equation~\eqref{eq:terminal_pnl} shows that terminal profit and loss depended on the JumpHMM terminal stock price, strike, and premium. Dynamic IV affected interim option marks and Greeks, but not a held-to-expiration payoff.
-
 Greeks were calculated by central finite differences on the same Leisen-Reimer pricer. Spot bumps were $\pm1.5\%$ of spot for delta and gamma. Volatility bumps were $\pm0.005$, and Vega was reported per one volatility percentage point. We assumed execution at the observed mid, no transaction costs, no margin constraint, no early assignment before the plotted horizon, and no discrete dividends.
-
-\subsection{Inactive extensions}
-
-The repository also contains a proposed state-dependent level and aggregate tail-state mood multiplier. Those terms were held inactive in every experiment reported here. The present results evaluate the fitted level-times-surface model and the fixed return-shock coupling only. Testing state- and mood-dependent IV requires state-conditioned option histories and remains outside this study.

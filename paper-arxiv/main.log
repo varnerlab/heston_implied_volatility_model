@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  18 AUG 2026 11:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  19 AUG 2026 17:03
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -571,52 +571,49 @@ LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
 al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}])
 (./sections/methods.tex
-Underfull \vbox (badness 3954) has occurred while \output is active []
-
-
 
 [2]
 
-[3]
+[3]) (./sections/results.tex
 
-[4]) (./sections/results.tex
-
-[5]
-<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=233, 1505.625pt x 8
+[4]
+<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=215, 1505.625pt x 8
 03.0pt>
 File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
  pdf)
 <use sections/figures/ladder_per_ticker_nn_smile_panels.pdf>
 Package pdftex.def Info: sections/figures/ladder_per_ticker_nn_smile_panels.pdf
-  used on input line 37.
+  used on input line 30.
 (pdftex.def)             Requested size: 397.48499pt x 211.9853pt.
-<sections/figures/ladder_price_error_three_tickers.pdf, id=235, 1204.5pt x 903.
+
+
+[5]
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 3
+5.
+ (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
+File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
+)
+<sections/figures/ladder_price_error_three_tickers.pdf, id=230, 1204.5pt x 903.
 375pt>
 File: sections/figures/ladder_price_error_three_tickers.pdf Graphic file (type 
 pdf)
 <use sections/figures/ladder_price_error_three_tickers.pdf>
 Package pdftex.def Info: sections/figures/ladder_price_error_three_tickers.pdf 
- used on input line 45.
+ used on input line 39.
 (pdftex.def)             Requested size: 397.48499pt x 298.11467pt.
 
 
 [6 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
-(./sections/scenarios.tex
 
 [7 <./sections/figures/ladder_price_error_three_tickers.pdf>]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 7
-.
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
-File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
-)
+(./sections/scenarios.tex
 Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 14.
-<sections/figures/gs/gs_short_paths.pdf, id=259, 1505.625pt x 1104.125pt>
+put line 8.
+<sections/figures/gs/gs_short_paths.pdf, id=258, 1505.625pt x 1104.125pt>
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
-line 39.
+line 33.
 (pdftex.def)             Requested size: 357.73405pt x 262.3335pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
@@ -628,81 +625,88 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
-put line 48.
+put line 40.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-
-
-[9 <./sections/figures/gs/gs_short_paths.pdf> <./sections/figures/gs/gs_iv_traj
-ectories.pdf>]
-<sections/figures/gs/gs_short_pnl_distributions.pdf, id=282, 1505.625pt x 602.2
+<sections/figures/gs/gs_short_pnl_distributions.pdf, id=276, 1505.625pt x 602.2
 5pt>
 File: sections/figures/gs/gs_short_pnl_distributions.pdf Graphic file (type pdf
 )
 <use sections/figures/gs/gs_short_pnl_distributions.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_pnl_distributions.pdf  us
-ed on input line 57.
+ed on input line 49.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/lly/lly_short_pnl_distributions.pdf, id=288, 1505.625pt x 602
+
+
+[9 <./sections/figures/gs/gs_short_paths.pdf> <./sections/figures/gs/gs_iv_traj
+ectories.pdf>]
+<sections/figures/lly/lly_short_pnl_distributions.pdf, id=293, 1505.625pt x 602
 .25pt>
 File: sections/figures/lly/lly_short_pnl_distributions.pdf Graphic file (type p
 df)
 <use sections/figures/lly/lly_short_pnl_distributions.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_pnl_distributions.pdf  
-used on input line 75.
+used on input line 61.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-
+)) (./sections/discussion.tex
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
 
 
-[10 <./sections/figures/gs/gs_short_pnl_distributions.pdf>]))
-(./sections/discussion.tex) (./sections/conclusion.tex
+[10 <./sections/figures/gs/gs_short_pnl_distributions.pdf> <./sections/figures/
+lly/lly_short_pnl_distributions.pdf>]) (./sections/conclusion.tex) (./main.bbl
 
-[11 <./sections/figures/lly/lly_short_pnl_distributions.pdf>]) (./main.bbl
+[11])
 
-[12])
+[12] (./sections/supplement.tex
 
-[13] (./sections/supplement.tex
-
-[14
+[13
 
 ]
 
-[15]
-<sections/figures/gs/gs_short_greeks.pdf, id=340, 1505.625pt x 1505.625pt>
+[14]
+
+[15
+
+]
+<sections/figures/gs/gs_short_greeks.pdf, id=348, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
- line 172.
+ line 235.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
-<sections/figures/lly/lly_short_paths.pdf, id=344, 1505.625pt x 1104.125pt>
-File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
-<use sections/figures/lly/lly_short_paths.pdf>
-Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
-t line 208.
-(pdftex.def)             Requested size: 397.48499pt x 291.4798pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=345, 1505.625pt x 602.25pt>
-File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
-<use sections/figures/lly/lly_iv_trajectories.pdf>
-Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
-input line 215.
-(pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/lly/lly_short_greeks.pdf, id=346, 1505.625pt x 1505.625pt>
-File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
-<use sections/figures/lly/lly_short_greeks.pdf>
-Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
-ut line 222.
-(pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
-)
+
 
 [16]
 
 [17 <./sections/figures/gs/gs_short_greeks.pdf>]
+<sections/figures/lly/lly_short_paths.pdf, id=362, 1505.625pt x 1104.125pt>
+File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
+<use sections/figures/lly/lly_short_paths.pdf>
+Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
+t line 278.
+(pdftex.def)             Requested size: 397.48499pt x 291.4798pt.
+<sections/figures/lly/lly_iv_trajectories.pdf, id=363, 1505.625pt x 602.25pt>
+File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
+<use sections/figures/lly/lly_iv_trajectories.pdf>
+Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
+input line 285.
+(pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
+<sections/figures/lly/lly_short_greeks.pdf, id=364, 1505.625pt x 1505.625pt>
+File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
+<use sections/figures/lly/lly_short_greeks.pdf>
+Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
+ut line 292.
+(pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
+)
 
-[18 <./sections/figures/lly/lly_short_paths.pdf> <./sections/figures/lly/lly_iv
+[18
+
+]
+
+[19 <./sections/figures/lly/lly_short_paths.pdf> <./sections/figures/lly/lly_iv
 _trajectories.pdf>]
 
-[19 <./sections/figures/lly/lly_short_greeks.pdf>] (./main.aux)
+[20 <./sections/figures/lly/lly_short_greeks.pdf>] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -712,16 +716,16 @@ L3 programming layer <2025-01-18>
 LaTeX Font Warning: Some font shapes were not available, defaults substituted.
 
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: AE4134A9E188D40DFF6714969728FACF;3905.
+(rerunfilecheck)             Checksum: 55728E9D73E9A0F2FCA8AF703319D3C9;3684.
  ) 
 Here is how much of TeX's memory you used:
- 13665 strings out of 473190
- 218347 string characters out of 5715801
- 635235 words of memory out of 5000000
- 36609 multiletter control sequences out of 15000+600000
+ 13668 strings out of 473190
+ 218417 string characters out of 5715801
+ 631351 words of memory out of 5000000
+ 36610 multiletter control sequences out of 15000+600000
  575880 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,1428b,570s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,2075b,548s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
@@ -736,10 +740,10 @@ ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texliv
 e/2025/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/tex
 mf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fo
 nts/type1/urw/times/utmri8a.pfb>
-Output written on main.pdf (19 pages, 3417164 bytes).
+Output written on main.pdf (20 pages, 3415477 bytes).
 PDF statistics:
- 454 PDF objects out of 1000 (max. 8388607)
- 389 compressed objects within 4 object streams
- 98 named destinations out of 1000 (max. 500000)
- 227 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 466 PDF objects out of 1000 (max. 8388607)
+ 399 compressed objects within 4 object streams
+ 100 named destinations out of 1000 (max. 500000)
+ 211 words of extra memory for PDF output out of 10000 (max. 10000000)
 
