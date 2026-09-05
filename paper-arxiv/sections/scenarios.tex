@@ -1,8 +1,4 @@
-\subsection{Forward-simulated fitted illustrations}\label{sec:scenarios}
-
-\subsubsection{GS}
-
-Having evaluated the fitted surfaces, we next asked whether the modules formed a coherent synthetic market from return generation through terminal P\&L. We selected one put and one call from the April 28 GS capture; their spot, strikes, market deltas, quoted IVs, mids, and fitted entry values are reported in Supplementary Table~\ref{tab:gs_scenario}. The fitted values were close to these two captured mids, but that agreement is descriptive because the surface calibration included the scenario date. We then generated the stock ensemble, advanced a separate contract-level IV factor around the fitted surface target, and marked each state with the American lattice. The path count, horizon, random seed, growth prior, factor parameters, rate assumptions, and lattice depth were fixed in advance and are collected in Supplementary Table~\ref{tab:scenario_settings}. Algorithm~\ref{alg:forward_sim} gives the operational sequence: calendar DTE entered the surface and lattice, whereas the return generator and variance update advanced on exchange sessions, and return shocks were standardized across the completed ensemble before they were coupled to the contract factors.
+Having evaluated the fitted surfaces, we next asked whether the modules formed complete simulated contract paths from return generation through terminal P\&L. We selected one put and one call from the April 28 GS capture; their spot, strikes, market deltas, quoted IVs, mids, and fitted entry values are reported in Supplementary Table~\ref{tab:gs_scenario}. The fitted values were close to these two captured mids, but that agreement is descriptive because the surface calibration included the scenario date. We then generated the stock ensemble, advanced a separate contract-level IV factor around the fitted surface target, and marked each state with the American lattice. The path count, horizon, random seed, growth prior, factor parameters, rate assumptions, and lattice depth were fixed in advance and are collected in Supplementary Table~\ref{tab:scenario_settings}. Algorithm~\ref{alg:forward_sim} gives the operational sequence: calendar DTE entered the surface and lattice, whereas the return generator and variance update advanced on exchange sessions, and return shocks were standardized across the completed ensemble before they were coupled to the contract factors.
 
 \begin{algorithm}[ht]
 \caption{Forward simulation of contract values}\label{alg:forward_sim}
@@ -11,12 +7,12 @@ Having evaluated the fitted surfaces, we next asked whether the modules formed a
 \Ensure Stock, variance, IV, and option-value paths.
 \State Draw $N_p$ JumpHMM stock paths with $L$ trading transitions.
 \State Compute $Z^S_{j,\ell}$ by standardizing all simulated one-session log returns as in~\eqref{eq:return_shock}.
+\State Draw $Z^\perp_{j,\ell}\sim\mathcal N(0,1)$ once per path and transition; set $Z^v_{j,\ell}\gets\rho Z^S_{j,\ell}+\sqrt{1-\rho^2}Z^\perp_{j,\ell}$ and reuse it for every contract.
 \For{contract $a$ and path $j$}
   \State $v_{a,0}^{(j)} \gets \theta_i\psi_i(\tau_0,K/S_0)$
   \For{$\ell=0$ \textbf{to} $L-1$}
     \State $\sigma_{a,\ell}^{(j)} \gets \sqrt{v_{a,\ell}^{(j)}}$
     \State $P_{a,\ell}^{(j)} \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S_{j,\ell},K,\sigma_{a,\ell}^{(j)},\tau_\ell/365,r)$
-    \State Draw $Z^\perp_{j,\ell}\sim\mathcal N(0,1)$ and set $Z^v_{j,\ell}\gets\rho Z^S_{j,\ell}+\sqrt{1-\rho^2}Z^\perp_{j,\ell}$.
     \State $\bar v_{a,\ell}^{(j)}\gets\theta_i\psi_i(\tau_\ell,K/S_{j,\ell})$
     \State Update $v_{a,\ell+1}^{(j)}$ with the hard-floor rule in~\eqref{eq:euler} using $\Delta t=1/252$.
   \EndFor
@@ -42,24 +38,22 @@ The simulated paths separate the roles assigned to the return and IV modules. Te
 \label{fig:gs_iv}
 \end{figure}
 
-Terminal P\&L then isolates the contribution of the return generator because the held-to-expiration payoff no longer depends on the interim IV state. The GS put retained its premium on 73.7\% of paths and had mean P\&L of $+\$4.65$, whereas the call retained its premium on 68.8\% and had mean P\&L of $-\$1.01$; their lower-tail expected shortfalls were $-\$90.73$ and $-\$125.62$ (Fig.~\ref{fig:gs_pnl}; Supplementary Table~\ref{tab:gs_scenario}). The market-delta heuristic $1-|\Delta|$ implied premium-retention rates of 70.5\% and 67.2\%, leaving gaps of 3.2 and 1.6 percentage points from the simulated frequencies (Supplementary Table~\ref{tab:gs_scenario}). This is a diagnostic comparison, not a calibration target, because quote delta is risk-neutral while strike crossing is generated under the drift-adjusted physical paths. The pathwise Greeks complete the interim risk picture: delta approached the exercise states, gamma concentrated near the strike, and Vega declined with maturity (Supplementary Fig.~\ref{fig:gs_greeks}).
+Terminal P\&L then isolates the contribution of the return generator because the held-to-expiration payoff no longer depends on the interim IV state. The GS put retained its premium on 74.0\% of paths and had mean P\&L of $+\$4.27$, whereas the call retained its premium on 67.6\% and had mean P\&L of $-\$2.21$; their lower-tail expected shortfalls were $-\$92.96$ and $-\$130.83$ (Fig.~\ref{fig:gs_pnl}; Supplementary Table~\ref{tab:gs_scenario}). The market-delta heuristic $1-|\Delta|$ implied premium-retention rates of 70.5\% and 67.2\%, leaving gaps of 3.5 and 0.4 percentage points from the simulated frequencies (Supplementary Table~\ref{tab:gs_scenario}). This is a diagnostic comparison, not a calibration target, because quote delta is risk-neutral while strike crossing is generated under the drift-adjusted physical paths. The pathwise Greeks complete the interim risk picture: delta approached the exercise states, gamma concentrated near the strike, and Vega declined with maturity (Supplementary Fig.~\ref{fig:gs_greeks}).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/gs/gs_short_pnl_distributions.pdf}
-\caption{GS terminal short-option P\&L per contract over 1{,}000 JumpHMM paths. The lattice IV process does not enter terminal P\&L in~\eqref{eq:terminal_pnl}; it affects only interim values and Greeks.}
+\caption{GS terminal short-option P\&L per share over 1{,}000 JumpHMM paths. The lattice IV process does not enter terminal P\&L in~\eqref{eq:terminal_pnl}; it affects only interim values and Greeks.}
 \label{fig:gs_pnl}
 \end{figure}
 
 \FloatBarrier
-\subsubsection{LLY}\label{sec:lly_scenario}
-
-We repeated the pipeline for LLY to test the same software path under a different return marginal and a higher fitted IV level. Contract inputs and fitted entry marks are reported in Supplementary Table~\ref{tab:lly_scenario}, and the simulation reused the settings in Supplementary Table~\ref{tab:scenario_settings}. The resulting terminal distributions again combined a mass at the premium ceiling with a left tail: the put and call retained their premiums on 81.2\% and 80.3\% of paths, their mean P\&L values were $+\$16.69$ and $+\$11.42$, and their expected shortfalls were $-\$51.43$ and $-\$89.21$ (Fig.~\ref{fig:lly_pnl}; Supplementary Table~\ref{tab:lly_scenario}). In contrast, the market-delta heuristic implied retention rates of 69.7\% and 69.1\%, which were 11.5 and 11.2 percentage points below the simulated frequencies (Supplementary Table~\ref{tab:lly_scenario}). The larger discrepancy than in GS reinforces the distinction between quote delta and a physical strike-crossing probability; it does not establish superior calibration for either ticker. Like the GS case, this scenario used a surface fitted with observations from the same period and one fixed simulation design, so it remains a computational illustration. Supplementary Figs.~\ref{fig:lly_paths}--\ref{fig:lly_greeks} report the corresponding stock, option-value, IV, and Greek paths.
+We repeated the pipeline for LLY to test the same software path under a different return marginal and a higher fitted IV level. Contract inputs and fitted entry marks are reported in Supplementary Table~\ref{tab:lly_scenario}, and the simulation reused the settings in Supplementary Table~\ref{tab:scenario_settings}. The resulting terminal distributions again combined a mass at the premium ceiling with a left tail: the put and call retained their premiums on 80.7\% and 79.3\% of paths, their mean P\&L values were $+\$16.36$ and $+\$10.60$, and their expected shortfalls were $-\$57.16$ and $-\$94.23$ (Fig.~\ref{fig:lly_pnl}; Supplementary Table~\ref{tab:lly_scenario}). In contrast, the market-delta heuristic implied retention rates of 69.7\% and 69.1\%, which were 11.0 and 10.2 percentage points below the simulated frequencies (Supplementary Table~\ref{tab:lly_scenario}). The larger discrepancy than in GS reinforces the distinction between quote delta and a physical strike-crossing probability; it does not establish superior calibration for either ticker. Like the GS case, this scenario used a surface fitted with observations from the same period and one fixed simulation design, so it remains a computational illustration. Supplementary Figs.~\ref{fig:lly_paths}--\ref{fig:lly_greeks} report the corresponding stock, option-value, IV, and Greek paths.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_short_pnl_distributions.pdf}
-\caption{LLY terminal short-option P\&L per contract over 1{,}000 JumpHMM paths. The wider lower tail for the call came from the simulated terminal-stock distribution relative to the call strike and entry premium.}
+\caption{LLY terminal short-option P\&L per share over 1{,}000 JumpHMM paths. The wider lower tail for the call came from the simulated terminal-stock distribution relative to the call strike and entry premium.}
 \label{fig:lly_pnl}
 \end{figure}
 

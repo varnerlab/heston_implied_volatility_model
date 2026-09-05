@@ -1,0 +1,5 @@
+marginal_rf = 0.0
+growth_shift = -0.017395917674689718
+log_return_sd = 0.0179235663293126
+marginal_dt = 0.003968253968253968
+log_return_mean = 0.0003968253968253969

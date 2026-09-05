@@ -1,0 +1,27 @@
+\clearpage
+\section{Dynamic Ablation and Strike Diagnostics}\label{sec:supp_ablation}
+
+Table~\ref{tab:dynamic_ablation} reports liquidation outcomes at the primary ten-transition endpoint. Table~\ref{tab:ablation_seeds} separates the three evaluation seeds. All comparisons reuse the same stock paths within each ticker and seed. Expected shortfalls summarize simulated P\&L tails; paired standard errors describe uncertainty in mean differences and are not uncertainty intervals for expected shortfall. The fitted surface and pilot normalization constants are conditioned on throughout.
+
+\begin{table}[H]
+\centering
+\caption{Liquidation after ten trading transitions (May 12, 2026), with 17 calendar DTE. Each row uses 3{,}000 paths. All monetary quantities are dollars per share. $\Delta$P\&L and mean $|\Delta P|$ compare the variant with the direct-surface reference on identical paths. Parentheses contain the paired Monte Carlo standard error of mean $\Delta$P\&L. More negative 5\% expected shortfall indicates a worse simulated lower tail.}\label{tab:dynamic_ablation}
+\small
+\input{sections/generated/dynamic_ablation_table}
+\end{table}
+\FloatBarrier
+
+\begin{table}[H]
+\centering
+\caption{Full factor versus direct surface after ten trading transitions, by evaluation seed. Each row uses 1{,}000 paths. Quantities are dollars per share; paired SE applies to the mean P\&L difference.}\label{tab:ablation_seeds}
+\input{sections/generated/ablation_seeds}
+\end{table}
+
+Table~\ref{tab:strike_audit} reports the necessary strike-condition checks at 401 steps. The grid had eleven fixed strikes at the scenario expiry, with fifty stock paths evaluated after ten and twenty transitions plus one shared entry state. As spot moved, some fixed strikes left the calibration moneyness interval; the audit therefore included extrapolated states. Each variant and ticker supplied 2{,}222 bound checks, 2{,}020 adjacent-strike checks, and 1{,}818 convexity checks across calls and puts. The companion machine-readable output reports both lattice depths, each test location, and the violation magnitude. Passing this finite grid does not establish the absence of arbitrage elsewhere or consistency across maturities.
+
+\begin{table}[H]
+\centering
+\caption{Strike-condition violations exceeding \$0.01 per share at 401 lattice steps. Entries show violations/tests. Vertical denotes the upper bound on an adjacent-strike option-price difference. Max reports the largest positive deviation across the four checks, including deviations below the reporting tolerance.}\label{tab:strike_audit}
+\resizebox{\textwidth}{!}{\input{sections/generated/strike_audit_table}}
+\end{table}
+\FloatBarrier

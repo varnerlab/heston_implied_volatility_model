@@ -1,9 +1,15 @@
-\begin{thebibliography}{18}
+\begin{thebibliography}{21}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Alpaca Markets}(2026)]{alpaca_market_data_faq}
+{Alpaca Markets}.
+\newblock Market data {FAQ}: Options.
+\newblock \url{https://docs.alpaca.markets/us/docs/market-data-faq}, 2026.
+\newblock Accessed September 5, 2026.
 
 \bibitem[Alswaidan and Varner(2026)]{jumphmm2025}
 A.~Alswaidan and J.~D. Varner.
@@ -45,6 +51,19 @@ R.~Cont.
   issues.
 \newblock \emph{Quantitative Finance}, 1\penalty0 (2):\penalty0 223--236, 2001.
 \newblock \doi{10.1080/713665670}.
+
+\bibitem[Cont and da~Fonseca(2002)]{cont2002}
+R.~Cont and J.~da~Fonseca.
+\newblock Dynamics of implied volatility surfaces.
+\newblock \emph{Quantitative Finance}, 2\penalty0 (1):\penalty0 45--60, 2002.
+\newblock \doi{10.1088/1469-7688/2/1/304}.
+
+\bibitem[Cont and Vuleti{\'c}(2023)]{cont2023}
+R.~Cont and M.~Vuleti{\'c}.
+\newblock Simulation of arbitrage-free implied volatility surfaces.
+\newblock \emph{Applied Mathematical Finance}, 30\penalty0 (2):\penalty0
+  94--121, 2023.
+\newblock \doi{10.1080/1350486X.2023.2277960}.
 
 \bibitem[Cox et~al.(1979)Cox, Ross, and Rubinstein]{cox1979}
 J.~C. Cox, S.~A. Ross, and M.~Rubinstein.

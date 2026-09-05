@@ -594,8 +594,8 @@ for (k, t) in enumerate(panel_tickers)
 end
 
 p2 = plot(p_panels...,
-          layout = (2, 3),
-          size = (1500, 800),
+          layout = (3, 2),
+          size = (1000, 1100),
           dpi = 200,
           left_margin = 6mm,
           right_margin = 4mm,

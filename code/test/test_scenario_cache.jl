@@ -7,6 +7,14 @@ ENV["GKSwstype"] = "100"  # headless GR for the Plots dependency
 include(joinpath(@__DIR__, "..", "src", "ScenarioTemplate.jl"))
 
 @testset "Scenario cache validation" begin
+    @testset "stock reconstruction includes every return exactly once" begin
+        prices=ScenarioTemplate._reconstruct_stock_path([0.1,0.2],100.0;rf=0.0,dt=1/252)
+        @test length(prices)==3
+        @test prices[1]==100.0
+        @test prices[2]≈100exp(0.1/252)
+        @test prices[3]≈100exp(0.3/252)
+        @test ScenarioTemplate._safe_lr_price(80.0,100.0,0.005,0.0425,10/365,201,:put)>=20.0
+    end
     @testset "_cache_matches — full match" begin
         ref = Dict{String,Any}("S_0" => 100.0, "seed" => 20260429, "n_paths" => 1000)
         cache = merge(ref, Dict{String,Any}("v_put_paths" => zeros(2, 2)))

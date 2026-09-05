@@ -1,0 +1,25 @@
+steps = [0, 5, 10, 15, 20, 22]
+corpus_manifest_sha256 = "647f725f9ae31fab0b7319e557a9da30a2b9a2f61dca403fa37e9163dc8499de"
+lr_depth = 201
+r = 0.0425
+julia_version = "1.12.7"
+seeds = [20260429, 20260430, 20260431]
+kappa = 15.0
+q = 0.0
+modes = ["frozen", "surface", "relaxation", "uncoupled", "coupled"]
+pilot_paths = 10000
+pilot_seed = 20260905
+sigma_v = 0.5
+rho = -0.6
+paths_per_seed = 1000
+portfolio_sha256 = "212a0b0559381d2dc0fe3b2bb8bf61990107319ca44d2c7fd96a6c407783d31e"
+nn_sha256 = "c9dd576af574b8057263735a2f7db62629e9e681686bc09f4c353f25373d510f"
+variance_floor = 2.5e-5
+
+[source_sha256]
+"code/src/ScenarioTemplate.jl" = "5b678835c90832168c1fca3a353a93cbbbfe4cb15ad99ea14dc3903930174ea9"
+"code/Manifest.toml" = "ac3f8460f45ff694b34cce509fe5b31b7d868131fa192bb5456bb44bdf994700"
+"code/examples/dynamic_iv_ablation.jl" = "6862f38efc00ef635b9536f65b6fd438d8d7fc00871e08985e7a20589ed8e908"
+"code/src/LRTree.jl" = "f6a6f9ab0bf15c6845e56fd4a3ab956751bcafc26ca9e3f08abc2ed85bd5d18e"
+"code/src/CRRTree.jl" = "8ea41181761988901ada81c3acbd83abf612c5234051aedd92318c706e05f609"
+"code/src/DynamicAblation.jl" = "385a060fe4f3676d98032f9ee33e3afd6ebe2e04dfd8a8070eeb263429d1fc0a"

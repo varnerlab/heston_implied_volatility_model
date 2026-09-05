@@ -18,4 +18,5 @@ end
 @testset "Baselines and scenario tooling" begin
     include("test_sabr.jl")
     include("test_scenario_cache.jl")
+    include("test_dynamic_ablation.jl")
 end

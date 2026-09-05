@@ -11,11 +11,19 @@ At entry, $v_{a,0}=\bar v_{a,0}$ reproduces the fitted IV product exactly. There
 
 \section{Calibration Details}\label{sec:supp_sector_nn}
 
+The snapshot labels, capture timestamps, and underlying-session dates did not always coincide. Table~\ref{tab:corpus_dates} preserves those distinctions for the frozen corpus described in the main Results. Dates are in 2026; the first snapshot contained 23 tickers and the other snapshots contained 31. The machine-readable corpus manifest records each file's SHA-256 hash and filtered row count.
+\begin{table}[H]
+\centering
+\caption{Frozen corpus provenance. Temporal earnings splits used snapshot labels; the May 11 single-date holdout used the underlying-session field. The first snapshot label is April 14 although its underlying close was from April 13.}\label{tab:corpus_dates}
+\input{sections/generated/corpus_dates}
+\end{table}
+\FloatBarrier
+
 Table~\ref{tab:sector_map} reports the corpus composition. Tables~\ref{tab:per_sector} and~\ref{tab:worst_tickers} report sector and ticker errors for the pooled calibration tiers, while Tables~\ref{tab:per_ticker_comparison} and~\ref{tab:price_error_summary} connect the per-ticker fits to the main-text IV and pricing comparisons.
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
-\caption{Sector partition of the 31-ticker ladder across fifteen capture dates. Counts are filtered observations used in calibration.}\label{tab:sector_map}
+\caption{Sector partition of the 31-ticker ladder across fifteen snapshots. Counts are filtered observations used in calibration.}\label{tab:sector_map}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{lrl}
 \toprule
@@ -31,7 +39,7 @@ Energy     &   7{,}832 & CVX, OXY, XOM \\
 \end{tabular}}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{In-sample RMSE by sector, in volatility percentage points. The sector network improved on the global neural network in every group, while technology and healthcare retained the largest errors.}\label{tab:per_sector}
 \begin{tabular}{lrrrr}
@@ -48,7 +56,7 @@ Technology & 15.58 & 15.31 & 14.47 &  68{,}334 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Largest per-ticker in-sample RMSE reductions among the 29 qualified tickers. In total, 21 qualified tickers improved and eight worsened; the combined per-ticker-plus-fallback model reduced pooled RMSE from 10.24 to 9.73 volatility percentage points. BMY and PFE retained their sector surfaces.}\label{tab:per_ticker_comparison}
 \begin{tabular}{lrrrr}
@@ -66,7 +74,7 @@ NVDA & 5{,}805 & 10.14 &  9.15 & 0.99 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{May 11 price-error summary for the contracts plotted in Fig.~\ref{fig:price_error}. Dollar errors are absolute differences from the market mid. The per-ticker column used a per-ticker surface where qualified and a sector fallback otherwise; the market-IV reference passed each contract's reported IV to the same 200-step CRR lattice.}\label{tab:price_error_summary}
 \begin{tabular}{lrrrrrr}
@@ -81,7 +89,7 @@ GS   & 11 & 145 & \$1.56 & \$0.46 & 88\% & \$0.12 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Best and worst ticker-level in-sample RMSE under the sector networks. RMSE is in volatility percentage points.}\label{tab:worst_tickers}
 \begin{tabular}{llrrl}
@@ -110,7 +118,7 @@ Rank & Ticker & Observations & RMSE & Sector \\
 
 We held out May 11, 2026, and retrained on the other fourteen dates. Standardization used training rows only. Table~\ref{tab:loo_sector_nn} shows that pooled test RMSE exceeded train RMSE by 0.68 volatility percentage points, with larger gaps in energy and retail. Because this analysis used one date and one seed, it is evidence for that split only.
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Sector-network RMSE after fitting on fourteen dates and holding out the 14{,}442 observations from May 11, 2026. Values and test-minus-train gaps are in volatility percentage points.}\label{tab:loo_sector_nn}
 \begin{tabular}{lrrr}
@@ -134,7 +142,7 @@ Pooled     & 10.21 & 10.89 & $+0.68$ \\
 
 The technology-ticker breakdown showed where the four-input model changed holdout error (Table~\ref{tab:tech_pivot}). Several tickers with a peer earnings date near the holdout improved, while INTC and NVDA worsened. This pattern was consistent with a peer-calendar signal, but the shared training process did not isolate the marginal effect of either event input.
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Technology-ticker test RMSE for the pooled model (A) and earnings-aware model (C). Inputs $e$ and $e^{\mathrm{peer}}$ are median signed ticker distance and minimum peer distance, in days. RMSE differences are in volatility percentage points.}\label{tab:tech_pivot}
 \begin{tabular}{lrrrrr}
@@ -160,7 +168,7 @@ INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
 
 Table~\ref{tab:scenario_settings} collects the fixed simulation design used for both fitted illustrations, and Table~\ref{tab:gs_scenario} reports the GS contracts and terminal distributions. The 5\% expected shortfall is the mean P\&L among observations at or below the empirical 5\% quantile. The premium-retained interval is a two-sided 95\% Wilson interval for the binomial fraction of paths that expired out of the money.
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
 \caption{Fixed simulation design shared by the GS and LLY fitted illustrations.}\label{tab:scenario_settings}
 \begin{tabular}{lr}
@@ -183,39 +191,16 @@ Leisen--Reimer depth & 201 \\
 \end{tabular}
 \end{table}
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
-\caption{GS results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar values are per contract.}
+\caption{GS results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar option values and P\&L are per share.}
 \label{tab:gs_scenario}
-\begin{tabular}{lrr}
-\toprule
-Statistic & Short put & Short call \\
-\midrule
-Initial spot                              & \multicolumn{2}{c}{$\$926.38$} \\
-Strike                                    & $\$890$          & $\$970$ \\
-Market delta                              & $-0.295$          & $+0.328$ \\
-Market IV                                 & 31.3\%            & 28.9\% \\
-Market mid                                & $+\$16.51$       & $+\$16.09$ \\
-Model entry value                         & $\$17.26$        & $\$16.07$ \\
-Model value minus market mid              & $+\$0.75$        & $-\$0.02$ \\
-\midrule
-Mean P\&L                                  & $+\$4.65$        & $-\$1.01$ \\
-Monte Carlo SE of mean                    & $\$0.87$         & $\$1.18$ \\
-Median P\&L                                & $+\$16.51$       & $+\$16.09$ \\
-Standard deviation                        & $\$27.44$        & $\$37.17$ \\
-5\% quantile                               & $-\$59.61$       & $-\$83.67$ \\
-5\% expected shortfall                     & $-\$90.73$       & $-\$125.62$ \\
-Premium retained                          & 73.7\%           & 68.8\% \\
-Wilson 95\% interval                      & 70.9--76.3\%     & 65.9--71.6\% \\
-Delta-heuristic premium retained          & 70.5\%           & 67.2\% \\
-Simulated minus heuristic                 & $+3.2$ pp         & $+1.6$ pp \\
-\bottomrule
-\end{tabular}
+\input{sections/generated/gs_scenario_table}
 \end{table}
 
 \FloatBarrier
 The Greek calculation used the same Leisen--Reimer price function as the base mark. Algorithm~\ref{alg:greeks} gives the central finite differences, and Fig.~\ref{fig:gs_greeks} shows the resulting GS paths. Delta approached the terminal exercise states, gamma was largest near the strike late in the horizon, and Vega declined toward zero; the displayed values use the long-option convention.
-\begin{algorithm}[ht]
+\begin{algorithm}[H]
 \caption{Path-conditional Greeks by central finite differences}\label{alg:greeks}
 \begin{algorithmic}[1]
 \Require State $(S,\sigma,\tau)$; contract $(K,r)$; LR depth $N_{\mathrm{LR}}$; relative spot bump $h_S$; absolute IV bump $h_\sigma$.
@@ -230,7 +215,7 @@ The Greek calculation used the same Leisen--Reimer price function as the base ma
 \end{algorithmic}
 \end{algorithm}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/gs/gs_short_greeks.pdf}
 \caption{GS long-option delta, gamma, and Vega from the 201-step Leisen-Reimer pricer. Spot bumps were $1.5\%$ of spot, and IV bumps were 0.005. Vega is dollars per one volatility percentage point.}
@@ -240,54 +225,31 @@ The Greek calculation used the same Leisen--Reimer price function as the base ma
 \FloatBarrier
 The corresponding LLY terminal results are reported in Table~\ref{tab:lly_scenario}. The scenario used the same clock, path count, seed, lattice settings, and factor parameters as GS.
 
-\begin{table}[ht]
+\begin{table}[H]
 \centering
-\caption{LLY results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar values are per contract.}
+\caption{LLY results from 1{,}000 paths between April 28 and May 29, 2026. The horizon had 31 calendar days and 22 trading transitions. Dollar option values and P\&L are per share.}
 \label{tab:lly_scenario}
-\begin{tabular}{lrr}
-\toprule
-Statistic & Short put & Short call \\
-\midrule
-Initial spot                              & \multicolumn{2}{c}{$\$873.83$} \\
-Strike                                    & $\$825$          & $\$940$ \\
-Market delta                              & $-0.303$          & $+0.309$ \\
-Market IV                                 & 44.4\%            & 44.0\% \\
-Market mid                                & $+\$23.30$       & $+\$20.76$ \\
-Model entry value                         & $\$21.95$        & $\$18.96$ \\
-Model value minus market mid              & $-\$1.35$        & $-\$1.80$ \\
-\midrule
-Mean P\&L                                  & $+\$16.69$       & $+\$11.42$ \\
-Monte Carlo SE of mean                    & $\$0.59$         & $\$0.86$ \\
-Median P\&L                                & $+\$23.30$       & $+\$20.76$ \\
-Standard deviation                        & $\$18.78$        & $\$27.10$ \\
-5\% quantile                               & $-\$22.12$       & $-\$47.31$ \\
-5\% expected shortfall                     & $-\$51.43$       & $-\$89.21$ \\
-Premium retained                          & 81.2\%           & 80.3\% \\
-Wilson 95\% interval                      & 78.7--83.5\%     & 77.7--82.6\% \\
-Delta-heuristic premium retained          & 69.7\%           & 69.1\% \\
-Simulated minus heuristic                 & $+11.5$ pp        & $+11.2$ pp \\
-\bottomrule
-\end{tabular}
+\input{sections/generated/lly_scenario_table}
 \end{table}
 
 \FloatBarrier
 Figures~\ref{fig:lly_paths}--\ref{fig:lly_greeks} show the LLY path outputs. They use the same plotting conventions as the GS figures.
 
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_short_paths.pdf}
 \caption{LLY stock paths and long-option values across 31 calendar days and 22 trading transitions. Red and green overlays identify the 1st through 5th and 95th through 99th terminal-stock percentiles.}
 \label{fig:lly_paths}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_iv_trajectories.pdf}
 \caption{Contract-specific LLY IV paths at the put and call strikes. The fixed negative return-shock coupling tended to raise factor shocks after lower standardized returns.}
 \label{fig:lly_iv}
 \end{figure}
 
-\begin{figure}[ht]
+\begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_short_greeks.pdf}
 \caption{LLY long-option delta, gamma, and Vega from the 201-step Leisen-Reimer pricer. Short-position Greeks have the opposite sign.}

@@ -7,7 +7,7 @@ FIGURES = $(shell find sections/figures -type f \( -name '*.pdf' -o -name '*.png
 
 all: $(MAIN).pdf
 
-$(MAIN).pdf: $(MAIN).tex references.bib $(wildcard sections/*.tex) $(FIGURES)
+$(MAIN).pdf: $(MAIN).tex references.bib $(wildcard sections/*.tex) $(wildcard sections/generated/*.tex) $(FIGURES)
 	-$(TEX) -interaction=nonstopmode $(MAIN)
 	-$(BIB) $(MAIN)
 	-$(TEX) -interaction=nonstopmode $(MAIN)
