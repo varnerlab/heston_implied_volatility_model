@@ -1,11 +1,11 @@
 {
   "archive": "paper-arxiv/arxiv-source-v2.1.tar.gz",
-  "archive_sha256": "8ff2ce8cb7c52c33621223226cdf6c6a2778289e1eaef435e117898f5bcde992",
-  "reviewed_pdf_sha256": "a59f88a054288fbc29b480c71483e254c5f52ebdd896928204ff5c45738fbf8d",
+  "archive_sha256": "103a41d90acac26033e286bcd0a14c1913fe24cd50efcdf9c3834b09ff0d0a92",
+  "reviewed_pdf_sha256": "5b5acfb72d287f10ac450a1bcd246891fdbc07f34fab0715ed9817bf8d8bd030",
   "plain_abstract_sha256": "caceffb5c55eda44d86bd48e3016e63cd6086439943154c00dac4695772b9955",
   "files": {
     "main.bbl": "c9ed4b6dae5d89ff619fd60a1b2fb1f9b84dda1621b5eb3c65e8e51db2f3eed1",
-    "main.tex": "4fad7f2c479871093e620fb96dfff96f7717419d4dc130ceda846f364ea114c4",
+    "main.tex": "51bc15728edb5d36e065c90701627b9eb3819dfdf8fe5b04e9bf91de456f9404",
     "neurips_2025.sty": "b9b4c107cda2d2157a4710031dc3ba9430af631e39c2ab68b4dde5e1022bb170",
     "references.bib": "5e5b08cfc0a9c3ed424b33db5cb1ee3d4f505b253e8d9f928b2356efd85ff998",
     "sections/abstract.tex": "ddd6b44084d8f15920c18ec0af36aed0662aaeab84575135fbfd0aeb8c0a192d",

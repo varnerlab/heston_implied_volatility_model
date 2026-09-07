@@ -1,4 +1,4 @@
-# Synthetic American-option scenarios
+# Simulating American Option Prices with Dynamic Implied Volatility
 
 This repository connects JumpHMM physical stock paths, fitted IV surfaces,
 contract-specific square-root factors, and American-option lattices. The
@@ -174,7 +174,7 @@ candidate, date, horizon, and simulation-replicate scores are retained.
 
 ## Manuscript prepared for the author's prose pass
 
-The current 37-page `paper-arxiv/main.pdf` integrates the 2025 and 2026 stock
+The current 36-page `paper-arxiv/main.pdf` integrates the 2025 and 2026 stock
 comparisons in Table 4 and the supplement. The abstract, introduction, results,
 discussion, conclusion, and forecast captions distinguish illustrative scenarios,
 forecasts evaluated against later observations, and diagnostics supplied with

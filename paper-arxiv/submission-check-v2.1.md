@@ -1,5 +1,15 @@
 # Manuscript check before the author's prose pass
 
+Title update, September 7, 2026: the manuscript is now titled “Simulating American
+Option Prices with Dynamic Implied Volatility.” The shorter title changed page
+flow, producing a 36-page PDF with Table 4 on page 16. The PDF and source archive
+were rebuilt, and the archive compiled independently with identical extracted
+PDF text. Pages 1, 2, 16, 33, and 36 were visually checked after the title change.
+There were no layout warnings or undefined references. The existing font
+substitution warning remains. Verification artifacts for this update are under
+`tmp/pdfs/title-update/`; the source manifest records the refreshed hashes.
+The detailed integration record below refers to the preceding 37-page version.
+
 Prepared September 7, 2026. This records the completed integration and submission
 checks for the 37-page `main.pdf`. No additional model experiments were run during
 this integration. JumpHMM and the original IV experiments were retained.
