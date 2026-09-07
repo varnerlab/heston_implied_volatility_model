@@ -1,0 +1,16 @@
+{
+  "training_rows": 1173538,
+  "training_sessions": 68,
+  "training_start": "2026-04-13",
+  "training_end": "2026-07-31",
+  "test_rows": 425061,
+  "test_sessions": 23,
+  "test_start": "2026-08-04",
+  "test_end": "2026-09-04",
+  "source_files": 2833,
+  "selected_files": 2813,
+  "excluded_capture_files": 20,
+  "superseded_files": 0,
+  "legacy_folds_verified": 53,
+  "selected_origin_contracts": 92
+}

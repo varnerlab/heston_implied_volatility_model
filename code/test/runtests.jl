@@ -19,4 +19,6 @@ end
     include("test_sabr.jl")
     include("test_scenario_cache.jl")
     include("test_dynamic_ablation.jl")
+    include("test_forecast_validation.jl")
+    include("test_stock_forecast_diagnosis.jl")
 end

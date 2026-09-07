@@ -40,3 +40,8 @@ __pycache__/
 
 # Stray LaTeX runs from the repo root
 texput.log
+
+# Regenerated chronological-validation row tables; retain source snapshots and scores.
+code/results/chronological_validation/training.csv
+code/results/chronological_validation/surface_test.csv
+code/results/chronological_validation/surface_predictions.csv

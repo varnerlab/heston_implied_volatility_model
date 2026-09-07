@@ -1,7 +1,7 @@
 \clearpage
 \section{Dynamic Ablation and Strike Diagnostics}\label{sec:supp_ablation}
 
-Table~\ref{tab:dynamic_ablation} reports liquidation outcomes at the primary ten-transition endpoint. Table~\ref{tab:ablation_seeds} separates the three evaluation seeds. All comparisons reuse the same stock paths within each ticker and seed. Expected shortfalls summarize simulated P\&L tails; paired standard errors describe uncertainty in mean differences and are not uncertainty intervals for expected shortfall. The fitted surface and pilot normalization constants are conditioned on throughout.
+The primary ten-transition endpoint compared liquidation outcomes across IV variants on shared stock paths (Table~\ref{tab:dynamic_ablation}). Mean absolute mark differences measured how much the prices changed along individual paths. Paired mean P\&L differences showed how those changes combined across the ensemble. The three evaluation seeds provided separate realizations of the comparison under the same fitted models and pilot constants (Table~\ref{tab:ablation_seeds}). Expected shortfalls summarized the simulated lower tails of P\&L. The paired standard errors applied to mean differences and did not supply uncertainty intervals for expected shortfall. All reported uncertainty was conditional on the fitted surface and pilot normalization constants. Variation from refitting either component remained outside these estimates.
 
 \begin{table}[H]
 \centering
@@ -13,7 +13,7 @@ Table~\ref{tab:dynamic_ablation} reports liquidation outcomes at the primary ten
 
 \begin{table}[H]
 \centering
-\caption{Full factor versus direct surface after ten trading transitions, by evaluation seed. Each row uses 1{,}000 paths. Quantities are dollars per share; paired SE applies to the mean P\&L difference.}\label{tab:ablation_seeds}
+\caption{Full factor versus direct surface after ten trading transitions, by evaluation seed. Each row uses 1{,}000 paths. Quantities are dollars per share; the paired standard error applies to the mean P\&L difference.}\label{tab:ablation_seeds}
 \input{sections/generated/ablation_seeds}
 \end{table}
 

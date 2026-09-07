@@ -1,4 +1,4 @@
-\begin{thebibliography}{21}
+\begin{thebibliography}{23}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -95,6 +95,13 @@ J.~Gatheral.
   with application to the valuation of volatility derivatives.
 \newblock Presentation at Global Derivatives \& Risk Management, Madrid, 2004.
 
+\bibitem[Gneiting and Raftery(2007)]{gneiting2007}
+T.~Gneiting and A.~E. Raftery.
+\newblock Strictly proper scoring rules, prediction, and estimation.
+\newblock \emph{Journal of the American Statistical Association}, 102\penalty0
+  (477):\penalty0 359--378, 2007.
+\newblock \doi{10.1198/016214506000001437}.
+
 \bibitem[Hagan et~al.(2002)Hagan, Kumar, Lesniewski, and Woodward]{hagan2002}
 P.~S. Hagan, D.~Kumar, A.~S. Lesniewski, and D.~E. Woodward.
 \newblock Managing smile risk.
@@ -114,6 +121,12 @@ B.~Horvath, A.~Muguruza, and M.~Tomas.
   pricing and calibration in (rough) volatility models.
 \newblock \emph{Quantitative Finance}, 21\penalty0 (1):\penalty0 11--27, 2021.
 \newblock \doi{10.1080/14697688.2020.1817974}.
+
+\bibitem[Hyndman and Athanasopoulos(2021)]{hyndman2021}
+R.~J. Hyndman and G.~Athanasopoulos.
+\newblock \emph{Forecasting: Principles and Practice}.
+\newblock OTexts, 3 edition, 2021.
+\newblock URL \url{https://otexts.com/fpp3/accuracy.html}.
 
 \bibitem[Jarrow and Rudd(1982)]{jarrow1983}
 R.~Jarrow and A.~Rudd.

@@ -1,0 +1,11 @@
+cohort = "short"
+model_sha256 = "9e2eeee83123f9a63108125f999612787baa42a5ca207c22d0c60bd09e445a75"
+protocol_sha256 = "6e0dbd89ad6859467e30559490a715ff142b2e4a6d66c9c97c9c2fdcf98b3cea"
+paths_per_origin = 1000
+elapsed_seconds = 386.59756898880005
+completed = true
+
+[source_sha256]
+"code/src/ForecastValidation.jl" = "02b51565dfe298c41e0bdab8f75faeb30b3da1c0c2fc42f2919843dbb5f004a2"
+"code/scripts/run_chronological_forecasts.jl" = "54bece203df27a54ee59dae45509b096db111b5702e27528e7810c08190191ac"
+"code/src/DynamicAblation.jl" = "385a060fe4f3676d98032f9ee33e3afd6ebe2e04dfd8a8070eeb263429d1fc0a"
