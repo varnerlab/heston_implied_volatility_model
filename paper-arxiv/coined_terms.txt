@@ -1,0 +1,37 @@
+# Internal labels defined in Methods. The style-check skill (rule 10) flags these in
+# abstract.tex, introduction.tex, discussion.tex, and conclusion.tex unless the same
+# sentence explains them in plain words. Named experiment arms such as "frozen IV" may
+# appear once glossed in that section.
+square-root factor
+IV factor
+variance factor
+coupled factor
+uncoupled factor
+return coupling
+return-coupled
+anchored target
+origin anchoring
+direct surface
+deterministic mean reversion
+variance target
+lattice input
+IV module
+IV variant
+paired ablation
+interim mark
+stationary initialization
+independent pilot
+growth shift
+emissions
+tail-state multiplier
+state-dependent level
+strike audit
+maturity-bucket
+shorter-maturity cohort
+capture session
+forecast origin
+July-cutoff
+frozen surface
+ticker level
+contract-level
+contract-specific

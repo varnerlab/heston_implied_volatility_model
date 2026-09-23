@@ -1,0 +1,36 @@
+check,ticker,value,unit
+factor_half_life_sessions,all,11.29475445626552,sessions
+factor_gap_closed_5_sessions,all,26.42351671399805,percent
+factor_gap_closed_10_sessions,all,45.86501107264678,percent
+jumphmm_median_move_5,GS,0.2721910499421753,percent
+jumphmm_log_sd_5,GS,3.9797916711987065,percent
+pilot_log_drift_5,GS,0.1984126984126983,percent
+coupled_mean_iv_change_5,GS,0.29644112067477313,vol points
+coupled_abs_iv_change_5,GS,2.4877347331072355,vol points
+surface_abs_iv_change_5,GS,5.496281181565704,vol points
+pilot_one_session_sd,GS,1.798783385392315,percent
+jumphmm_median_move_5,LLY,0.15591046564578037,percent
+jumphmm_log_sd_5,LLY,3.760832481578629,percent
+pilot_log_drift_5,LLY,0.1984126984126985,percent
+coupled_mean_iv_change_5,LLY,0.17518203372468755,vol points
+coupled_abs_iv_change_5,LLY,2.4671054409362827,vol points
+surface_abs_iv_change_5,LLY,4.116861320859383,vol points
+pilot_one_session_sd,LLY,1.7035958719439415,percent
+realized_one_session_sd_2025,GS,1.9657853595579504,percent
+ewma_one_session_sd_2025,GS,1.9426702913840257,percent
+realized_one_session_sd_2026,GS,1.40195272368239,percent
+ewma_one_session_sd_2026,GS,2.2632488675752946,percent
+realized_one_session_sd_2025,LLY,2.56800114271989,percent
+ewma_one_session_sd_2025,LLY,2.5188722636275402,percent
+realized_one_session_sd_2026,LLY,2.188247474780069,percent
+ewma_one_session_sd_2026,LLY,2.138323632350436,percent
+surface_bias_aug04,GS,-3.0723048789086547,vol points
+surface_bias_aug05,GS,-0.9582030059558486,vol points
+surface_bias_after_mean,GS,1.2006572505638833,vol points
+surface_bias_after_min,GS,-0.6832235573520173,vol points
+surface_bias_after_max,GS,3.592600708194081,vol points
+surface_bias_aug04,LLY,-17.902721569287813,vol points
+surface_bias_aug05,LLY,-0.5314075196334723,vol points
+surface_bias_after_mean,LLY,6.173027429808795,vol points
+surface_bias_after_min,LLY,2.0393981032024153,vol points
+surface_bias_after_max,LLY,8.069638521641437,vol points

@@ -7,6 +7,29 @@ The scenario model assigned a variance state to each contract rather than one in
 \end{equation}
 Contract $a$ indexes ticker, strike, and expiration. The target $\bar v_{a,t}$ in~\eqref{eq:theta} changes with current moneyness and calendar DTE. If that target were held fixed and a stationary distribution existed, its mean would equal $\bar v_a$. In the implemented scenario, however, the target moved at every trading date and the hard floor in~\eqref{eq:euler} altered the unconstrained square-root process. We therefore use the stationary result only as motivation for mean reversion, not as a claim about the simulated distribution. At entry, $v_{a,0}=\bar v_{a,0}$ reproduces the fitted IV product exactly. Thereafter, $\sigma_{a,t}^2=v_{a,t}$ supplies the lattice input. The fitted level and neural shape are not separately identified: shifting a constant between $\ln\theta_i$ and the network output bias leaves $\theta_i\psi_i$ unchanged. This does not change fitted IV or scenario output, but it prevents separate economic interpretation of the two components.
 
+The forward simulation for the fitted illustrations drew the stock paths first, standardized their one-session log returns across the completed ensemble, and then priced each contract and advanced its factor at every trading transition before replacing the final mark with intrinsic value (Algorithm~\ref{alg:forward_sim}). The paired ablation followed the same steps but replaced the ensemble standardization with constants frozen from an independent pilot simulation.
+\begin{algorithm}[H]
+\caption{Forward simulation of contract values}\label{alg:forward_sim}
+\begin{algorithmic}[1]
+\Require JumpHMM marginal; fitted $(\theta_i,\psi_i)$; contract $(K,T)$; trading dates $d_0,\ldots,d_L$; calendar DTE $\tau_0,\ldots,\tau_L$; $(\kappa,\sigma_v,\rho)$; $S_0$; $r$; $N_p$ paths; LR depth $N_{\mathrm{LR}}$.
+\Ensure Stock, variance, IV, and option-value paths.
+\State Draw $N_p$ JumpHMM stock paths with $L$ trading transitions and emissions truncated as in~\eqref{eq:truncated_emission}.
+\State Compute $Z^S_{j,\ell}$ by standardizing all simulated one-session log returns as in~\eqref{eq:return_shock}.
+\State Draw $Z^\perp_{j,\ell}\sim\mathcal N(0,1)$ once per path and transition; set $Z^v_{j,\ell}\gets\rho Z^S_{j,\ell}+\sqrt{1-\rho^2}Z^\perp_{j,\ell}$ and reuse it for every contract.
+\For{contract $a$ and path $j$}
+  \State $v_{a,0}^{(j)} \gets \theta_i\psi_i(\tau_0,K/S_0)$
+  \For{$\ell=0$ \textbf{to} $L-1$}
+    \State $\sigma_{a,\ell}^{(j)} \gets \sqrt{v_{a,\ell}^{(j)}}$
+    \State $P_{a,\ell}^{(j)} \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S_{j,\ell},K,\sigma_{a,\ell}^{(j)},\tau_\ell/365,r)$
+    \State $\bar v_{a,\ell}^{(j)}\gets\theta_i\psi_i(\tau_\ell,K/S_{j,\ell})$
+    \State Update $v_{a,\ell+1}^{(j)}$ with the hard-floor rule in~\eqref{eq:euler} using $\Delta t=1/252$.
+  \EndFor
+  \State $P_{a,L}^{(j)}\gets\max\{\phi(S_{j,L}-K),0\}$, where $\phi=1$ for a call and $\phi=-1$ for a put.
+\EndFor
+\State \Return all paths.
+\end{algorithmic}
+\end{algorithm}
+
 \section{Calibration Details}\label{sec:supp_sector_nn}
 
 The snapshot labels, capture timestamps, and underlying-session dates did not always coincide. Table~\ref{tab:corpus_dates} preserves these fields for the frozen corpus described in the main Results. All dates are in 2026. The May 11 underlying-session snapshot was captured on May 12. Temporal earnings splits followed snapshot-directory labels, and the May 11 holdout followed the underlying-session date. The first snapshot contained 23 tickers and the remaining snapshots contained 31. The \href{https://github.com/varnerlab/heston_implied_volatility_model}{source repository} provides experiment drivers and reproduction instructions. Its frozen corpus manifest records each file's SHA-256 hash and filtered row count. Saved ablation outputs also include pilot constants, path-level marks, numerical audits, and copies of the computational sources so that the reported comparisons can be traced to their inputs.
@@ -72,7 +95,7 @@ NVDA & 5{,}805 & 10.14 &  9.15 & 0.99 \\
 
 \begin{table}[H]
 \centering
-\caption{Mean IV near the money in the May 11 smile panels (Fig.~\ref{fig:per_ticker_panels}). Each row uses the plotted calls and puts with $0.98\le K/S\le1.02$ at the indicated calendar days to expiry (DTE). Observed and predicted IV are percentages; bias is mean per-ticker predicted IV minus observed IV in percentage points. Predictions use the saved fifteen-date fit evaluated at each observed contract. The NVDA subset contains only two observations.}\label{tab:smile_date_bias}
+\caption{Mean IV near the money in the May 11 smile panels (Fig.~\ref{fig:per_ticker_panels}). Each row uses the plotted calls and puts with $0.98\le K/S\le1.02$ at the indicated calendar days to expiry (DTE). Observed and predicted IV are percentages; bias is mean per-ticker predicted IV minus observed IV in percentage points. Predictions use the saved fifteen-date fit evaluated at each observed contract. The NVDA subset contains only two observations. The public earnings calendar dated GS, MSFT, and LLY reports on April 13, April 29, and April 30, 2026, within the calibration window.}\label{tab:smile_date_bias}
 \input{sections/generated/smile_date_bias_table}
 \end{table}
 
