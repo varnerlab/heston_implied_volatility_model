@@ -1,9 +1,22 @@
-\begin{thebibliography}{21}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[{Alpaca Markets}(2026{\natexlab{a}})]{alpaca_market_data_faq}
+{Alpaca Markets}.
+\newblock Market data {FAQ}: Options.
+\newblock \url{https://docs.alpaca.markets/us/docs/market-data-faq},
+  2026{\natexlab{a}}.
+\newblock Accessed September 5, 2026.
+
+\bibitem[{Alpaca Markets}(2026{\natexlab{b}})]{alpaca_option_feed}
+{Alpaca Markets}.
+\newblock Historical option data: Data sources, 2026{\natexlab{b}}.
+\newblock URL \url{https://docs.alpaca.markets/us/docs/historical-option-data}.
+\newblock Accessed September 14, 2026.
 
 \bibitem[Alswaidan and Varner(2026)]{jumphmm2025}
 A.~Alswaidan and J.~D. Varner.
@@ -39,12 +52,11 @@ M.~Broadie and J.~Detemple.
   1211--1250, 1996.
 \newblock \doi{10.1093/rfs/9.4.1211}.
 
-\bibitem[Buehler et~al.(2019)Buehler, Gonon, Teichmann, and Wood]{buehler2019}
-H.~Buehler, L.~Gonon, J.~Teichmann, and B.~Wood.
-\newblock Deep hedging.
-\newblock \emph{Quantitative Finance}, 19\penalty0 (8):\penalty0 1271--1291,
-  2019.
-\newblock \doi{10.1080/14697688.2019.1571683}.
+\bibitem[Cassidy et~al.(2009)Cassidy, Hamp, and Ouyed]{cassidy2009}
+D.~T. Cassidy, M.~J. Hamp, and R.~Ouyed.
+\newblock Pricing european options with a log student's t-distribution: a
+  gosset formula, 2009.
+\newblock URL \url{https://arxiv.org/abs/0906.4092}.
 
 \bibitem[Cont(2001)]{cont2001}
 R.~Cont.
@@ -58,6 +70,13 @@ R.~Cont and J.~da~Fonseca.
 \newblock Dynamics of implied volatility surfaces.
 \newblock \emph{Quantitative Finance}, 2\penalty0 (1):\penalty0 45--60, 2002.
 \newblock \doi{10.1088/1469-7688/2/1/304}.
+
+\bibitem[Cont and Vuleti{\'c}(2023)]{cont2023}
+R.~Cont and M.~Vuleti{\'c}.
+\newblock Simulation of arbitrage-free implied volatility surfaces.
+\newblock \emph{Applied Mathematical Finance}, 30\penalty0 (2):\penalty0
+  94--121, 2023.
+\newblock \doi{10.1080/1350486X.2023.2277960}.
 
 \bibitem[Cox et~al.(1979)Cox, Ross, and Rubinstein]{cox1979}
 J.~C. Cox, S.~A. Ross, and M.~Rubinstein.
@@ -89,11 +108,12 @@ J.~Gatheral.
   with application to the valuation of volatility derivatives.
 \newblock Presentation at Global Derivatives \& Risk Management, Madrid, 2004.
 
-\bibitem[Glasserman(2004)]{glasserman2004}
-P.~Glasserman.
-\newblock \emph{Monte Carlo Methods in Financial Engineering}.
-\newblock Stochastic Modelling and Applied Probability. Springer, 2004.
-\newblock \doi{10.1007/978-0-387-21617-1}.
+\bibitem[Gneiting and Raftery(2007)]{gneiting2007}
+T.~Gneiting and A.~E. Raftery.
+\newblock Strictly proper scoring rules, prediction, and estimation.
+\newblock \emph{Journal of the American Statistical Association}, 102\penalty0
+  (477):\penalty0 359--378, 2007.
+\newblock \doi{10.1198/016214506000001437}.
 
 \bibitem[Hagan et~al.(2002)Hagan, Kumar, Lesniewski, and Woodward]{hagan2002}
 P.~S. Hagan, D.~Kumar, A.~S. Lesniewski, and D.~E. Woodward.
@@ -114,6 +134,12 @@ B.~Horvath, A.~Muguruza, and M.~Tomas.
   pricing and calibration in (rough) volatility models.
 \newblock \emph{Quantitative Finance}, 21\penalty0 (1):\penalty0 11--27, 2021.
 \newblock \doi{10.1080/14697688.2020.1817974}.
+
+\bibitem[Hyndman and Athanasopoulos(2021)]{hyndman2021}
+R.~J. Hyndman and G.~Athanasopoulos.
+\newblock \emph{Forecasting: Principles and Practice}.
+\newblock OTexts, 3 edition, 2021.
+\newblock URL \url{https://otexts.com/fpp3/accuracy.html}.
 
 \bibitem[Jarrow and Rudd(1982)]{jarrow1983}
 R.~Jarrow and A.~Rudd.

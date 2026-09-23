@@ -1,0 +1,14 @@
+{
+  "completed": true,
+  "julia_tests": 251,
+  "python_tests": 6,
+  "forecast_reconstruction_checks": 136,
+  "verified_run_hashes": 102,
+  "pdf_pages": 40,
+  "archive_files": 55,
+  "isolated_pdf_text_matches": true,
+  "cutoffs": [
+    10,
+    20
+  ]
+}

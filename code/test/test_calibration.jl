@@ -69,7 +69,10 @@ using HestonIV
         @test isapprox(σ2, 0.30; atol=0.02)
     end
 
-    @testset "calibrate — returns valid Heston params (positive κ, σ_v)" begin
+    @testset "calibrate — κ, σ_v pass through unchanged (not identified)" begin
+        # Under the equilibrium initialization v₀ = θ(t=0), the static IV
+        # objective never evaluates κ or σ_v; calibrate must return them
+        # exactly as supplied rather than pretending to estimate them.
         n = 30
         cd = CalibrationData(
             collect(1:n),
@@ -80,10 +83,54 @@ using HestonIV
             fill(1, n),
             fill(0.0, n),
         )
-        heston, θ_func = calibrate(cd, 1; maxiter=500)
-        @test heston.κ > 0.0
-        @test heston.σ_v > 0.0
+        heston, θ_func = calibrate(cd, 1; κ_init=7.5, σv_init=0.42, maxiter=500)
+        @test heston.κ == 7.5
+        @test heston.σ_v == 0.42
         @test all(θ_func.θ_states .> 0.0)
-        @test length(θ_func.β) == 4
+        @test length(θ_func.β) == 5
+    end
+
+    @testset "calibrate — γ constrained non-negative" begin
+        # mood=1 rows carry LOWER IV than mood=0 rows in the same state, so an
+        # unconstrained fit would push γ below zero; the model requires γ ≥ 0.
+        n_per = 30
+        n = 2 * n_per
+        cd = CalibrationData(
+            collect(1:n),
+            fill(100.0, n),
+            fill(30, n),
+            vcat(fill(0.30, n_per), fill(0.15, n_per)),
+            fill(100.0, n),
+            fill(1, n),
+            vcat(fill(0.0, n_per), fill(1.0, n_per)),
+        )
+        _, θ_func = calibrate(cd, 1; maxiter=3000)
+        @test θ_func.γ >= 0.0
+    end
+
+    @testset "initialize_theta_states — mean IV² per state" begin
+        cd = CalibrationData(
+            [1, 2, 3],
+            fill(100.0, 3),
+            fill(30, 3),
+            [0.10, 0.30, 0.25],
+            fill(100.0, 3),
+            [1, 1, 2],
+            zeros(3),
+        )
+        θ0 = HestonIV.initialize_theta_states(cd, 3)
+        @test θ0[1] ≈ (0.10^2 + 0.30^2) / 2   # mean, not last-observation overwrite
+        @test θ0[2] ≈ 0.25^2
+        @test θ0[3] ≈ 0.04                     # default for states with no observations
+    end
+
+    @testset "state_index_for_observation — return ending at t" begin
+        # state_sequence[i] classifies the return over prices[i] → prices[i+1],
+        # so an observation at price index t must use state_sequence[t-1]; using
+        # state_sequence[t] would leak the FOLLOWING day's return state.
+        @test HestonIV.state_index_for_observation(3, 4) == 2
+        @test HestonIV.state_index_for_observation(5, 4) == 4
+        @test HestonIV.state_index_for_observation(1, 4) == 1  # no completed return yet
+        @test HestonIV.state_index_for_observation(9, 4) == 4  # clamp at final return
     end
 end

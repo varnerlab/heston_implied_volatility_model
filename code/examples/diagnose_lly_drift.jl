@@ -1,3 +1,5 @@
+using HestonIV: simulate_truncated, emission_spec_from_env, emission_metadata
+const EMISSIONS=emission_spec_from_env()
 """
 Diagnostic: why is the median LLY share-price path drifting up so fast?
 
@@ -131,7 +133,7 @@ uncond_with_jumps  = (1 - p_jump_step_approx) * uncond_mean_G + p_jump_step_appr
 # 4. Empirical: simulate, compute mean obs and median terminal price drift
 # ----------------------------------------------------------------------------
 println("\n[4] Empirical forward simulation ($N_PATHS paths × $T_DAYS days):")
-sim = JumpHMM.simulate(lly_model, T_DAYS; n_paths=N_PATHS, seed=SEED)
+sim = simulate_truncated(lly_model, T_DAYS; n_paths=N_PATHS, seed=SEED, emissions=EMISSIONS)
 
 all_obs = vcat([sim.paths[p].observations for p in 1:N_PATHS]...)
 emp_mean_G = mean(all_obs)

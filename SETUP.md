@@ -76,7 +76,8 @@ code/
     earnings/         earnings_calendar.csv (fetched, see above)
     equity/           equity price data
   test/               Julia test suite
-paper/                LaTeX paper sources and figures
+paper-arxiv/          LaTeX sources and figures, arXiv variant
+paper-jcf/            LaTeX sources and figures, JCF submission variant
 ```
 
 ## Common problems

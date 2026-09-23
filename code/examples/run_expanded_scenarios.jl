@@ -11,13 +11,12 @@ sector + liquidity profiles:
 - JNJ  (Healthcare large-cap)
 
 Strikes for each ticker are pulled from the 2026-04-28 capture at the
-closest ~30Δ, ~30-DTE pair (expiry 2026-05-29). The Heston backbone is
-the same κ=15.0, σ_v=0.5, ρ=-0.6 as the GS/LLY scenarios so the comparison
-is fair.
+closest ~30Δ, ~30-DTE pair (expiry 2026-05-29). The CIR-like factor settings
+are the same κ=15.0, σ_v=0.5, ρ=-0.6 as the GS/LLY scenarios.
 
 Output:
   code/figures/{ticker}_short_premium_simulation_cache.jld2   (sim cache)
-  paper-jcf/sections/figures/{ticker}/                        (4 fig sets)
+  paper-{arxiv,jcf}/sections/figures/{ticker}/                (4 fig sets)
   code/figures/expanded_scenarios_summary.csv                 (aggregate)
 
 Run:
@@ -38,7 +37,6 @@ const RESIM = "--resim" in ARGS
 
 const LADDER_DIR    = joinpath(@__DIR__, "..", "data", "ladder")
 const FIG_CACHE_DIR = joinpath(@__DIR__, "..", "figures")
-const PAPER_FIG_BASE = joinpath(@__DIR__, "..", "..", "paper-jcf", "sections", "figures")
 const NN_CACHE      = joinpath(FIG_CACHE_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 const PORT_PATH     = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-surrogate.jld2")
 
@@ -72,10 +70,11 @@ const SPECS = [
 ]
 
 const EXPIRY      = "2026-05-29"
+const EXPIRY_DATE = Date(EXPIRY)
 const ANCHOR_DATE = Date("2026-04-28")
-const T_DAYS      = 31
+const MARKET_HOLIDAYS = [Date("2026-05-25")]
 
-hspec = HestonSpec()
+hspec = VarianceSpec()
 
 summary_rows = NamedTuple[]
 for (i, s) in enumerate(SPECS)
@@ -86,19 +85,20 @@ for (i, s) in enumerate(SPECS)
 
     spec = ScenarioSpec(
         ticker=s.ticker, anchor_date=ANCHOR_DATE,
-        T_days=T_DAYS,
+        expiry_date=EXPIRY_DATE,
         K_put=s.K_put, K_call=s.K_call,
         market_premium_put=s.mid_put,   market_premium_call=s.mid_call,
         market_iv_put=s.iv_put,         market_iv_call=s.iv_call,
         market_delta_put=s.d_put,       market_delta_call=s.d_call,
         expiry_label=EXPIRY,
         ticker_prior_ccgr_pct=s.prior_ccgr_pct,
+        market_holidays=MARKET_HOLIDAYS,
         n_paths=1000, seed=20260429,
         fig_subdir=lowercase(s.ticker),
     )
 
     sim_cache = joinpath(FIG_CACHE_DIR, "$(lowercase(s.ticker))_short_premium_simulation_cache.jld2")
-    plot_dir  = joinpath(PAPER_FIG_BASE, lowercase(s.ticker))
+    plot_dirs = paper_figure_dirs(lowercase(s.ticker))  # every paper variant
 
     result = run_short_scenario(spec, hspec;
                                 nn_cache_path=NN_CACHE, port_path=PORT_PATH,
@@ -107,7 +107,7 @@ for (i, s) in enumerate(SPECS)
                                 use_per_ticker=s.per_ticker,
                                 sector=s.sector,
                                 compute_greeks=true)
-    render_scenario_figures(result, spec; plot_dir=plot_dir)
+    render_scenario_figures(result, spec; plot_dir=plot_dirs)
     print_summary(result)
 
     push!(summary_rows, merge(result.summary_row,

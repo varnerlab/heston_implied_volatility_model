@@ -1,0 +1,9 @@
+cohort,ticker,horizon,selected,matched,origins,complete_stock_path
+monthly,GS,1,44,34,22,42
+monthly,GS,5,36,0,18,26
+monthly,LLY,1,44,34,22,42
+monthly,LLY,5,36,0,18,26
+short,GS,1,44,42,22,42
+short,GS,5,36,34,18,26
+short,LLY,1,44,41,22,42
+short,LLY,5,36,30,18,26

@@ -1,0 +1,9 @@
+ticker,origin,endpoint,horizon,kind,symbol,quote_matched,stock_matched,complete_stock_path
+GS,2026-08-04,2026-08-05,1,call,GS260904C01105000,true,true,true
+GS,2026-08-04,2026-08-05,1,put,GS260904P01000000,true,true,true
+GS,2026-08-04,2026-08-11,5,call,GS260904C01105000,false,true,true
+GS,2026-08-04,2026-08-11,5,put,GS260904P01000000,false,true,true
+LLY,2026-08-04,2026-08-05,1,call,LLY260904C01175000,true,true,true
+LLY,2026-08-04,2026-08-05,1,put,LLY260904P01060000,true,true,true
+LLY,2026-08-04,2026-08-11,5,call,LLY260904C01175000,false,true,true
+LLY,2026-08-04,2026-08-11,5,put,LLY260904P01060000,false,true,true

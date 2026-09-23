@@ -8,7 +8,7 @@ The modified Heston SDE~\eqref{eq:heston_modified} reads
 \end{equation}
 in which the mean-reversion target $\theta(i,t;K) = \theta_{i,s_t}(1+\gamma M_t)\,\psi(\mathrm{DTE}_t, K/S_t, e_{i,t}, e^{\text{peer}}_{i,t})$ from~\eqref{eq:theta} depends on contract coordinates through $\psi$ and on regime state and aggregate mood through the level prefactor. Because the drift carries the $K$ and $\mathrm{DTE}$ dependencies, the variance process $v_t$ is not a single scalar trajectory per ticker per path but a family of trajectories indexed by contract: each (ticker, $K$, $\mathrm{DTE}$) triple obtains its own $v_t$ under the same Brownian forcing $W_t$ with a contract-specific drift target. The price path $S_t$ enters the drift only through the moneyness $K/S_t$ in $\psi$, so contracts sharing a path see correlated drift modulations whenever the underlying moves but each evolves its own variance state from those modulations. The per-contract instantaneous variance defined in~\eqref{eq:sigma_path} as $\sigma_t^2(K, S_t) = v_t$ then inherits the smile and term structure directly from $\psi$ via the drift; the shape factor $\psi$ is not reapplied as a multiplicative overlay on $v_t$, since the SDE has already absorbed it into the variance dynamics.
 
-At the contract entry time $t = 0$ the construction reproduces the calibrated surface exactly rather than in expectation. The initial condition $v_0 = \theta(i,0;K)$ from~\eqref{eq:v0} gives $\sigma_0^2(K, S_0) = v_0 = \theta_{i,s_0}(1+\gamma M_0)\,\psi(\mathrm{DTE}_0, K/S_0, e_{i,0}, e^{\text{peer}}_{i,0})$ at the contract's entry coordinates; under the calibration restrictions $\gamma = 0$ and $\theta_{i,s_0} = \theta_i$ this collapses to $\theta_i \cdot \psi(\cdot) = \theta_{\text{cal}}(i,t)$ from~\eqref{eq:theta_calibration}, which is the calibrated decomposition~\eqref{eq:sigma_model}. The calibrated $\psi$ surface from the multi-date ladder corpus therefore also serves as the entry IV surface at simulation start without requiring a separate $v_0$ degree of freedom or an external IV input. Beyond the entry boundary the same identity holds in expectation under the stationary law of~\eqref{eq:level_sde}: conditioning on the slow variables $(s_t, M_t)$ and the contract coordinates $(K, \mathrm{DTE}_t, S_t, e_{i,t}, e^{\text{peer}}_{i,t})$ under which the drift target is constant, $v_t$ obeys a CIR process whose stationary mean is the target itself, so $\mathbb{E}[v_t \mid \cdot] \to \theta(i,t;K)$ and $\mathbb{E}[\sigma_t^2 \mid \cdot] \to \theta(i,t;K)$ as $\kappa t \to \infty$. The conditional variance of the stationary law is $\sigma_v^2 \theta(i,t;K) / (2\kappa)$, so the fluctuations of $\sigma_t^2$ around the target are controlled jointly by vol-of-vol and the mean-reversion rate, and the reflecting boundary at $v = 0$ in the discretization~\eqref{eq:euler} prevents excursions to negative variance under non-Feller parameter combinations.
+At the contract entry time $t = 0$ the construction reproduces the calibrated surface exactly rather than in expectation. The initial condition $v_0 = \theta(i,0;K)$ from~\eqref{eq:v0} gives $\sigma_0^2(K, S_0) = v_0 = \theta_{i,s_0}(1+\gamma M_0)\,\psi(\mathrm{DTE}_0, K/S_0, e_{i,0}, e^{\text{peer}}_{i,0})$ at the contract's entry coordinates; under the calibration restrictions $\gamma = 0$ and $\theta_{i,s_0} = \theta_i$ this collapses to $\theta_i \cdot \psi(\cdot) = \theta_{\text{cal}}(i,t)$ from~\eqref{eq:theta_calibration}, which is the calibrated decomposition~\eqref{eq:sigma_model}. The calibrated $\psi$ surface from the multi-date ladder corpus therefore also serves as the entry IV surface at simulation start without requiring a separate $v_0$ degree of freedom or an external IV input. Beyond the entry boundary the same identity holds in expectation under the stationary law of~\eqref{eq:level_sde}: conditioning on the slow variables $(s_t, M_t)$ and the contract coordinates $(K, \mathrm{DTE}_t, S_t, e_{i,t}, e^{\text{peer}}_{i,t})$ under which the drift target is constant, $v_t$ obeys a CIR process whose stationary mean is the target itself, so $\mathbb{E}[v_t \mid \cdot] \to \theta(i,t;K)$ and $\mathbb{E}[\sigma_t^2 \mid \cdot] \to \theta(i,t;K)$ as $\kappa t \to \infty$. The conditional variance of the stationary law is $\sigma_v^2 \theta(i,t;K) / (2\kappa)$, so the fluctuations of $\sigma_t^2$ around the target are controlled jointly by vol-of-vol and the mean-reversion rate, and the variance floor in the discretization~\eqref{eq:euler} prevents excursions to negative variance under non-Feller parameter combinations.
 
 The calibration form~\eqref{eq:theta_calibration} arises by specializing this construction to a single observation day. There is no time evolution within an observation-day IV surface, so $v_t$ is taken at its entry value $\theta(i,0;K)$ over the day, with regime and mood absorbed into the per-ticker level $\theta_i$, and the calibration target reduces to $\sigma_{\text{cal}}^2(K, S) = \theta_i \cdot \psi(\cdot) = \theta_{\text{cal}}(i,t)$. The calibration loss in~\eqref{eq:nn_loss} fits $\{\theta_i\}_i$ and $\psi$ jointly to market IV under this stationary form, with no SDE solve required. The three symbols carry distinct roles throughout: $\theta(i,t;K)$ is the mean-reversion target of the per-contract variance, evaluated at the contract's coordinates at each time step; $v_t$ is the variance state itself, evolving per contract under~\eqref{eq:level_sde} with that target; and $\psi$ is the contract-coordinate-dependent shape factor that enters the model once, through the drift target, and is carried through to the per-contract IV $\sigma_t^2 = v_t$ by the variance dynamics rather than by a separate multiplication.
 
@@ -178,11 +178,11 @@ INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
 
 \section{Short-premium scenarios: P\&L statistics and cross-ticker validation}\label{sec:supp_short_premium}
 
-We tabulated the moments and tail statistics per contract for the GS 31-day forward simulation and observed the short-premium asymmetry that the main-text figures rendered qualitatively: a thin-tailed right side with a hard ceiling at the entry premium, paired with a long left tail that extended an order of magnitude beyond the median (Table~\ref{tab:gs_scenario}). The model's $t=0$ Leisen-Reimer fair value sat essentially at the market mid on both contracts (entry edge $+\$0.75$ on the put, $-\$0.02$ on the call), confirming the per-ticker $\psi_{\mathrm{NN}}$ matched the 04-28 GS market IV. The dispersion was larger on the call leg (std $\$51.58$ vs.\ $\$34.12$), and the worst-case loss on the call ($-\$484.57$) exceeded the worst put loss ($-\$323.42$) by a factor of $1.50$, despite the call collecting a smaller entry premium.
+We tabulated the moments and tail statistics per contract for the GS forward simulation over 31 calendar days and 22 trading transitions and observed the short-premium asymmetry that the main-text figures rendered qualitatively: a thin-tailed right side with a hard ceiling at the entry premium, paired with a long left tail that extended an order of magnitude beyond the median (Table~\ref{tab:gs_scenario}). The model's $t=0$ Leisen-Reimer fair value sat essentially at the market mid on both contracts (entry edge $+\$0.75$ on the put, $-\$0.02$ on the call), confirming the per-ticker $\psi_{\mathrm{NN}}$ matched the 04-28 GS market IV. The dispersion was larger on the call leg (std $\$37.17$ vs.\ $\$27.44$), and the worst-case loss on the call ($-\$277.29$) exceeded the worst put loss ($-\$176.95$) by a factor of $1.57$, despite the call collecting a smaller entry premium.
 
 \begin{table}[ht]
 \centering
-\caption{Terminal P\&L statistics from 1{,}000 GS 31-day forward simulations of the real 2026-05-29 \$890 put and \$970 call. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}
+\caption{Terminal P\&L statistics from 1{,}000 GS forward simulations of the real 2026-05-29 \$890 put and \$970 call, run over 31 calendar days and 22 trading transitions. Entry premium was the market mid from the 2026-04-28 capture (GS spot $S_0 = \$926.38$). The model's $t=0$ Leisen-Reimer fair value at NN-IV was reported as a reference; statistics are per contract.}
 \label{tab:gs_scenario}
 \begin{tabular}{lrr}
 \toprule
@@ -193,12 +193,12 @@ Market mid (entry premium)  & $+16.51$   & $+16.09$  \\
 Model $t=0$ fair value      & $+17.26$   & $+16.07$  \\
 Entry edge (model $-$ market) & $+0.75$  & $-0.02$   \\
 \midrule
-Mean P\&L                    &  $+1.52$  &  $-9.00$  \\
+Mean P\&L                    &  $+4.65$  &  $-1.01$  \\
 Median P\&L                  & $+16.51$  & $+16.09$  \\
-Std P\&L                     &  $34.12$  &  $51.58$  \\
-5\%-tile P\&L                & $-76.13$  & $-113.16$ \\
-Worst-case P\&L              & $-323.42$ & $-484.57$ \\
-Premium kept in full         & $72.2\%$  & $64.3\%$  \\
+Std P\&L                     &  $27.44$  &  $37.17$  \\
+5\%-tile P\&L                & $-59.61$  & $-83.67$  \\
+Worst-case P\&L              & $-176.95$ & $-277.29$ \\
+Premium kept in full         & $73.7\%$  & $68.8\%$  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -223,7 +223,7 @@ Premium kept in full         & $72.2\%$  & $64.3\%$  \\
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/gs/gs_short_greeks.pdf}
-\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the GS put and call strikes over the 31-day horizon, computed by central finite differences (Algorithm~\ref{alg:greeks}) on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta$/$\Gamma$, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta$. Middle: $\Gamma$, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt{T-t}$ on every path. Tail overlays as in Fig.~\ref{fig:gs_paths}.}
+\caption{Leisen-Reimer American Greeks ($\Delta$, $\Gamma$, Vega) at the GS put and call strikes over the 31-calendar-day horizon, computed by central finite differences (Algorithm~\ref{alg:greeks}) on the 201-step Leisen-Reimer pricer at the per-path NN-IV ($h_S = 1.5\% S_t$ for $\Delta$/$\Gamma$, $d\sigma = \pm 0.005$ for Vega). Long-Greek convention: short-position Greeks are the negatives. Top row: $\Delta$. Middle: $\Gamma$, exhibiting the short-gamma spike on paths that pinned to the strike near expiry. Bottom: Vega, decaying toward zero with $\sqrt{T-t}$ on every path. Tail overlays as in Fig.~\ref{fig:gs_paths}.}
 \label{fig:gs_greeks}
 \end{figure}
 
@@ -231,7 +231,7 @@ We re-ran the GS pipeline verbatim on an LLY option pair from the same 04-28 cap
 
 \begin{table}[ht]
 \centering
-\caption{Terminal P\&L statistics from 1{,}000 LLY 31-day forward simulations of the real 2026-05-29 \$825 put and \$940 call. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi_{\mathrm{NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap.}
+\caption{Terminal P\&L statistics from 1{,}000 LLY forward simulations of the real 2026-05-29 \$825 put and \$940 call, run over 31 calendar days and 22 trading transitions. Entry premium was the market mid from the 2026-04-28 capture (LLY spot $S_0 = \$873.83$). LLY had dropped $\sim 5\%$ on 04-28, so the contracts were captured against an elevated-IV regime relative to the fifteen-date calibration window; the model's $t=0$ Leisen-Reimer fair value at the per-ticker $\psi_{\mathrm{NN}}$-implied IV came in below the market mid on both legs, with the entry edges reflecting the gap.}
 \label{tab:lly_scenario}
 \begin{tabular}{lrr}
 \toprule
@@ -242,12 +242,12 @@ Market mid (entry premium)  & $+23.30$   & $+20.76$  \\
 Model $t=0$ fair value      & $+21.95$   & $+18.96$  \\
 Entry edge (model $-$ market) & $-1.35$  & $-1.80$   \\
 \midrule
-Mean P\&L                    & $+14.31$  &  $+6.45$  \\
+Mean P\&L                    & $+16.69$  & $+11.42$  \\
 Median P\&L                  & $+23.30$  & $+20.76$  \\
-Std P\&L                     &  $23.75$  & $36.81$   \\
-5\%-tile P\&L                & $-41.54$  & $-79.68$  \\
-Worst-case P\&L              & $-185.19$ & $-303.88$ \\
-Premium kept in full         & $77.4\%$  & $75.7\%$  \\
+Std P\&L                     &  $18.78$  & $27.10$   \\
+5\%-tile P\&L                & $-22.12$  & $-47.31$  \\
+Worst-case P\&L              & $-129.43$ & $-212.60$ \\
+Premium kept in full         & $81.2\%$  & $80.3\%$  \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -255,14 +255,14 @@ Premium kept in full         & $77.4\%$  & $75.7\%$  \\
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_short_paths.pdf}
-\caption{Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 days; analogue of GS Fig.~\ref{fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call).}
+\caption{Forward LLY share-price paths and short option premium paths for the real LLY 2026-05-29 contracts, 1{,}000 simulated trajectories over 31 calendar days and 22 trading transitions; analogue of GS Fig.~\ref{fig:gs_paths}. Top row: share path with $K_p = \$825$ marked (left) and short-put premium (right), with the worst 1--5\% by terminal price overlaid in red. Bottom row: share path with $K_c = \$940$ marked (left) and short-call premium (right), with the top 1--5\% overlaid in green. The $K_p = \$825$ strike sat $\sim 6\%$ below spot, further from ATM than the GS put because LLY's higher IV regime placed the same-delta strike further from spot. Black solid: median; shaded band: 25--75\% IQR. Blue dashed lines on the option-price panels mark the market mids received at sale (\$23.30 put, \$20.76 call).}
 \label{fig:lly_paths}
 \end{figure}
 
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_iv_trajectories.pdf}
-\caption{Path-conditional IV at $K_{\text{put}}$ and $K_{\text{call}}$ over the 31-day horizon; analogue of GS Fig.~\ref{fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}
+\caption{Path-conditional IV at $K_{\text{put}}$ and $K_{\text{call}}$ over the 31-calendar-day horizon; analogue of GS Fig.~\ref{fig:gs_iv}. IV expanded on worst-5\% down-paths and contracted on top-5\% up-paths, consistent with the negative leverage coupling $\rho = -0.6$ that lifted $v_t$ when shares fell.}
 \label{fig:lly_iv}
 \end{figure}
 
@@ -275,21 +275,21 @@ Premium kept in full         & $77.4\%$  & $75.7\%$  \\
 
 \subsection{Cross-sector short-premium scenarios on five additional tickers}\label{sec:supp_expanded_scenarios}
 
-We re-ran the short-premium scenario pipeline verbatim on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare (PFE, sector-NN fallback), and large-cap Healthcare (Table~\ref{tab:expanded_scenarios}). The short-premium asymmetry reproduced cleanly on AMD (Tech, $\sim 65\%$ IV regime), where the worst-call loss exceeded the worst-put loss by $3.2{\times}$, and collapsed to near-symmetry on SPY (ETF, balanced moneyness profile and shallow smile). The PFE row exercised the sector-NN fallback path of the framework (PFE has $1{,}300$ ladder observations, below the $2{,}000$-observation per-ticker threshold, so its $\psi_{\mathrm{NN}}$ is the Healthcare sector network rather than a per-ticker fit) and produced an operationally clean short-premium distribution despite the small absolute dollar values that the $\sim\$26$ underlying generated. JNJ reproduced the LLY-style negative entry edge on its put leg ($-\$0.98$ at model fair value below market mid), reflecting the same time-averaged-$\psi$ vs.\ capture-day-regime gap noted for LLY on 04-28.
+We re-ran the short-premium scenario pipeline verbatim on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare (PFE, sector-NN fallback), and large-cap Healthcare (Table~\ref{tab:expanded_scenarios}). The worst-call loss exceeded the worst-put loss on AMD (Tech, $\sim 65\%$ IV regime, $1.45{\times}$) and on XOM ($1.09{\times}$), while SPY, PFE, and JNJ ran the other way. Each worst-case entry is the single most extreme path out of $1{,}000$, so the sign of this ratio is not a stable ticker property; the premium-kept columns, which average over the whole ensemble, are the comparable statistics across rows. The PFE row exercised the sector-NN fallback path of the framework (PFE has $1{,}300$ ladder observations, below the $2{,}000$-observation per-ticker threshold, so its $\psi_{\mathrm{NN}}$ is the Healthcare sector network rather than a per-ticker fit) and produced an operationally clean short-premium distribution despite the small absolute dollar values that the $\sim\$26$ underlying generated. JNJ reproduced the LLY-style negative entry edge on its put leg ($-\$0.98$ at model fair value below market mid), reflecting the same time-averaged-$\psi$ vs.\ capture-day-regime gap noted for LLY on 04-28.
 
 \begin{table}[ht]
 \centering
-\caption{Short-premium scenarios on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare, and large-cap Healthcare. Each scenario was a 31-day forward simulation of $1{,}000$ paths from the ticker's pretrained JumpHMM marginal, with $30\Delta$ put and call strikes drawn from the 2026-04-28 capture and contracts expiring 2026-05-29. All five scenarios used the same Heston backbone $(\kappa, \sigma_v, \rho) = (15.0, 0.5, -0.6)$, the same $201$-step Leisen-Reimer American pricer, and identical caching/seeding as the GS and LLY scenarios; only the per-ticker $\psi_{\mathrm{NN}}$ surface, the long-run-drift anchor, and the contract specifications varied across rows. PFE's $\psi$ source is the Healthcare sector network because PFE has $1{,}300$ ladder observations, below the per-ticker fit threshold.}\label{tab:expanded_scenarios}
+\caption{Short-premium scenarios on five additional tickers spanning ETF, Energy, Tech, low-liquidity Healthcare, and large-cap Healthcare. Each scenario was a forward simulation of $1{,}000$ paths over 31 calendar days and 22 trading transitions from the ticker's pretrained JumpHMM marginal, with $30\Delta$ put and call strikes drawn from the 2026-04-28 capture and contracts expiring 2026-05-29. All five scenarios used the same Heston backbone $(\kappa, \sigma_v, \rho) = (15.0, 0.5, -0.6)$, the same $201$-step Leisen-Reimer American pricer, and identical caching/seeding as the GS and LLY scenarios; only the per-ticker $\psi_{\mathrm{NN}}$ surface, the long-run-drift anchor, and the contract specifications varied across rows. PFE's $\psi$ source is the Healthcare sector network because PFE has $1{,}300$ ladder observations, below the per-ticker fit threshold.}\label{tab:expanded_scenarios}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llcrrrrrrrr}
 \toprule
 Ticker & Sector & $\psi$ source & $K_p$ & $K_c$ & Edge$_p$ (\$) & Edge$_c$ (\$) & Worst$_p$ (\$) & Worst$_c$ (\$) & Kept$_p$ (\%) & Kept$_c$ (\%) \\
 \midrule
-SPY & ETF        & per-ticker & 696 & 729 & $-0.07$ & $+0.94$ & $-132.65$ & $-132.59$ & 73.8 & 59.3 \\
-XOM & Energy     & per-ticker & 145 & 160 & $-0.46$ & $+0.32$ &  $-36.19$ &  $-56.40$ & 70.4 & 72.1 \\
-AMD & Tech       & per-ticker & 300 & 365 & $+0.15$ & $-0.31$ & $-111.84$ & $-361.75$ & 68.9 & 71.8 \\
-PFE & Healthcare & sector     &  26 &  28 & $+0.18$ & $+0.30$ &   $-6.21$ &   $-5.70$ & 64.8 & 73.7 \\
-JNJ & Healthcare & per-ticker & 220 & 235 & $-0.98$ & $+0.45$ &  $-40.32$ &  $-36.42$ & 78.5 & 64.4 \\
+SPY & ETF        & per-ticker & 696 & 729 & $-0.07$ & $+0.94$ & $-201.69$ & $-106.77$ & 74.1 & 62.5 \\
+XOM & Energy     & per-ticker & 145 & 160 & $-0.46$ & $+0.32$ &  $-29.03$ &  $-31.61$ & 71.8 & 75.0 \\
+AMD & Tech       & per-ticker & 300 & 365 & $+0.15$ & $-0.31$ & $-148.68$ & $-214.89$ & 69.3 & 76.5 \\
+PFE & Healthcare & sector     &  26 &  28 & $+0.18$ & $+0.30$ &   $-6.38$ &   $-3.78$ & 63.6 & 77.5 \\
+JNJ & Healthcare & per-ticker & 220 & 235 & $-0.98$ & $+0.45$ &  $-58.69$ &  $-29.69$ & 79.9 & 68.5 \\
 \bottomrule
 \end{tabular}}
 \end{table}
@@ -304,7 +304,7 @@ Cells were selected deterministically from the $31 \times 15$ corpus after the p
 
 \begin{table}[ht]
 \centering
-\caption{Multi-cell LoRA sweep. Per-cell base, V0 (level-only), and V1 (rank-2 LoRA + level) RMSE on the day's ladder slice, with V1 adapter-norm summaries on the three Dense layers. V1 reduced RMSE on every cell (no overfit) and beat V0 across the board; improvements scaled with base RMSE. The five GS control cells (bottom block) saw V1 perturbations near zero, the desired behaviour on days the base already fit well.}\label{tab:lora_sweep}
+\caption{Multi-cell LoRA sweep. Per-cell base, V0 (level-only), and V1 (rank-2 LoRA + level) RMSE on the day's ladder slice, with V1 adapter-norm summaries on the three Dense layers. V1 reduced the in-sample day-slice RMSE on every cell and beat V0 across the board; improvements scaled with base RMSE. The five GS control cells (bottom block) saw near-zero V1 level shifts and sub-percent RMSE changes on days the base already fit well, although their shape norms remained comparable to the problem cells.}\label{tab:lora_sweep}
 \resizebox{\textwidth}{!}{%
 \begin{tabular}{llrrrrrrrr}
 \toprule
@@ -329,7 +329,7 @@ WFC  & 2026-04-27 & 144 &  7.50 &  7.44 &  5.72 & $-0.03$ & 0.75 & 1.57 & 0.29 \
 SPY  & 2026-04-21 & 2{,}701 &  7.14 &  6.89 &  5.61 & $+0.08$ & 0.65 & 2.20 & 0.14 \\
 JNJ  & 2026-05-11 & 128 &  6.78 &  6.00 &  4.40 & $+0.01$ & 0.30 & 1.38 & 0.29 \\
 \midrule
-\multicolumn{10}{l}{\emph{Control cells (5 lowest base RMSE; near-zero V1 perturbation)}} \\
+\multicolumn{10}{l}{\emph{Control cells (5 lowest base RMSE; near-zero V1 level shift)}} \\
 GS   & 2026-04-22 & 583 &  4.13 &  4.01 &  3.15 & $-0.01$ & 1.10 & 2.15 & 0.74 \\
 GS   & 2026-04-23 & 447 &  3.79 &  3.66 &  3.08 & $+0.04$ & 0.47 & 1.06 & 0.55 \\
 GS   & 2026-04-16 & 806 &  3.70 &  3.70 &  3.22 & $+0.07$ & 0.61 & 2.70 & 1.51 \\
@@ -346,12 +346,12 @@ GS   & 2026-04-24 & 517 &  3.41 &  3.40 &  2.73 & $+0.05$ & 0.82 & 1.11 & 0.79 \
 \begin{figure}[ht]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lora_sweep_summary.pdf}
-\caption{LoRA sweep diagnostics across 20 (ticker, date) cells. (A) V1 improvement scales with base RMSE: red points are problem cells, gray middle, green controls. The diagonal marks full-closure (V1 RMSE = 0). (B) The middle-layer adapter norm $\|B_2 A_2\|_F$ tracks base RMSE, consistent with the LoRA-on-transformers pattern of intermediate-representation adaptation. (C) V1 dominates V0 across cells; the diagonal would mark equal improvement. (D) V1 partitions its budget between a small level shift ($\Delta\log\theta$ near zero on most cells) and a larger shape perturbation (mean $\|BA\|_F$), with the four shape-heavy outliers being the four highest-RMSE problem cells.}\label{fig:lora_sweep}
+\caption{LoRA sweep diagnostics across 20 (ticker, date) cells. (A) V1 improvement scales with base RMSE: red points are problem cells, gray middle, green controls. The diagonal marks full-closure (V1 RMSE = 0). (B) The middle-layer adapter norm $\|B_2 A_2\|_F$ tracks base RMSE across cells. (C) V1 dominates V0 across cells; the diagonal would mark equal improvement. (D) V1 partitions its budget between a small level shift ($\Delta\log\theta$ near zero on most cells) and a larger shape perturbation (mean $\|BA\|_F$), with the four shape-heavy outliers being the four highest-RMSE problem cells.}\label{fig:lora_sweep}
 \end{figure}
 
 \subsection{LLY 04-28 entry-edge case study}\label{sec:supp_lora_lly}
 
-The LLY 04-28 cell appeared as a single row in Table~\ref{tab:lora_sweep} (sweep position: middle cell, base RMSE 15.66\%, V1 RMSE 4.34\% reported here in detail rather than the 04-22 row above), and we re-priced its $30\Delta$ put and call under each adapter variant to translate the slice-RMSE improvement into a dollar entry-edge story.
+The LLY 04-28 cell was not part of the 20-cell sweep in Table~\ref{tab:lora_sweep}, whose middle stratum drew the milder LLY 04-22 row (base RMSE 8.54\%); we fit it separately under the same adapter protocol (base RMSE 15.66\%, V1 RMSE 4.34\%) and re-priced its $30\Delta$ put and call under each adapter variant to translate the slice-RMSE improvement into a dollar entry-edge story.
 
 \begin{table}[ht]
 \centering
@@ -380,7 +380,7 @@ The rank-2 adapter carries no structural arbitrage constraint, so we re-evaluate
 
 \subsection{Streaming trigger ROC}\label{sec:supp_lora_trigger}
 
-We evaluated the streaming refit trigger on every (ticker, date) cell in the $31 \times 15$ corpus ($457$ filtered cells after the $N_{\text{obs}} \geq 10$ filter). Ground truth was defined as the binary indicator $\text{RMSE}_t > 12\%$ IV ($112 / 457$ positive cells). The trigger was run with the absolute floor $\tau_{\text{abs}} = 10\%$ fixed and the relative threshold $\tau_z$ swept from $0$ to $6$. The trailing window length was $4$ non-flagged dates per ticker, with $1.4826 \times \mathrm{MAD}$ as the robust scale. Flagged dates were excluded from the trailing baseline for subsequent decisions on the same ticker.
+We evaluated the streaming refit trigger on every (ticker, date) cell in the $31 \times 15$ corpus ($457$ cells: eight tickers were absent from the 04-14 capture, and the $N_{\text{obs}} \geq 10$ filter removed no further cells). Ground truth was defined as the binary indicator $\text{RMSE}_t > 12\%$ IV ($112 / 457$ positive cells). The trigger was run with the absolute floor $\tau_{\text{abs}} = 10\%$ fixed and the relative threshold $\tau_z$ swept from $0$ to $6$. The trailing window length was $4$ non-flagged dates per ticker, with $1.4826 \times \mathrm{MAD}$ as the robust scale. Flagged dates were excluded from the trailing baseline for subsequent decisions on the same ticker. The label is a deterministic function of the same day-slice RMSE the absolute floor thresholds, so the sweep characterized operating points of a thresholding policy on the observed RMSE stream rather than out-of-sample prediction of refit need.
 
 \begin{table}[ht]
 \centering

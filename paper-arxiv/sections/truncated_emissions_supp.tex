@@ -1,0 +1,29 @@
+\clearpage
+\section{Return Bounds and Sensitivity}\label{sec:truncated_emissions}
+
+All reported JumpHMM price simulations used the conditional emission law in~\eqref{eq:truncated_emission}. The primary residual cutoff was $b=10$, with $b=20$ as the wider sensitivity case. The state locations and scales came from the 2014--2024 fit. We specified the two residual bounds as stress assumptions before rerunning the affected experiments; they were not estimated from the largest observed return or selected to improve forecast errors. We retained the trained parameters and applied truncation only to simulation and the corresponding state-inference likelihoods. Each experiment recomputed its existing pilot or ensemble normalization under the selected cutoff. The Gaussian benchmark distributions retained their original specifications.
+
+Table~\ref{tab:emission_bounds} translates the state-specific bounds to daily percentage returns using the chronological experiment's independent pilot growth shift. These are support limits over all fitted states, not central forecast intervals. The probability removed refers to the original standardized Student-$t$ distribution. It does not represent the probability of all large stock moves, since different state locations and scales also contribute to return variation. Normalization constants differ slightly between experiments, so their shifted daily support limits can differ.
+
+\begin{table}[H]
+\centering
+\caption{Emission bounds under the primary and wider residual cutoffs. Daily return limits include the chronological pilot growth shift and the $1/252$ year step. Removed mass is the probability excluded from the original Student-$t$ emission, in percent.}\label{tab:emission_bounds}
+\input{sections/generated/emission_bounds_table}
+\end{table}
+
+The sensitivity comparison reran the fitted illustrations, paired IV ablation, both chronological option cohorts, and stock benchmarks with the same seeds and inputs at each cutoff. Table~\ref{tab:tail_sensitivity} reports call-loss summaries for the fitted illustrations and the ten-transition coupled-factor ablation. Table~\ref{tab:tail_forecasts} reports the shorter-maturity five-session coupled option errors and the JumpHMM stock distribution scores. Differences reflect the changed emission law and recomputed normalization constants, with the other fitted components held fixed.
+
+\begin{table}[H]
+\centering
+\caption{Short-call P\&L sensitivity to the residual cutoff, in dollars per share. The fitted illustration uses 1{,}000 paths and terminal P\&L; the coupled-factor ablation uses 3{,}000 paths and liquidation after ten trading transitions. Expected shortfall averages outcomes at or below the 5\% quantile.}\label{tab:tail_sensitivity}
+\input{sections/generated/tail_sensitivity_table}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Five-session forecast sensitivity to the residual cutoff. Option MAE scores the coupled-factor forecast mean in the shorter-maturity cohort. Stock CRPS scores the JumpHMM forecast distribution in each period. Values are dollars per share and retain the date and replicate weighting of the main comparisons.}\label{tab:tail_forecasts}
+\input{sections/generated/tail_forecast_table}
+\end{table}
+
+The finite support makes stock-price moments and short-call expected losses finite at every fixed horizon. This is a mathematical property of the specified model, not evidence that its support limits are correct. Agreement across these two cutoffs assesses the reported finite simulations; it does not establish insensitivity to arbitrary return-tail specifications or accuracy in unobserved market extremes.
+\FloatBarrier

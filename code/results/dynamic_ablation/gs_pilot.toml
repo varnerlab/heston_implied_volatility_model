@@ -1,0 +1,11 @@
+marginal_rf = 0.0
+growth_shift = -0.017665647144319882
+log_return_sd = 0.01791125515980328
+marginal_dt = 0.003968253968253968
+log_return_mean = 0.00039682539682539704
+
+[emission_spec]
+family = "truncated_student_t"
+standardized_cutoff = 10.0
+bound_units = "fitted Student-t scale, not standard deviation"
+sampler_version = 1

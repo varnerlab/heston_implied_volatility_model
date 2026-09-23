@@ -1,0 +1,11 @@
+{
+  "monthly": {
+    "archive": "source/monthly_runner.jl",
+    "sha256": "6c48eaa5e455c1cd932e9a01da4258aacc6ae71019f0de4397c27c90ebd9fbc9"
+  },
+  "short": {
+    "archive": "source/cohort_runner.jl",
+    "sha256": "54bece203df27a54ee59dae45509b096db111b5702e27528e7810c08190191ac"
+  },
+  "note": "The cohort selector was added while the original monthly run was completing. It changes only input/output paths. Archives preserve both executed forms; end-of-run source hashes refer to files then present."
+}

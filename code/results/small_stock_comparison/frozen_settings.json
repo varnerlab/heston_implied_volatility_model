@@ -1,0 +1,51 @@
+{
+  "training_cutoff": "2024-12-31",
+  "selected_decay": 0.97,
+  "selected_penalty": "zero",
+  "models": {
+    "GS": {
+      "coefficients": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "feature_scale": [
+        0.9799064642101019,
+        0.9902359244573479,
+        0.9807873423154588,
+        0.9392305762992766
+      ],
+      "n_training_rows": 2706,
+      "last_response_date": "2024-12-31"
+    },
+    "LLY": {
+      "coefficients": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "feature_scale": [
+        0.9638775951308624,
+        0.9515033517558458,
+        0.9784074777341099,
+        0.9392305762992766
+      ],
+      "n_training_rows": 2706,
+      "last_response_date": "2024-12-31"
+    }
+  },
+  "initial_variances": {
+    "GS": 0.00031076669316484407,
+    "LLY": 0.0002872010765393771,
+    "SPY": 0.0001183177474417779
+  },
+  "selection_period": "2019\u20132024 expanding annual blocks",
+  "source_sha256": {
+    "code/scripts/small_stock_models.py": "79a1856d8a2fb153b910991ed1532953678383ae79f745d2ba4bbe60dba844f5",
+    "code/scripts/fit_small_stock_models.py": "114a0dfa45b372f22cfd6e777c29982604b3838de9a080d881a14f413893265a",
+    "code/results/small_stock_comparison/PROTOCOL.md": "369dcb72c54dc8219eb2e449cef892b38de7d4452c027bf93cb9bb0a0f8d6529",
+    "code/results/small_stock_comparison/historical_closes.csv": "41852f61d176719e8c211a79f4203487eb1527b64f04140f8f03386e4a2c2f19"
+  }
+}

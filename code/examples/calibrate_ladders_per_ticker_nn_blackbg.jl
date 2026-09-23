@@ -17,7 +17,7 @@ using Plots.PlotMeasures
 const LADDER_DIR = joinpath(@__DIR__, "..", "data", "ladder")
 const PLOT_DIR = joinpath(@__DIR__, "..", "figures")
 const CACHE_PATH = joinpath(PLOT_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
-const PRESENTATION_DIR = abspath(joinpath(@__DIR__, "..", "..", "paper", "sections",
+const PRESENTATION_DIR = abspath(joinpath(@__DIR__, "..", "..", "paper-jcf", "sections",
                                           "figures", "presentation"))
 mkpath(PRESENTATION_DIR)
 

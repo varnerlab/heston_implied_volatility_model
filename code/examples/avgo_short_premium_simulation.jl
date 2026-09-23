@@ -1,3 +1,5 @@
+using HestonIV: simulate_truncated, emission_spec_from_env, emission_metadata
+const EMISSIONS=emission_spec_from_env()
 """
 Short-premium scenario study for AVGO.
 
@@ -117,7 +119,7 @@ const HESTON_RHO     = -0.6   # leverage: dW_v ~ ρ·dW_S + √(1-ρ²)·dW_v_in
 # Paths
 const LADDER_DIR     = joinpath(@__DIR__, "..", "data", "ladder")
 const FIG_CACHE_DIR  = joinpath(@__DIR__, "..", "figures")    # cached NN + sim artifacts
-const PLOT_DIR       = joinpath(@__DIR__, "..", "..", "paper", "sections", "figures", "avgo")
+const PLOT_DIR       = joinpath(@__DIR__, "..", "..", "paper-jcf", "sections", "figures", "avgo")
 const NN_CACHE       = joinpath(FIG_CACHE_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 const SIM_CACHE      = joinpath(FIG_CACHE_DIR, "avgo_short_premium_simulation_cache.jld2")
 const PORT_PATH      = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-surrogate.jld2")
@@ -253,7 +255,7 @@ function simulate_all()
     ticker_model = portfolio["marginals"][TICKER]
 
     println("Simulating $N_PATHS $TICKER price paths over $T_DAYS days...")
-    sim = JumpHMM.simulate(ticker_model, T_DAYS; n_paths=N_PATHS, seed=SEED)
+    sim = simulate_truncated(ticker_model, T_DAYS; n_paths=N_PATHS, seed=SEED, emissions=EMISSIONS)
     n_actual = length(sim.paths)
 
     # Anchor the projection drift to a documented long-run prior.
@@ -341,7 +343,8 @@ function load_or_simulate()
         cache_kcal  = get(cache, "K_call", NaN)
         cache_prior = get(cache, "avgo_prior_ccgr_pct", NaN)
         if cache_S0 ≈ S_0 && cache_kput ≈ K_PUT && cache_kcal ≈ K_CALL &&
-           cache_prior ≈ AVGO_PRIOR_CCGR_PCT
+           cache_prior ≈ AVGO_PRIOR_CCGR_PCT &&
+           get(cache,"emission_spec",nothing)==emission_metadata(EMISSIONS)
             println("Cache hit: loading prior simulation from $(basename(SIM_CACHE))")
             return (S_paths=cache["S_paths"],
                     v_paths=cache["v_paths"],
@@ -353,7 +356,7 @@ function load_or_simulate()
         end
     end
     art = simulate_all()
-    JLD2.jldsave(SIM_CACHE;
+    JLD2.jldsave(SIM_CACHE; emission_spec=emission_metadata(EMISSIONS),
         S_paths=art.S_paths, v_paths=art.v_paths,
         V_put=art.V_put, V_call=art.V_call,
         S_0=S_0, K_put=K_PUT, K_call=K_CALL,
@@ -707,9 +710,10 @@ out_E_pdf = joinpath(PLOT_DIR, "avgo_short_greeks.pdf")
 out_E_png = joinpath(PLOT_DIR, "avgo_short_greeks.png")
 savefig(p_E, out_E_pdf); savefig(p_E, out_E_png)
 
-# Output goes directly to paper/sections/figures/avgo/ — no promote_figures()
-# step needed (and promote_figures only knows about the flat code/figures →
-# paper/sections/figures/ mapping, which would flag these as unreferenced).
+# Output goes directly to paper-jcf/sections/figures/avgo/ — no promote_figures()
+# step needed. promote_figures() owns the flat code/figures/ namespace; nested
+# per-ticker figures like these are written into the paper tree by the scenario
+# scripts themselves, and it deliberately leaves them alone.
 
 # ============================================================================
 # Summary

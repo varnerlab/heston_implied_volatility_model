@@ -1,12 +1,18 @@
 """
     Calibration.jl
 
-Calibrate Heston parameters (κ, σ_v, v₀) and ThetaHybrid parameters
-(θ_{s_t}, β₁, β₂, β₃, γ) against historical option chain data.
+Calibrate ThetaHybrid parameters (θ_{s_t}, β₁…β₅, γ) against historical
+option chain data.
 
 Two-stage approach:
 1. JumpHMM is already fitted on historical prices (external)
-2. This module fits the variance process parameters to match observed IV
+2. This module fits the θ-function parameters to match observed IV
+
+The dynamic Heston parameters κ and σ_v are NOT identified by a static IV
+surface: under the equilibrium initialization v₀ = θ(t=0) the model IV is
+√θ, which never evaluates κ or σ_v. `calibrate` therefore passes them
+through unchanged; they must be set from time-series or option-dynamics
+considerations outside this module.
 """
 
 using Optim
@@ -72,9 +78,11 @@ function prepare_calibration_data(option_chains::DataFrame,
         # Price at this date (date_idx is 1-based into original price series)
         spot_prices[i] = prices[t_idx]
 
-        # HMM state (state_sequence is 1 shorter than prices due to differencing)
-        state_idx = min(t_idx, length(state_sequence))
-        hmm_states_out[i] = state_sequence[state_idx]
+        # HMM state: state_sequence[i] classifies the return over
+        # prices[i] → prices[i+1], so the return ENDING at the observation
+        # date t_idx is state_sequence[t_idx - 1]. Using state_sequence[t_idx]
+        # would leak the following day's return state into calibration.
+        hmm_states_out[i] = state_sequence[state_index_for_observation(t_idx, length(state_sequence))]
 
         # Single-asset mood: binary tail indicator at this state
         s = hmm_states_out[i]
@@ -86,28 +94,64 @@ function prepare_calibration_data(option_chains::DataFrame,
 end
 
 """
+    state_index_for_observation(t_idx, seq_len) → Int
+
+Index into a return-state sequence for an option observation at price index
+`t_idx`. `state_sequence[i]` classifies the return over `prices[i] → prices[i+1]`,
+so the most recent completed return at observation date `t_idx` is
+`state_sequence[t_idx - 1]`. The first price has no completed return and falls
+back to the first state; indices past the end clamp to the final return.
+"""
+state_index_for_observation(t_idx::Int, seq_len::Int)::Int = clamp(t_idx - 1, 1, seq_len)
+
+"""
+    initialize_theta_states(cal_data, N_states) → Vector{Float64}
+
+Initial θ per HMM state: the mean squared IV over observations in that state.
+States with no observations default to 0.04 (20% IV).
+"""
+function initialize_theta_states(cal_data::CalibrationData, N_states::Int)::Vector{Float64}
+    θ_sum = zeros(N_states)
+    θ_cnt = zeros(Int, N_states)
+    for i in 1:length(cal_data.market_ivs)
+        s = cal_data.hmm_states[i]
+        if 1 <= s <= N_states
+            θ_sum[s] += cal_data.market_ivs[i]^2
+            θ_cnt[s] += 1
+        end
+    end
+    return [θ_cnt[s] > 0 ? θ_sum[s] / θ_cnt[s] : 0.04 for s in 1:N_states]
+end
+
+"""
     calibrate(cal_data, N_states; kwargs...) → (HestonParameters, ThetaHybrid)
 
-Calibrate the Heston + ThetaHybrid parameters to minimize IV prediction error.
+Calibrate the ThetaHybrid parameters to minimize IV prediction error.
 
 Since v₀ = θ(t=0) (the process starts at equilibrium), the calibration objective
 simplifies: the model-predicted IV for each observation is just √θ(s, DTE, K/S, M).
-The κ parameter controls how quickly the process would mean-revert if perturbed,
-and σ_v controls the stochastic spread around the target.
+The objective therefore never evaluates κ or σ_v — they are flat directions of
+a static IV surface and CANNOT be estimated here. `calibrate` returns them
+exactly as supplied via `κ_init`/`σv_init`; set them from time-series or
+option-dynamics considerations.
+
+The mood sensitivity γ is constrained to γ ≥ 0, matching the model definition
+(the mood multiplier 1 + γ·M must stay positive for M ∈ [0, 1]).
 
 # Arguments
 - `cal_data::CalibrationData`: preprocessed calibration data
 - `N_states::Int`: number of HMM states
 
 # Keyword Arguments
-- `κ_init::Float64`: initial κ (default 5.0)
-- `σv_init::Float64`: initial σ_v (default 0.3)
+- `κ_init::Float64`: κ passed through to the returned HestonParameters (default 5.0)
+- `σv_init::Float64`: σ_v passed through to the returned HestonParameters (default 0.3)
 - `γ_init::Float64`: initial mood sensitivity (default 0.5)
 - `method`: Optim method (default NelderMead())
 - `maxiter::Int`: maximum iterations (default 5000)
 
 # Returns
-Tuple of (HestonParameters, ThetaHybrid) that minimize Σ(σ_model - IV_market)²
+Tuple of (HestonParameters, ThetaHybrid); the ThetaHybrid minimizes
+Σ(σ_model - IV_market)², the HestonParameters echo `κ_init`/`σv_init`.
 """
 function calibrate(cal_data::CalibrationData, N_states::Int;
                    κ_init::Float64=5.0,
@@ -119,38 +163,26 @@ function calibrate(cal_data::CalibrationData, N_states::Int;
     n_obs = length(cal_data.market_ivs)
 
     # Parameter vector layout:
-    # [1]       = log(κ)          (ensures κ > 0)
-    # [2]       = log(σ_v)        (ensures σ_v > 0)
-    # [3]       = γ               (mood sensitivity, unconstrained)
-    # [4:7]     = β₁, β₂, β₃, β₄ (ψ parameters, unconstrained)
-    # [8:7+N]   = log(θ_states)   (ensures θ > 0 for each state)
+    # [1]       = γ               (mood sensitivity, clamped to γ ≥ 0)
+    # [2:6]     = β₁ … β₅         (ψ parameters, unconstrained)
+    # [7:6+N]   = log(θ_states)   (ensures θ > 0 for each state)
 
-    # Initialize θ_states: group observations by state and use mean IV² as θ
-    θ_init = fill(0.04, N_states)
-    for i in 1:n_obs
-        s = cal_data.hmm_states[i]
-        if 1 <= s <= N_states
-            θ_init[s] = cal_data.market_ivs[i]^2
-        end
-    end
+    θ_init = initialize_theta_states(cal_data, N_states)
 
-    n_params = 7 + N_states
+    n_params = 6 + N_states
     x0 = Vector{Float64}(undef, n_params)
-    x0[1] = log(κ_init)
-    x0[2] = log(σv_init)
-    x0[3] = γ_init
-    x0[4] = 0.0   # β₁ (DTE effect)
-    x0[5] = 0.0   # β₂ (skew)
-    x0[6] = 0.0   # β₃ (interaction)
-    x0[7] = 0.0   # β₄ (smile curvature)
-    x0[8:end] .= log.(max.(θ_init, 1e-8))
+    x0[1] = γ_init
+    x0[2] = 0.0   # β₁ (DTE effect)
+    x0[3] = 0.0   # β₂ (skew)
+    x0[4] = 0.0   # β₃ (interaction)
+    x0[5] = 0.0   # β₄ (smile curvature)
+    x0[6] = 0.0   # β₅ (term-structure curvature)
+    x0[7:end] .= log.(max.(θ_init, 1e-8))
 
     function objective(x)
-        κ = exp(x[1])
-        σ_v = exp(x[2])
-        γ = x[3]
-        β = x[4:7]
-        θ_states = exp.(x[8:end])
+        γ = max(x[1], 0.0)
+        β = x[2:6]
+        θ_states = exp.(x[7:end])
 
         θ_func = ThetaHybrid(θ_states, β, γ)
 
@@ -179,8 +211,8 @@ function calibrate(cal_data::CalibrationData, N_states::Int;
 
     x_opt = Optim.minimizer(result)
 
-    heston = HestonParameters(exp(x_opt[1]), exp(x_opt[2]))
-    θ_func = ThetaHybrid(exp.(x_opt[8:end]), x_opt[4:7], x_opt[3])
+    heston = HestonParameters(κ_init, σv_init)
+    θ_func = ThetaHybrid(exp.(x_opt[7:end]), x_opt[2:6], max(x_opt[1], 0.0))
 
     return heston, θ_func
 end

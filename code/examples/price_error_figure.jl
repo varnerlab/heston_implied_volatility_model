@@ -29,7 +29,6 @@ using HestonIV  # for crr_american_price
 const LADDER_DIR    = joinpath(@__DIR__, "..", "data", "ladder")
 const PLOT_DIR      = joinpath(@__DIR__, "..", "figures")
 const CACHE_PATH    = joinpath(PLOT_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
-const PAPER_FIG_DIR = abspath(joinpath(@__DIR__, "..", "..", "paper", "sections", "figures"))
 
 const PANEL_TICKERS = ["SPY", "NVDA", "LLY", "GS"]
 # Risk-free rate: ~3-month T-bill area as of the late-April 2026 capture window.
@@ -380,9 +379,8 @@ out_png = joinpath(PLOT_DIR, "ladder_price_error_three_tickers.png")
 savefig(p_fig, out_pdf)
 savefig(p_fig, out_png)
 
-mkpath(PAPER_FIG_DIR)
-cp(out_pdf, joinpath(PAPER_FIG_DIR, "ladder_price_error_three_tickers.pdf"); force=true)
-println("[promote] copied ladder_price_error_three_tickers.pdf -> paper/sections/figures/")
+include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
+promote_figures()
 
 # ============================================================================
 # Summary

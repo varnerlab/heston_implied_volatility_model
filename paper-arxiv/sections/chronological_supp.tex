@@ -1,0 +1,56 @@
+\section{Chronological Evaluation Details}\label{sec:chronological_supp}
+
+The completed expanding-window experiment tested conditional surface transfer across 53 successive capture-date splits. Its two-input sector networks used moneyness and maturity from each later observation, including that observation's stock price. Table~\ref{tab:walk_forward_extended} reports the distribution of fold RMSE by test month. The new July-cutoff experiment used a larger training window, stricter capture handling, recomputed calendar DTE, and a later test period. Its pooled sector errors are reported separately in Table~\ref{tab:chronological_surface}, so they are not interpreted as a paired comparison with the earlier folds. Both analyses used one fixed neural training seed and did not quantify uncertainty from refitting with other seeds.
+
+\begin{table}[H]
+\centering
+\caption{Chronological sector-surface prediction errors across 53 expanding-window folds. Each fold fitted earlier capture dates and evaluated the next captured date using its observed stock price. RMSE is in IV percentage points.}\label{tab:walk_forward_extended}
+\input{sections/generated/walk_forward_extended_table}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Training and held-out IV errors for sector surfaces frozen at the July 31 cutoff. Training used 68 underlying sessions; testing used 23 later sessions from August 4 through September 4. Each RMSE pools observations within the indicated sector. Bias is predicted minus observed IV, in percentage points.}\label{tab:chronological_surface}
+\resizebox{\textwidth}{!}{\input{sections/generated/chronological_surface_table}}
+\end{table}
+
+The origin rule selected contracts before looking for later matches. Table~\ref{tab:forecast_availability} distinguishes selected forecasts whose endpoint fell inside the fixed window from those with valid exact-symbol endpoint quotes. The monthly cohort used 25--45 calendar DTE and selected expiry nearest 31 DTE. The short cohort used 10--21 DTE and selected expiry nearest 14 DTE after the monthly cohort proved unavailable at the five-session horizon. Missing endpoint quotes were not replaced, and coverage of the selected universe remained part of the reported result. Full stock-path availability required a recorded underlying close at every intervening exchange session; it was more restrictive than having an endpoint quote. The observed-stock diagnostic therefore had its own sample size and was compared across IV variants only on that common subset.
+
+\begin{table}[H]
+\centering
+\caption{Availability of exact-contract outcomes by cohort, ticker, and horizon. Selected counts include all origin-selected contracts whose endpoint fell within the fixed window, including endpoints on missing capture dates. Full stock path counts selected contracts with all intervening stock observations, whether or not the endpoint option quote was available. Horizons are exchange sessions.}\label{tab:forecast_availability}
+\resizebox{\textwidth}{!}{\input{sections/generated/forecast_availability_table}}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{One-session option forecasts for the monthly cohort. Scores first average matched contracts within each ticker and origin and then average dates. MAE, CRPS, and central 90\% interval width are dollars per share. Coverage averages the within-origin fraction of observed midpoints inside that interval across dates.}\label{tab:forecast_one_session}
+\resizebox{\textwidth}{!}{\input{sections/generated/forecast_one_session_table}}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Five-session IV-factor diagnostic conditional on the observed stock path for the shorter-maturity cohort. These values use realized stock information and are not joint stock--option forecasts. All variants use the same complete-path subset. Monetary quantities and aggregation follow Table~\ref{tab:forecast_main}.}\label{tab:forecast_conditional}
+\resizebox{\textwidth}{!}{\input{sections/generated/forecast_conditional_table}}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Stock forecast scores at the observed endpoint dates for the original 1{,}000-path forecasts. MAE scores forecast means. The random walk has zero log drift and the fixed pilot's one-session return standard deviation. Monetary errors are dollars per share, and coverage refers to central 90\% forecast intervals.}\label{tab:forecast_stock}
+\resizebox{\textwidth}{!}{\input{sections/generated/forecast_stock_table}}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{American-lattice repricing with the endpoint's reported IV for matched contracts with valid reported IV. This diagnostic uses information observed at the endpoint and is not a forecast. MAE is dollars per share; inside-spread frequencies compare the resulting price directly with Alpaca's indicative bid and ask.}\label{tab:forecast_repricing}
+\input{sections/generated/forecast_repricing_table}
+\end{table}
+
+\begin{table}[H]
+\centering
+\caption{Five-session option errors under mean and median point forecasts for the shorter-maturity cohort. Mean MAE and Mean RMSE score the simulated mean; Median MAE scores the median. All errors are dollars per share and use the same date-weighted contracts as Table~\ref{tab:forecast_main}. The prespecified mean-based comparison is retained alongside the additional point summaries.}\label{tab:option_point_summary}
+\input{sections/generated/option_point_summary_table}
+\end{table}
+
+We checked numerical calculations separately from agreement with market observations. Recomputing prices from the saved stock and variance paths reproduced the forecast means, quantiles, and CRPS. Increasing lattice depth from 201 to 401 steps in the sampled checks changed prices by at most \$0.0026 per share. At the first origin for each ticker, paired Monte Carlo standard errors for coupled-minus-frozen mean prices ranged from \$0.041 to \$0.061 across the four shorter-maturity five-session contracts. These errors described simulation precision for individual price differences; they were not confidence intervals for average forecast accuracy across market dates. The small aggregate MAE reductions therefore did not justify a claim of predictive superiority. In the observed-stock diagnostic, frozen IV, direct surface evaluation, and deterministic mean reversion produced a single price once the stock path was supplied, so their central intervals had zero width. Stochastic-factor intervals retained only IV uncertainty. Their coverage in Table~\ref{tab:forecast_conditional} consequently answered a different question from coverage of the joint stock--option forecasts. The saved score files include both cohorts, both horizons where outcomes were available, all five IV variants, and the date-level errors used in aggregation.
+\FloatBarrier

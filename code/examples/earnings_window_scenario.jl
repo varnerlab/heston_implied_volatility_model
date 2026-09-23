@@ -8,7 +8,8 @@ scenarios all sat in event-free windows by construction.
 
 The scenario uses the per-ticker ψ_NN INTC surface (calibrated across all
 15 dates with no earnings-feature awareness), the calibration-collapsed
-\bar{θ}_INTC, and the same Heston backbone as GS/LLY (κ=15.0, σ_v=0.5, ρ=-0.6).
+\bar{θ}_INTC, and the same CIR-like factor settings as GS/LLY
+(κ=15.0, σ_v=0.5, ρ=-0.6).
 Per the §5 Algorithm 1 note, the regime-state and mood multipliers are
 held inactive, so the simulator has *no* mechanism to anticipate the
 04-22 print — and the honest finding is that path-conditional pricing
@@ -21,7 +22,7 @@ Inputs (INTC 2026-04-14 capture, 30Δ pair on 2026-05-15 expiry):
 
 Output:
   code/figures/intc_earnings_window_simulation_cache.jld2
-  paper-jcf/sections/figures/intc_earnings/
+  paper-{arxiv,jcf}/sections/figures/intc_earnings/
   Aggregate row appended (after run_expanded_scenarios) is recorded
   separately via the standard print_summary path.
 
@@ -42,7 +43,7 @@ const RESIM = "--resim" in ARGS
 
 const LADDER_DIR    = joinpath(@__DIR__, "..", "data", "ladder")
 const FIG_CACHE_DIR = joinpath(@__DIR__, "..", "figures")
-const PLOT_DIR      = joinpath(@__DIR__, "..", "..", "paper-jcf", "sections", "figures", "intc_earnings")
+const PLOT_DIRS     = paper_figure_dirs("intc_earnings")  # every paper variant
 const NN_CACHE      = joinpath(FIG_CACHE_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 const SIM_CACHE     = joinpath(FIG_CACHE_DIR, "intc_earnings_window_simulation_cache.jld2")
 const PORT_PATH     = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-surrogate.jld2")
@@ -50,7 +51,7 @@ const PORT_PATH     = joinpath(@__DIR__, "..", "data", "pretrained-portfolio-sur
 spec = ScenarioSpec(
     ticker="INTC",
     anchor_date=Date("2026-04-13"),   # captures in the 04-14 dir are 04-13 trading session
-    T_days=32,                         # spans 04-22 print at ~day 7 / 32 from 04-13
+    expiry_date=Date("2026-05-15"),   # spans the 04-22 print
     K_put=60.0, K_call=75.0,
     market_premium_put=3.28,   market_premium_call=2.62,
     market_iv_put=0.782,       market_iv_call=0.736,
@@ -61,7 +62,7 @@ spec = ScenarioSpec(
     fig_subdir="intc_earnings",
 )
 
-hspec = HestonSpec()  # same as GS/LLY for fair comparison
+hspec = VarianceSpec()  # same fixed factor settings as GS/LLY
 
 result = run_short_scenario(spec, hspec;
                             nn_cache_path=NN_CACHE,
@@ -73,7 +74,7 @@ result = run_short_scenario(spec, hspec;
                             sector="Tech",
                             compute_greeks=true)
 
-render_scenario_figures(result, spec; plot_dir=PLOT_DIR,
+render_scenario_figures(result, spec; plot_dir=PLOT_DIRS,
                         prefix="intc_earnings")
 print_summary(result)
 

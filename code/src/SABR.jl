@@ -24,11 +24,11 @@ function hagan_sabr_iv(F::Float64, K::Float64, T::Float64,
     @assert abs(ρ) < 1.0
 
     if abs(F - K) < 1e-8 * F
-        # ATM expansion
+        # ATM expansion: σ_ATM = (α/F^(1-β)) · [1 + corrections·T]
         FmB = F^(1 - β)
-        term = 1.0 + ((1 - β)^2 / 24) * α^2 / FmB^2 +
-                     (ρ * β * ν * α) / (4 * FmB) +
-                     ((2 - 3ρ^2) / 24) * ν^2
+        term = ((1 - β)^2 / 24) * α^2 / FmB^2 +
+               (ρ * β * ν * α) / (4 * FmB) +
+               ((2 - 3ρ^2) / 24) * ν^2
         return (α / FmB) * (1.0 + term * T)
     end
 

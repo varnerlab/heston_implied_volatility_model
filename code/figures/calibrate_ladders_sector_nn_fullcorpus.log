@@ -1,201 +1,204 @@
 Loading ladder data...
-  158885 observations, 31 tickers, 6 sectors
+  234549 observations, 31 tickers, 6 sectors
 
-  ETF         : 69147 obs  (IWM, QQQ, SPY)
-  Energy      :  5608 obs  (CVX, OXY, XOM)
-  Financials  : 12869 obs  (BAC, GS, JPM, WFC)
-  Healthcare  : 18497 obs  (ABBV, AMGN, BMY, JNJ, LLY, MRNA, PFE, UNH)
-  Retail      :  7925 obs  (TGT, UPS, WMT)
-  Tech        : 44839 obs  (AAPL, AMD, AVGO, GOOG, INTC, META, MSFT, MU, NVDA, QCOM)
+  ETF         : 102738 obs  (IWM, QQQ, SPY)
+  Energy      :  7832 obs  (CVX, OXY, XOM)
+  Financials  : 17938 obs  (BAC, GS, JPM, WFC)
+  Healthcare  : 26387 obs  (ABBV, AMGN, BMY, JNJ, LLY, MRNA, PFE, UNH)
+  Retail      : 11320 obs  (TGT, UPS, WMT)
+  Tech        : 68334 obs  (AAPL, AMD, AVGO, GOOG, INTC, META, MSFT, MU, NVDA, QCOM)
 
 Standardizing inputs (global)...
-  ln(DTE): mu=2.564, sigma=1.003
-  ln(K/S): mu=-0.0207, sigma=0.0927
+  ln(DTE): mu=2.521, sigma=0.999
+  ln(K/S): mu=-0.0212, sigma=0.0924
 
 ======================================================================
   TRAINING SECTOR-SPECIFIC PSI NETWORKS
 ======================================================================
 
-  [ETF] 69147 obs, 3 tickers, arch=2->16->16->1
-    337 NN + 3 theta = 340 params (203.0 obs/param)
-    epoch    1: RMSE=14.21%  (best=14.21%)
-    epoch  500: RMSE=6.76%  (best=6.76%)
-    epoch 1000: RMSE=6.28%  (best=6.28%)
-    epoch 1500: RMSE=6.24%  (best=6.24%)
-    epoch 2000: RMSE=6.22%  (best=6.22%)
-    FINAL RMSE: 6.22%
+  [ETF] 102738 obs, 3 tickers, arch=2->16->16->1
+    337 NN + 3 theta = 340 params (302.0 obs/param)
+    epoch    1: RMSE=14.30%  (best=14.30%)
+    epoch  500: RMSE=6.77%  (best=6.77%)
+    epoch 1000: RMSE=6.17%  (best=6.17%)
+    epoch 1500: RMSE=6.12%  (best=6.12%)
+    epoch 2000: RMSE=6.10%  (best=6.10%)
+    FINAL RMSE: 6.1%
 
-  [Energy] 5608 obs, 3 tickers, arch=2->16->16->1
-    337 NN + 3 theta = 340 params (16.0 obs/param)
-    epoch    1: RMSE=12.10%  (best=12.10%)
-    epoch  500: RMSE=7.19%  (best=7.19%)
-    epoch 1000: RMSE=7.01%  (best=7.01%)
-    epoch 1500: RMSE=6.97%  (best=6.97%)
-    epoch 2000: RMSE=6.96%  (best=6.96%)
-    FINAL RMSE: 6.96%
-
-  [Financials] 12869 obs, 4 tickers, arch=2->16->16->1
-    337 NN + 4 theta = 341 params (38.0 obs/param)
-    epoch    1: RMSE=11.95%  (best=11.95%)
-    epoch  500: RMSE=6.33%  (best=6.33%)
-    epoch 1000: RMSE=5.97%  (best=5.97%)
-    epoch 1500: RMSE=5.92%  (best=5.92%)
-    epoch 2000: RMSE=5.90%  (best=5.90%)
-    FINAL RMSE: 5.9%
-
-  [Healthcare] 18497 obs, 8 tickers, arch=2->16->16->1
-    337 NN + 8 theta = 345 params (54.0 obs/param)
-    epoch    1: RMSE=15.35%  (best=15.35%)
-    epoch  500: RMSE=11.60%  (best=11.60%)
-    epoch 1000: RMSE=11.49%  (best=11.49%)
-    epoch 1500: RMSE=11.46%  (best=11.46%)
-    epoch 2000: RMSE=11.44%  (best=11.44%)
-    FINAL RMSE: 11.44%
-
-  [Retail] 7925 obs, 3 tickers, arch=2->16->16->1
+  [Energy] 7832 obs, 3 tickers, arch=2->16->16->1
     337 NN + 3 theta = 340 params (23.0 obs/param)
-    epoch    1: RMSE=13.78%  (best=13.78%)
-    epoch  500: RMSE=8.90%  (best=8.90%)
-    epoch 1000: RMSE=8.61%  (best=8.61%)
-    epoch 1500: RMSE=8.55%  (best=8.55%)
-    epoch 2000: RMSE=8.53%  (best=8.53%)
-    FINAL RMSE: 8.53%
+    epoch    1: RMSE=12.71%  (best=12.71%)
+    epoch  500: RMSE=8.00%  (best=8.00%)
+    epoch 1000: RMSE=7.90%  (best=7.90%)
+    epoch 1500: RMSE=7.88%  (best=7.88%)
+    epoch 2000: RMSE=7.88%  (best=7.88%)
+    FINAL RMSE: 7.88%
 
-  [Tech] 44839 obs, 10 tickers, arch=2->16->16->1
-    337 NN + 10 theta = 347 params (129.0 obs/param)
-    epoch    1: RMSE=17.55%  (best=17.55%)
-    epoch  500: RMSE=14.15%  (best=14.15%)
-    epoch 1000: RMSE=14.07%  (best=14.07%)
-    epoch 1500: RMSE=14.04%  (best=14.04%)
-    epoch 2000: RMSE=14.02%  (best=14.02%)
-    FINAL RMSE: 14.02%
+  [Financials] 17938 obs, 4 tickers, arch=2->16->16->1
+    337 NN + 4 theta = 341 params (53.0 obs/param)
+    epoch    1: RMSE=12.90%  (best=12.90%)
+    epoch  500: RMSE=7.13%  (best=7.13%)
+    epoch 1000: RMSE=6.79%  (best=6.79%)
+    epoch 1500: RMSE=6.72%  (best=6.72%)
+    epoch 2000: RMSE=6.70%  (best=6.70%)
+    FINAL RMSE: 6.7%
+
+  [Healthcare] 26387 obs, 8 tickers, arch=2->16->16->1
+    337 NN + 8 theta = 345 params (76.0 obs/param)
+    epoch    1: RMSE=16.31%  (best=16.31%)
+    epoch  500: RMSE=12.63%  (best=12.63%)
+    epoch 1000: RMSE=12.56%  (best=12.56%)
+    epoch 1500: RMSE=12.54%  (best=12.54%)
+    epoch 2000: RMSE=12.53%  (best=12.53%)
+    FINAL RMSE: 12.53%
+
+  [Retail] 11320 obs, 3 tickers, arch=2->16->16->1
+    337 NN + 3 theta = 340 params (33.0 obs/param)
+    epoch    1: RMSE=14.53%  (best=14.53%)
+    epoch  500: RMSE=9.76%  (best=9.76%)
+    epoch 1000: RMSE=9.55%  (best=9.55%)
+    epoch 1500: RMSE=9.51%  (best=9.51%)
+    epoch 2000: RMSE=9.50%  (best=9.50%)
+    FINAL RMSE: 9.5%
+
+  [Tech] 68334 obs, 10 tickers, arch=2->16->16->1
+    337 NN + 10 theta = 347 params (197.0 obs/param)
+    epoch    1: RMSE=18.01%  (best=18.01%)
+    epoch  500: RMSE=14.60%  (best=14.60%)
+    epoch 1000: RMSE=14.52%  (best=14.52%)
+    epoch 1500: RMSE=14.49%  (best=14.49%)
+    epoch 2000: RMSE=14.47%  (best=14.47%)
+    FINAL RMSE: 14.47%
 
 ======================================================================
   RESULTS: SECTOR-SPECIFIC NN
 ======================================================================
 
-  Overall RMSE: 9.78% IV
+  Overall RMSE: 10.24% IV
 
   Per-sector RMSE:
   Sector         N     RMSE(%)  Bias(%)  Arch
   -------------------------------------------------------
-  ETF          69147     6.22    +0.02    2->16->16->1
-  Energy        5608     6.96    +0.04    2->16->16->1
-  Financials   12869     5.90    +0.01    2->16->16->1
-  Healthcare   18497    11.44    +0.23    2->16->16->1
-  Retail        7925     8.53    +0.05    2->16->16->1
-  Tech         44839    14.02    +0.12    2->16->16->1
+  ETF          102738     6.10    +0.03    2->16->16->1
+  Energy        7832     7.88    +0.03    2->16->16->1
+  Financials   17938     6.70    +0.00    2->16->16->1
+  Healthcare   26387    12.53    +0.24    2->16->16->1
+  Retail       11320     9.50    +0.04    2->16->16->1
+  Tech         68334    14.47    +0.14    2->16->16->1
 
   Per-ticker RMSE:
   Ticker       N     RMSE(%)  Bias(%)  Sector
   -------------------------------------------------------
-  AAPL      4504    10.28    +0.80    Tech
-  ABBV      1818     8.99    +0.49    Healthcare
-  AMD       2808    18.24    -0.76    Tech
-  AMGN      2395     9.80    +0.89    Healthcare
-  AVGO      5819    10.28    +0.07    Tech
-  BAC       1674     8.51    +1.13    Financials
-  BMY       1236    12.78    +1.24    Healthcare
-  CVX       1779     7.01    +0.28    Energy
-  GOOG      2990     9.39    +0.54    Tech
-  GS        6307     4.73    -0.51    Financials
-  INTC      2036    18.15    -0.68    Tech
-  IWM      14309     6.38    -0.15    ETF
-  JNJ       1562    11.44    +1.38    Healthcare
-  JPM       2688     5.57    +0.37    Financials
-  LLY       6034    10.90    -0.26    Healthcare
-  META      8988    13.81    +0.11    Tech
-  MRNA      2047    14.59    -1.81    Healthcare
-  MSFT      6651    14.77    +0.51    Tech
-  MU        4470    15.85    -0.79    Tech
-  NVDA      4106    10.48    +0.39    Tech
-  OXY       1795     7.50    -0.42    Energy
-  PFE        877    16.96    +1.43    Healthcare
-  QCOM      2467    21.26    +0.32    Tech
-  QQQ      26016     6.25    -0.53    ETF
-  SPY      28822     6.10    +0.61    ETF
-  TGT       2707     7.52    -0.12    Retail
-  UNH       2528     9.61    +0.58    Healthcare
-  UPS       2573    11.14    -0.24    Retail
-  WFC       2200     6.84    +0.23    Financials
-  WMT       2645     6.28    +0.51    Retail
-  XOM       2034     6.39    +0.22    Energy
+  AAPL      6594    14.30    +0.91    Tech
+  ABBV      2525     9.13    +0.40    Healthcare
+  AMD       4566    17.74    -0.66    Tech
+  AMGN      3383    13.36    +1.15    Healthcare
+  AVGO      9470     9.94    +0.04    Tech
+  BAC       2399     9.47    +1.23    Financials
+  BMY       1847    12.19    +1.23    Healthcare
+  CVX       2453     7.70    +0.22    Energy
+  GOOG      4433     9.57    +0.56    Tech
+  GS        8772     5.40    -0.59    Financials
+  INTC      3417    17.78    -0.79    Tech
+  IWM      21368     6.11    -0.23    ETF
+  JNJ       2190    11.14    +1.50    Healthcare
+  JPM       3720     6.18    +0.37    Financials
+  LLY       8531    11.35    -0.33    Healthcare
+  META     13926    13.72    +0.27    Tech
+  MRNA      2851    17.49    -2.07    Healthcare
+  MSFT     10129    14.33    +0.54    Tech
+  MU        6619    18.45    -0.82    Tech
+  NVDA      5805    10.14    +0.34    Tech
+  OXY       2559     8.60    -0.38    Energy
+  PFE       1300    17.66    +1.68    Healthcare
+  QCOM      3375    21.46    +0.25    Tech
+  QQQ      39146     6.17    -0.51    ETF
+  SPY      42224     6.02    +0.67    ETF
+  TGT       3957     9.54    -0.43    Retail
+  UNH       3760    10.39    +0.68    Healthcare
+  UPS       3526    11.44    +0.02    Retail
+  WFC       3047     7.94    +0.31    Financials
+  WMT       3837     7.23    +0.54    Retail
+  XOM       2820     7.31    +0.23    Energy
 
   Per-DTE RMSE (all tickers pooled):
   DTE     N     RMSE(%)  Bias(%)
   -----------------------------------
-    1    3345    15.27    +0.39
-    2    5704    13.66    +1.37
-    3    7499    17.91    -1.80
-    4    6476    14.41    -1.01
-    5    4425    11.33    +2.48
-    6    5459    10.08    +0.06
-    7   12312    13.34    -0.53
-    8    6141     9.77    +1.43
-    9    7793     9.92    +0.51
-   10    8840     9.61    -1.23
-   11    6482     8.69    +0.97
-   12    3751     6.87    +0.88
-   13    3809     5.32    +0.30
-   14   10347    10.01    -0.52
-   15    3490     5.59    +0.24
-   16    5064     6.47    -0.09
-   17    5823     6.91    -0.42
-   18    1895     5.82    +0.71
-   25    1696     5.07    +0.52
-   28    6162     8.75    -0.47
-   29    1725     4.28    +1.02
-   30    4111     5.13    +0.26
-   31    4687     5.74    +0.21
-   32    3745     4.58    +0.32
-   39    1655     4.36    -0.16
-   42    5977     7.30    +0.08
-   43    2301     4.61    +1.04
-   44    2281     4.23    +0.81
-   46    1796     4.23    +0.04
-   57    1490     5.40    +0.04
-   58    1441     5.24    +0.12
-   62    1470     4.81    +0.97
-   63    2403     4.05    +0.39
-   66    1121     4.16    -0.29
-   78     827     2.91    +0.80
-   87    1323     4.87    -0.11
-   91    1349     4.43    +0.67
-   92    1338     4.45    +0.18
-   93    1332     4.33    +0.01
+    1    5742    17.75    +0.07
+    2    9095    14.46    +1.17
+    3    9096    16.94    -1.06
+    4   12581    15.22    -1.27
+    5    6674    10.56    +2.58
+    6    7254    10.53    -0.41
+    7   18160    12.80    -0.05
+    8   10242    10.54    +0.57
+    9   12465    10.45    +0.56
+   10   10716     9.63    -1.37
+   11   13278     9.88    -0.04
+   12    6095     7.36    +1.41
+   13    5460     6.44    +0.35
+   14   13873    10.23    -0.36
+   15    6274     8.10    +0.67
+   16    8037     8.18    +0.09
+   17    5823     7.22    -0.73
+   18    1895     6.51    +0.55
+   25    1696     5.56    +0.42
+   28    8488     8.55    -0.40
+   29    4067     6.14    +1.45
+   30    6521     5.96    +0.44
+   31    4687     5.80    +0.06
+   32    8282     6.69    +0.12
+   39    1655     4.40    -0.25
+   42    5977     6.98    -0.08
+   43    5395     5.79    +0.98
+   44    2281     4.35    +0.66
+   45    1779     5.87    +1.16
+   46    3809     7.50    -0.63
+   57    2374     4.48    +0.10
+   58    1441     5.00    -0.11
+   61     897     3.24    +0.99
+   62    1470     4.47    +0.75
+   63    2403     3.81    +0.23
+   66    1121     3.89    -0.30
+   78     827     2.89    +0.76
+   87    1323     4.59    -0.21
+   88     637     2.54    +0.03
+   91    1349     4.11    +0.57
+   92    1978     3.74    +0.23
+   93    1332     4.03    -0.08
 
   Per-ticker theta_base (sorted by IV level):
-    INTC  [Tech       ]: theta=0.8249  (90.8% IV)
-    MU    [Tech       ]: theta=0.7206  (84.9% IV)
-    MRNA  [Healthcare ]: theta=0.7027  (83.8% IV)
-    AMD   [Tech       ]: theta=0.5225  (72.3% IV)
-    QCOM  [Tech       ]: theta=0.4026  (63.5% IV)
-    LLY   [Healthcare ]: theta=0.2982  (54.6% IV)
-    META  [Tech       ]: theta=0.2977  (54.6% IV)
-    AVGO  [Tech       ]: theta=0.2945  (54.3% IV)
-    UPS   [Retail     ]: theta=0.2786  (52.8% IV)
-    MSFT  [Tech       ]: theta=0.2741  (52.4% IV)
-    OXY   [Energy     ]: theta=0.2607  (51.1% IV)
-    GOOG  [Tech       ]: theta=0.2429  (49.3% IV)
-    NVDA  [Tech       ]: theta=0.2305  (48.0% IV)
-    BMY   [Healthcare ]: theta=0.2266  (47.6% IV)
-    TGT   [Retail     ]: theta=0.2163  (46.5% IV)
-    ABBV  [Healthcare ]: theta=0.2078  (45.6% IV)
-    AMGN  [Healthcare ]: theta=0.2052  (45.3% IV)
-    PFE   [Healthcare ]: theta=0.1985  (44.6% IV)
-    XOM   [Energy     ]: theta=0.1973  (44.4% IV)
-    UNH   [Healthcare ]: theta=0.1908  (43.7% IV)
-    WFC   [Financials ]: theta=0.1854  (43.1% IV)
-    CVX   [Energy     ]: theta=0.1833  (42.8% IV)
-    BAC   [Financials ]: theta=0.1737  (41.7% IV)
-    GS    [Financials ]: theta=0.1667  (40.8% IV)
-    AAPL  [Tech       ]: theta=0.1647  (40.6% IV)
-    WMT   [Retail     ]: theta=0.1585  (39.8% IV)
-    IWM   [ETF        ]: theta=0.1388  (37.3% IV)
-    JPM   [Financials ]: theta=0.1378  (37.1% IV)
-    JNJ   [Healthcare ]: theta=0.1369  (37.0% IV)
-    QQQ   [ETF        ]: theta=0.1172  (34.2% IV)
-    SPY   [ETF        ]: theta=0.1009  (31.8% IV)
+    INTC  [Tech       ]: theta=0.9104  (95.4% IV)
+    MU    [Tech       ]: theta=0.8028  (89.6% IV)
+    MRNA  [Healthcare ]: theta=0.7493  (86.6% IV)
+    AMD   [Tech       ]: theta=0.5986  (77.4% IV)
+    QCOM  [Tech       ]: theta=0.4571  (67.6% IV)
+    AVGO  [Tech       ]: theta=0.3029  (55.0% IV)
+    OXY   [Energy     ]: theta=0.2758  (52.5% IV)
+    LLY   [Healthcare ]: theta=0.2738  (52.3% IV)
+    META  [Tech       ]: theta=0.2625  (51.2% IV)
+    UPS   [Retail     ]: theta=0.2568  (50.7% IV)
+    NVDA  [Tech       ]: theta=0.2485  (49.9% IV)
+    MSFT  [Tech       ]: theta=0.2368  (48.7% IV)
+    TGT   [Retail     ]: theta=0.2323  (48.2% IV)
+    GOOG  [Tech       ]: theta=0.2272  (47.7% IV)
+    AMGN  [Healthcare ]: theta=0.2201  (46.9% IV)
+    BMY   [Healthcare ]: theta=0.2192  (46.8% IV)
+    PFE   [Healthcare ]: theta=0.2172  (46.6% IV)
+    XOM   [Energy     ]: theta=0.2052  (45.3% IV)
+    ABBV  [Healthcare ]: theta=0.1978  (44.5% IV)
+    UNH   [Healthcare ]: theta=0.1910  (43.7% IV)
+    WFC   [Financials ]: theta=0.1897  (43.6% IV)
+    CVX   [Energy     ]: theta=0.1884  (43.4% IV)
+    BAC   [Financials ]: theta=0.1834  (42.8% IV)
+    AAPL  [Tech       ]: theta=0.1768  (42.0% IV)
+    WMT   [Retail     ]: theta=0.1681  (41.0% IV)
+    GS    [Financials ]: theta=0.1659  (40.7% IV)
+    JNJ   [Healthcare ]: theta=0.1452  (38.1% IV)
+    JPM   [Financials ]: theta=0.1407  (37.5% IV)
+    IWM   [ETF        ]: theta=0.1341  (36.6% IV)
+    QQQ   [ETF        ]: theta=0.1179  (34.3% IV)
+    SPY   [ETF        ]: theta=0.0997  (31.6% IV)
 
 ======================================================================
   THREE-WAY COMPARISON
@@ -203,22 +206,22 @@ Standardizing inputs (global)...
 
   Model                   Overall RMSE(%)
   ---------------------------------------------
-  Parametric (5 betas)         9.36
-  Shared NN (1 network)        8.03
-  Sector NN (6 networks)       9.78
+  Parametric (5 betas)        12.48
+  Shared NN (1 network)       11.47
+  Sector NN (6 networks)      10.24
 
-  Shared NN improvement:      1.33% IV (14.2% relative vs parametric)
-  Sector NN improvement:      -0.42% IV (-4.5% relative vs parametric)
+  Shared NN improvement:      1.01% IV (8.1% relative vs parametric)
+  Sector NN improvement:      2.24% IV (18.0% relative vs parametric)
 
   Per-sector RMSE comparison:
   Sector         Parametric  Shared NN  Sector NN
   -------------------------------------------------------
-  ETF              8.93       6.89       6.22
-  Energy           7.66       6.44       6.96
-  Financials       6.85       6.44       5.90
-  Healthcare      10.78       9.83      11.44
-  Retail           8.62       6.94       8.53
-  Tech            11.65      11.23      14.02
+  ETF             10.54       8.69       6.10
+  Energy           9.36       8.24       7.88
+  Financials       9.05       7.79       6.70
+  Healthcare      13.49      12.71      12.53
+  Retail          11.73      10.23       9.50
+  Tech            15.58      15.31      14.47
 
 Generating diagnostic plots...
   -> saved ladder_sector_nn_smile_panels.png/pdf
@@ -232,21 +235,58 @@ Generating diagnostic plots...
   SUMMARY
 ======================================================================
 
-  Sector-specific NN calibration on 31 tickers, 158885 observations
+  Sector-specific NN calibration on 31 tickers, 234549 observations
   6 independent psi networks (one per sector)
-  Overall RMSE: 9.78% IV
+  Overall RMSE: 10.24% IV
 
   Three-way comparison:
-    Parametric:     9.36% IV
-    Shared NN:      8.03% IV
-    Sector NN:      9.78% IV  (-4.5% improvement vs parametric)
+    Parametric:    12.48% IV
+    Shared NN:     11.47% IV
+    Sector NN:     10.24% IV  (18.0% improvement vs parametric)
 
-[promote_figures] 17/17 referenced PDFs synced -> paper/sections/figures/
-[promote_figures] WARNING: 6 unreferenced PDF(s) in code/figures/:
+[promote_figures] 0/0 referenced PDFs synced -> paper/sections/figures/
+[promote_figures] WARNING: 43 unreferenced PDF(s) in code/figures/:
+    - atm_iv_tech_blowup_diagnostic.pdf
+    - atm_term_structure.pdf
+    - forward_iv_paths.pdf
+    - iv_residuals_by_dte.pdf
+    - iv_residuals_cross_ticker.pdf
+    - iv_smile_all_tickers.pdf
+    - iv_surface_heatmap.pdf
+    - iv_surface_market_vs_model.pdf
     - ladder_atm_term_structure.pdf
     - ladder_iv_surface_spy.pdf
+    - ladder_nn_atm_term_structure.pdf
+    - ladder_nn_iv_surface_spy.pdf
+    - ladder_nn_psi_surface.pdf
+    - ladder_nn_residuals_moneyness.pdf
+    - ladder_nn_smile_panels.pdf
+    - ladder_nn_theta_base_bar.pdf
+    - ladder_per_ticker_nn_improvement.pdf
+    - ladder_per_ticker_nn_residuals.pdf
+    - ladder_per_ticker_nn_smile_panels.pdf
+    - ladder_price_error_three_tickers.pdf
     - ladder_residuals_moneyness.pdf
     - ladder_sector_nn_atm_term_structure.pdf
+    - ladder_sector_nn_psi_surfaces.pdf
+    - ladder_sector_nn_residuals.pdf
+    - ladder_sector_nn_smile_panels.pdf
+    - ladder_sector_nn_theta_base.pdf
     - ladder_smile_panels.pdf
     - ladder_theta_base_bar.pdf
+    - ladder_three_way_comparison.pdf
+    - lly_iv_trajectories.pdf
+    - lly_short_call_paths.pdf
+    - lly_short_greeks.pdf
+    - lly_short_paths.pdf
+    - lly_short_pnl_distributions.pdf
+    - lly_short_put_paths.pdf
+    - lora_arbitrage_audit.pdf
+    - lora_sweep_summary.pdf
+    - lora_trigger_roc.pdf
+    - nvda_iv_smile.pdf
+    - static_arbitrage_heatmap.pdf
+    - vix_through_holdout.pdf
+    - walk_forward_extended_gap.pdf
+    - walk_forward_gap.pdf
     -> cite them in paper/sections/*.tex or remove them.

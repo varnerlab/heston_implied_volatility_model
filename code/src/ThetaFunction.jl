@@ -9,18 +9,23 @@ Hybrid θ-function implementation:
     ψ(β, DTE, moneyness) → Float64
 
 Term-structure, skew, and smile adjustment:
-    ψ = exp(β₁·ln(DTE) + β₂·ln(K/S) + β₃·ln(DTE)·ln(K/S) + β₄·(ln(K/S))²)
+    ψ = exp(β₁·ln(DTE) + β₂·ln(K/S) + β₃·ln(DTE)·ln(K/S) + β₄·(ln(K/S))² + β₅·(ln(DTE))²)
 
 - β₁: term structure decay (positive = contango, IV decays toward expiration)
 - β₂: skew (negative = put skew, OTM puts have higher IV)
 - β₃: interaction (skew flattens at longer maturities)
 - β₄: smile curvature (positive = U-shape, both wings have elevated IV)
+- β₅: term-structure curvature (bends the DTE decay away from a pure power law)
+
+Backward compatible with 3- and 4-element β; missing terms are treated as zero.
 """
 function ψ(β::Vector{Float64}, DTE::Float64, moneyness::Float64)::Float64
     log_DTE = log(max(DTE, 1.0))  # floor at 1 day to avoid log(0)
     log_m = log(moneyness)
-    β₄ = length(β) >= 4 ? β[4] : 0.0  # backward compatible with 3-element β
-    return exp(β[1] * log_DTE + β[2] * log_m + β[3] * log_DTE * log_m + β₄ * log_m^2)
+    β₄ = length(β) >= 4 ? β[4] : 0.0
+    β₅ = length(β) >= 5 ? β[5] : 0.0
+    return exp(β[1] * log_DTE + β[2] * log_m + β[3] * log_DTE * log_m +
+               β₄ * log_m^2 + β₅ * log_DTE^2)
 end
 
 """
