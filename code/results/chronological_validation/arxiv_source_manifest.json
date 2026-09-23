@@ -1,7 +1,7 @@
 {
   "archive": "paper-arxiv/arxiv-source-v2.1.tar.gz",
-  "archive_sha256": "ae08c1978fa99f5c2face02ab58eff54dc6690b8426e64aed740f5e10bd3b2bd",
-  "reviewed_pdf_sha256": "adc818f2ee7e8318c683c22e458282d1eb2eb47ad710fb39d1dad4deedae532a",
+  "archive_sha256": "8dae1ae67e22da1936ac86503f3bc2adc4b26c5a3c541b446415a930c94d6357",
+  "reviewed_pdf_sha256": "a3ceb53bb89ea38c25797a6970d263884cdef6e666fbdb3c067c80551ce7fa46",
   "plain_abstract_sha256": "98d81cdf051900cd17f77e4772eb32ea74e82b61620d647233d85e81bba29d37",
   "files": {
     "main.bbl": "d6c8b09da2c0331081b7c734735fa9ccdcf9c6daa99c026596618ec353961442",
@@ -53,13 +53,13 @@
     "sections/generated/tail_sensitivity_table.tex": "f6231fded1ce2b976586177644a36695f7744b5a51cf21436a161f9809d836a4",
     "sections/generated/walk_forward_extended_table.tex": "486f58cf9cf55cff6558170ff051eb27cde13048555add026509b33ebd5bc017",
     "sections/introduction.tex": "2a244b9041a2875bc584e23bad96bf0d145f6eef8a6258c38282589e85360b69",
-    "sections/methods.tex": "8fa9178e7cdfd09baf691750f938bde0c4e8dd12e67d628247062479ef079d5d",
+    "sections/methods.tex": "b92dc540b820dae207447a4caf3a25cd7dc6230ff1f75ec623e90fa19dd74597",
     "sections/results.tex": "bf1adb13adcb8c9136b1dc12307391186fed62a93ee2a52ec7e6e13decae36d0",
-    "sections/scenarios.tex": "f5cdb3ac4227e1ce5becc6210ac07b313a454b05e5e1f12d2f46ed8de0e9d79e",
+    "sections/scenarios.tex": "a63731511402bfe30d69ab94aac0d13dad6eb309321495b8afa9ab5e6f0988fd",
     "sections/stock_validation_methods.tex": "03353679e2823a9dc1c8ca27ad73d2301a14e9817c111710d6585171448f9e95",
     "sections/stock_validation_results.tex": "95a5ffad3ba9c8151372c4c47ca8ecccf4dff5f09d8704630bee16a1331f5485",
     "sections/stock_validation_supp.tex": "fb278deb7156c2dbc9c49a209b2a23e990a6ca4b12c23de43b12ac24bd8ac772",
-    "sections/supplement.tex": "0378fcd38da401f87919859834b7e273cb15aec229b3152ccbb2cd482e781c17",
+    "sections/supplement.tex": "e8b4b4ee7bd3b9ee3cbe8a5c7714f4920681d4c4c528bb5d55af2805b41828c8",
     "sections/truncated_emissions_supp.tex": "e7f87b0f09b0d50f43d8dfca705764e71a88f2bbfc04bcdcabe291c8ab67c8f0"
   }
 }

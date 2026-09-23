@@ -93,7 +93,29 @@ We fixed $\kappa=15$, $\sigma_v=0.5$, and $v_{\min}=(0.005)^2$ as scenario assum
 
 \subsection{American-option pricing, calendar clock, and terminal profit and loss}
 
-Recombining lattices price American options by comparing continuation with immediate exercise at every node during backward induction~\cite{broadie1996}. The Cox--Ross--Rubinstein (CRR) construction sets its up and down factors from the supplied volatility~\cite{cox1979}, and alternatives include the moment matches of Jarrow--Rudd and Tian~\cite{jarrow1983,tian1993} and the Peizer--Pratt inversion used by Leisen--Reimer to improve finite-step convergence~\cite{leisen1996}. Both pricers used here accepted one IV value for a given contract and date. The GS and LLY contracts ran from April 28 to May 29, 2026, an interval of 31 calendar days and 22 exchange-session transitions after excluding weekends and the May 25 market holiday. The surface and lattice used calendar DTE, with $\tau_t/365$ years entering the pricer, while the stock and variance states advanced on the 22 trading transitions. Within this common clock, corpus-wide dollar-price checks used a 200-step CRR American tree and scenario marks and Greeks used a 201-step Leisen--Reimer (LR) American tree, both with a constant risk-free rate of $4.25\%$ and continuous dividend yield $q=0$. For low-volatility states or saturated Leisen--Reimer probabilities, an American CRR tree supplied the mark and retained the immediate-exercise comparison. At each trading transition, the simulation priced each contract at its current stock price, remaining maturity, and factor value before advancing the factor toward its moving target, and at expiration it replaced the lattice value with intrinsic value (Supplementary Algorithm~\ref{alg:forward_sim}).
+Recombining lattices price American options by comparing continuation with immediate exercise at every node during backward induction~\cite{broadie1996}. The Cox--Ross--Rubinstein (CRR) construction sets its up and down factors from the supplied volatility~\cite{cox1979}, and alternatives include the moment matches of Jarrow--Rudd and Tian~\cite{jarrow1983,tian1993} and the Peizer--Pratt inversion used by Leisen--Reimer to improve finite-step convergence~\cite{leisen1996}. Both pricers used here accepted one IV value for a given contract and date. The GS and LLY contracts ran from April 28 to May 29, 2026, an interval of 31 calendar days and 22 exchange-session transitions after excluding weekends and the May 25 market holiday. The surface and lattice used calendar DTE, with $\tau_t/365$ years entering the pricer, while the stock and variance states advanced on the 22 trading transitions. Within this common clock, corpus-wide dollar-price checks used a 200-step CRR American tree and scenario marks and Greeks used a 201-step Leisen--Reimer (LR) American tree, both with a constant risk-free rate of $4.25\%$ and continuous dividend yield $q=0$. For low-volatility states or saturated Leisen--Reimer probabilities, an American CRR tree supplied the mark and retained the immediate-exercise comparison. At each trading transition, the simulation priced each contract at its current stock price, remaining maturity, and factor value before advancing the factor toward its moving target, and at expiration it replaced the lattice value with intrinsic value (Algorithm~\ref{alg:forward_sim}).
+
+\begin{algorithm}[H]
+\caption{Forward simulation of contract values}\label{alg:forward_sim}
+\begin{algorithmic}[1]
+\Require JumpHMM marginal; fitted $(\theta_i,\psi_i)$; contract $(K,T)$; trading dates $d_0,\ldots,d_L$; calendar DTE $\tau_0,\ldots,\tau_L$; $(\kappa,\sigma_v,\rho)$; $S_0$; $r$; $N_p$ paths; LR depth $N_{\mathrm{LR}}$.
+\Ensure Stock, variance, IV, and option-value paths.
+\State Draw $N_p$ JumpHMM stock paths with $L$ trading transitions and emissions truncated as in~\eqref{eq:truncated_emission}.
+\State Compute $Z^S_{j,\ell}$ by standardizing all simulated one-session log returns as in~\eqref{eq:return_shock}.
+\State Draw $Z^\perp_{j,\ell}\sim\mathcal N(0,1)$ once per path and transition; set $Z^v_{j,\ell}\gets\rho Z^S_{j,\ell}+\sqrt{1-\rho^2}Z^\perp_{j,\ell}$ and reuse it for every contract.
+\For{contract $a$ and path $j$}
+  \State $v_{a,0}^{(j)} \gets \theta_i\psi_i(\tau_0,K/S_0)$
+  \For{$\ell=0$ \textbf{to} $L-1$}
+    \State $\sigma_{a,\ell}^{(j)} \gets \sqrt{v_{a,\ell}^{(j)}}$
+    \State $P_{a,\ell}^{(j)} \gets \mathrm{LR}_{N_{\mathrm{LR}}}(S_{j,\ell},K,\sigma_{a,\ell}^{(j)},\tau_\ell/365,r)$
+    \State $\bar v_{a,\ell}^{(j)}\gets\theta_i\psi_i(\tau_\ell,K/S_{j,\ell})$
+    \State Update $v_{a,\ell+1}^{(j)}$ with the hard-floor rule in~\eqref{eq:euler} using $\Delta t=1/252$.
+  \EndFor
+  \State $P_{a,L}^{(j)}\gets\max\{\phi(S_{j,L}-K),0\}$, where $\phi=1$ for a call and $\phi=-1$ for a put.
+\EndFor
+\State \Return all paths.
+\end{algorithmic}
+\end{algorithm}
 
 We calculated terminal profit and loss for a short position that received the captured indicative midpoint $p_0$ as follows:
 \begin{equation}\label{eq:terminal_pnl}
