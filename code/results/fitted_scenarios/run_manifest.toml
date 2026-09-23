@@ -1,0 +1,14 @@
+completed = true
+
+[emission_spec]
+family = "truncated_student_t"
+standardized_cutoff = 10.0
+bound_units = "fitted Student-t scale, not standard deviation"
+sampler_version = 1
+
+[source_sha256]
+"code/src/ScenarioTemplate.jl" = "a1cc2b4b35f32174bd71f52d89e582775ad5afe06f8b2f18508ca9624bbe17ee"
+"code/src/TruncatedEmissions.jl" = "b1cfefb8931e22e780b574f40c3226454d39cf6842c7a13ea2d5e77ab2805895"
+"code/src/HestonIV.jl" = "c8f2a5151235b310af4acae120272df95e4ddc03de165f4ae37f5db091c190ed"
+"code/Manifest.toml" = "ac3f8460f45ff694b34cce509fe5b31b7d868131fa192bb5456bb44bdf994700"
+"code/examples/reproduce_arxiv_scenarios.jl" = "1db4c9d6ccf4c80113070ac8eed3eaaf4b60987a2b61dee50fc4a2ff6f6ed52f"

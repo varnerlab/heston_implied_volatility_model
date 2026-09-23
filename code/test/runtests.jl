@@ -7,6 +7,7 @@ using HestonIV
     include("test_heston_variance.jl")
     include("test_crr_tree.jl")
     include("test_calibration.jl")
+    include("test_truncated_emissions.jl")
 end
 
 @testset "Corpus tooling" begin

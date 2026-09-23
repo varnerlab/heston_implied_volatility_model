@@ -26,6 +26,7 @@ using .StockForecastDiagnosis
     likelihood=[pdf(TDist(e.ν),(.3-e.μ)/e.σ)/e.σ for e in m.emissions]
     expected=brute.*likelihood;expected./=sum(expected)
     @test condition(m,brute,.3)≈expected
+    @test_throws ErrorException condition(m,brute,1e6)
     # A forced alternating chain must transition before the first future return.
     alternate=JumpHiddenMarkovModel(m.partition,[0. 1.;1. 0.],m.emissions,
         [.5,.5],JumpParameters(0.,.7;p_neg=.6,N_tail=1),5.,0.,1/252)

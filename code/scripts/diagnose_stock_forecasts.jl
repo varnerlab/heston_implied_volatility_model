@@ -1,3 +1,5 @@
+using HestonIV: simulate_truncated, emission_spec_from_env, emission_metadata, truncated_t_variance
+const EMISSIONS = emission_spec_from_env()
 # Compare fixed stock forecast mechanisms using only information at each origin.
 using CSV,DataFrames,Dates,JLD2,JumpHMM,Statistics,Random,LinearAlgebra,TOML,SHA,Test
 include(joinpath(@__DIR__,"..","src","ForecastValidation.jl"))
@@ -7,14 +9,20 @@ BLAS.set_num_threads(1)
 const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 const ORIGINAL=joinpath(ROOT,"code/results/chronological_validation")
 const OUT=joinpath(ROOT,"code/results/stock_forecast_diagnosis")
+const RESULT_ROOT=get(ENV,"SIMULATION_RESULTS_ROOT",joinpath(ROOT,"code/results"))
+const RUNOUT=joinpath(RESULT_ROOT,basename(OUT))
+mkpath(RUNOUT)
+open(joinpath(RUNOUT,"manifest.toml"),"w") do io
+    TOML.print(io,Dict("completed"=>false,"emission_spec"=>emission_metadata(EMISSIONS)))
+end
 const N=10000
 const SEEDS=[202609081,202609082,202609083]
 const LAST=Date("2026-09-04")
 stocks=CSV.read(joinpath(ORIGINAL,"stock_sessions.csv"),DataFrame)
 stocks.session=Date.(stocks.session)
-pilots=TOML.parsefile(joinpath(ORIGINAL,"pilot_constants.toml"))
+pilots=TOML.parsefile(joinpath(RESULT_ROOT,"chronological_validation/pilot_constants.toml"))
 portfolio=JLD2.load(joinpath(ROOT,"code/data/pretrained-portfolio-surrogate.jld2"))
-old_scores=CSV.read(joinpath(ORIGINAL,"stock_scores.csv"),DataFrame)
+old_scores=CSV.read(joinpath(RESULT_ROOT,"chronological_validation/stock_scores.csv"),DataFrame)
 results=NamedTuple[];diagnostics=NamedTuple[];mixing=NamedTuple[];daily=NamedTuple[]
 variance_audit=NamedTuple[]
 training_data=JLD2.load(joinpath(ROOT,"code/data/equity/SP500-Daily-OHLC-1-3-2014-to-12-31-2024.jld2"),"dataset")
@@ -23,7 +31,14 @@ input_hashes=Dict(f=>(open(sha256,joinpath(ROOT,f)) |> bytes2hex) for f in
     ["code/data/pretrained-portfolio-surrogate.jld2","code/results/chronological_validation/stock_sessions.csv",
      "code/data/equity/SP500-Daily-OHLC-1-3-2014-to-12-31-2024.jld2",
      "code/results/stock_forecast_diagnosis/PROTOCOL.md","code/scripts/diagnose_stock_forecasts.jl",
-     "code/src/StockForecastDiagnosis.jl"])
+     "code/src/TruncatedEmissions.jl","code/src/HestonIV.jl","code/Manifest.toml",
+    "code/results/truncated_emissions/PROTOCOL.md","code/src/StockForecastDiagnosis.jl"])
+
+for ticker in ["GS","LLY"]
+    @assert pilots[ticker]["emission_spec"]==emission_metadata(EMISSIONS)
+end
+input_hashes[relpath(joinpath(RESULT_ROOT,"chronological_validation/pilot_constants.toml"),ROOT)]=
+    open(sha256,joinpath(RESULT_ROOT,"chronological_validation/pilot_constants.toml")) |> bytes2hex
 
 function checkpoints(model,observations,shift,until,components)
     first_day=minimum(keys(observations));mass=initial_mass(model,components)
@@ -34,7 +49,7 @@ function checkpoints(model,observations,shift,until,components)
         mass=propagate(model,mass,components)
         if haskey(observations,day) && haskey(observations,previous)
             lr=log(observations[day]/observations[previous])
-            mass=condition(model,mass,lr/model.dt-model.rf-shift)
+            mass=condition(model,mass,lr/model.dt-model.rf-shift;emissions=EMISSIONS)
             push!(returns,(day,lr))
         end
         saved[day]=copy(mass);previous=day
@@ -53,7 +68,7 @@ for (ticker_index,ticker) in enumerate(["GS","LLY"])
     within=sum(model.stationary.*scales.^2)
     push!(variance_audit,(ticker,training_daily_sd=std(historical_returns),
         training_daily_mean=mean(historical_returns),stationary_daily_mean=location,
-        stationary_daily_sd=sqrt(between+within*model.ν/(model.ν-2)),
+        stationary_daily_sd=sqrt(between+within*truncated_t_variance(model.ν,EMISSIONS)),
         between_state_variance=between,within_state_variance_unscaled=within,
         scale_corrected_sd=sqrt(between+within),fallback_states=count(e->e.is_fallback,model.emissions),
         fallback_probability=sum(model.stationary[[e.is_fallback for e in model.emissions]])))
@@ -93,7 +108,7 @@ for (ticker_index,ticker) in enumerate(["GS","LLY"])
         # Reproduce the exact saved first-origin simulation before changing it.
         if origin==first(origins)
             seed=202600000+1000ticker_index+Dates.value(origin-Date("2026-01-01"))
-            sim=JumpHMM.simulate(model,5;n_paths=1000,seed)
+            sim=simulate_truncated(model,5;n_paths=1000,seed,emissions=EMISSIONS)
             g=hcat([p.observations for p in sim.paths]...)
             prices=S0.*exp.(cumsum((g.+shift.+model.rf).*model.dt;dims=1))
             for h in [1,5]
@@ -107,10 +122,10 @@ for (ticker_index,ticker) in enumerate(["GS","LLY"])
         end
         for (replicate,base_seed) in enumerate(SEEDS)
             seed=base_seed+1000ticker_index+10000Dates.value(origin-Date("2026-01-01"))
-            sim=JumpHMM.simulate(model,5;n_paths=N,seed)
+            sim=simulate_truncated(model,5;n_paths=N,seed,emissions=EMISSIONS)
             legacy=(hcat([p.observations for p in sim.paths]...).+shift.+model.rf).*model.dt
-            stationary=simulate_forward(model,initial_mass(model,components),N,5,seed;shift,components)
-            filtered=simulate_forward(model,posterior,N,5,seed;shift,components)
+            stationary=simulate_forward(model,initial_mass(model,components),N,5,seed;shift,components,emissions=EMISSIONS)
+            filtered=simulate_forward(model,posterior,N,5,seed;shift,components,emissions=EMISSIONS)
             adapted=daily_mean.+scale.*(filtered.-daily_mean)
             normal=randn(MersenneTwister(seed+1),5,N)
             variants=[("legacy_stationary",legacy),("stationary_transition",stationary),
@@ -147,9 +162,9 @@ end
 for (name,rows) in [("scores",results),("origin_diagnostics",diagnostics),("state_memory",mixing),
     ("daily_returns",daily),("reconstruction",checks),("examples",examples),("model_settings",models),
     ("training_variance_audit",variance_audit)]
-    CSV.write(joinpath(OUT,name*".csv"),DataFrame(rows))
+    CSV.write(joinpath(RUNOUT,name*".csv"),DataFrame(rows))
 end
-open(joinpath(OUT,"manifest.toml"),"w") do io
-    TOML.print(io,Dict("completed"=>true,"paths"=>N,"seeds"=>SEEDS,"input_sha256"=>input_hashes))
+open(joinpath(RUNOUT,"manifest.toml"),"w") do io
+    TOML.print(io,Dict("emission_spec"=>emission_metadata(EMISSIONS),"completed"=>true,"paths"=>N,"seeds"=>SEEDS,"input_sha256"=>input_hashes))
 end
 println("Stock-only diagnosis complete.")

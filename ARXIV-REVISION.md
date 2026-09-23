@@ -2,6 +2,12 @@
 
 ## Completed work
 
+- September 14: explicitly truncated Student-t price emissions at ±10 fitted
+  scale units, complete reruns at ±10 and ±20, and three sensitivity tables.
+  All 251 Julia tests, six Python tests, and 136 forecast reconstruction checks
+  pass. The 40-page manuscript and 55-file source archive are synchronized.
+  Alpaca indicative-feed provenance is documented and no author query remains.
+
 - Five-arm paired dynamic ablation on GS and LLY: frozen IV, direct surface,
   deterministic mean reversion, uncoupled stochastic factors, and the full
   return-coupled factors. Three seeds, 3,000 paths per ticker, four interim
@@ -42,18 +48,21 @@ not cover calendar consistency or dynamic no-arbitrage.
 
 ## Confirmed data provenance
 
-The author identified Alpaca Markets, accessed through a free-tier account,
-as the option-data provider and specified the standard 2014–2024 JumpHMM
-training window. The saved model records 2,767 training days.
+The author has repeatedly confirmed daily option-chain downloads through a free
+Alpaca account. This provenance is settled and requires no further author query.
+Alpaca identifies the unsubscribed snapshot feed as indicative and describes its
+quotes as modified derivatives of OPRA. Methods and quote-comparison captions
+now identify the indicative feed and its interpretation. Retrieval timestamps
+remain distinct from exchange quote timestamps. The 2014–2024 JumpHMM training
+window and 2,767 training days are also confirmed.
 
-Alpaca's [Market Data FAQ](https://docs.alpaca.markets/us/docs/market-data-faq),
-checked September 5, 2026, documents Black–Scholes calculations and a
-Vega-based iterative IV solver. The paper cites that documentation and states
-that the reported IV field was fitted directly. Reconstructing the vendor's
-complete internal implementation is not a prerequisite for this study.
+## Truncated price emissions
 
-The previous statements treating vendor-method details and the training
-window as unresolved submission requirements have been removed.
+On September 14 the author authorized explicitly truncated Student-t emissions
+for price simulation. The protocol is recorded in
+`code/results/truncated_emissions/PROTOCOL.md`: residual bounds of ±10 fitted
+scale units, with ±20 as a wider sensitivity case, specified before rerunning
+forecast scores. No fitted neural surface is changed by this correction.
 
 ## Further work for prospective validation
 

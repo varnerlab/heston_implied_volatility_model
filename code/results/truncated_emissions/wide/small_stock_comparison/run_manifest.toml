@@ -1,0 +1,21 @@
+seeds = [202609091, 202609092, 202609093]
+paths = 10000
+completed = true
+
+[emission_spec]
+family = "truncated_student_t"
+standardized_cutoff = 20.0
+bound_units = "fitted Student-t scale, not standard deviation"
+sampler_version = 1
+
+[source_sha256]
+"code/src/TruncatedEmissions.jl" = "b1cfefb8931e22e780b574f40c3226454d39cf6842c7a13ea2d5e77ab2805895"
+"code/src/HestonIV.jl" = "c8f2a5151235b310af4acae120272df95e4ddc03de165f4ae37f5db091c190ed"
+"code/Manifest.toml" = "ac3f8460f45ff694b34cce509fe5b31b7d868131fa192bb5456bb44bdf994700"
+"code/src/ForecastValidation.jl" = "02b51565dfe298c41e0bdab8f75faeb30b3da1c0c2fc42f2919843dbb5f004a2"
+"code/data/pretrained-portfolio-surrogate.jld2" = "212a0b0559381d2dc0fe3b2bb8bf61990107319ca44d2c7fd96a6c407783d31e"
+"code/results/truncated_emissions/wide/chronological_validation/pilot_constants.toml" = "a866b9fa3e33fabfad421fd1351a20dbb276d15629b170c268841e205bdb0745"
+"code/scripts/run_small_stock_comparison.jl" = "7c7e8369cb9232d78a1cf3d8a8ea49db3e8e7389ac8ea10660c67b138468acb0"
+"code/results/truncated_emissions/PROTOCOL.md" = "35e656033158f7ead52a47aeee3af69f230b7cbd708c1d910c57ca4364c3d514"
+"code/results/small_stock_comparison/frozen_settings.json" = "3348c1884b0d23362b6a02b31e17c0d30bf1cf202ca3fc5f6122b9ea4e11632b"
+"code/results/small_stock_comparison/forecast_inputs.csv" = "3d83dcca348390ca9509390eabe8abfca2edf16b55646d70ffa8e5ae24a70a92"

@@ -1,15 +1,22 @@
-\begin{thebibliography}{23}
+\begin{thebibliography}{25}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
   \providecommand{\doi}[1]{doi: #1}\else
   \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
 
-\bibitem[{Alpaca Markets}(2026)]{alpaca_market_data_faq}
+\bibitem[{Alpaca Markets}(2026{\natexlab{a}})]{alpaca_market_data_faq}
 {Alpaca Markets}.
 \newblock Market data {FAQ}: Options.
-\newblock \url{https://docs.alpaca.markets/us/docs/market-data-faq}, 2026.
+\newblock \url{https://docs.alpaca.markets/us/docs/market-data-faq},
+  2026{\natexlab{a}}.
 \newblock Accessed September 5, 2026.
+
+\bibitem[{Alpaca Markets}(2026{\natexlab{b}})]{alpaca_option_feed}
+{Alpaca Markets}.
+\newblock Historical option data: Data sources, 2026{\natexlab{b}}.
+\newblock URL \url{https://docs.alpaca.markets/us/docs/historical-option-data}.
+\newblock Accessed September 14, 2026.
 
 \bibitem[Alswaidan and Varner(2026)]{jumphmm2025}
 A.~Alswaidan and J.~D. Varner.
@@ -44,6 +51,12 @@ M.~Broadie and J.~Detemple.
 \newblock \emph{Review of Financial Studies}, 9\penalty0 (4):\penalty0
   1211--1250, 1996.
 \newblock \doi{10.1093/rfs/9.4.1211}.
+
+\bibitem[Cassidy et~al.(2009)Cassidy, Hamp, and Ouyed]{cassidy2009}
+D.~T. Cassidy, M.~J. Hamp, and R.~Ouyed.
+\newblock Pricing european options with a log student's t-distribution: a
+  gosset formula, 2009.
+\newblock URL \url{https://arxiv.org/abs/0906.4092}.
 
 \bibitem[Cont(2001)]{cont2001}
 R.~Cont.

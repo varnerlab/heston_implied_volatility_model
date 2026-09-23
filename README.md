@@ -104,10 +104,9 @@ separate. Source hashes, capture exclusions, selected contracts, exact endpoint
 matches, fitted weights and preprocessing, path distributions, and date-level
 scores are saved with the new experiment.
 
-From the repository root:
+From the repository root, using the committed snapshots:
 
 ```sh
-julia --project=code --startup-file=no code/scripts/sync_ladder_extended.jl
 python3 code/scripts/prepare_chronological_validation.py
 python3 code/scripts/select_short_maturity_validation.py
 julia --project=code --startup-file=no code/scripts/fit_chronological_surface.jl
@@ -118,6 +117,9 @@ julia --project=code --startup-file=no code/scripts/check_forecast_outputs.jl
 julia --project=code --startup-file=no code/scripts/render_forecast_validation.jl
 make -C paper-arxiv all
 ```
+
+The optional `sync_ladder_extended.jl` command extends collection from an author-local
+Alpaca SDK checkout; it is not needed to reproduce the committed observations.
 
 Training checkpoints validate their input and trainer hashes before reuse. The
 large derived `training.csv`, `surface_test.csv`, and `surface_predictions.csv`
@@ -140,8 +142,10 @@ Simply accumulating maturity ladders does not produce complete contract historie
 The forecast results do not establish a consistent benefit from the fixed coupled
 factor over frozen IV. The manuscript reports that outcome, the conditional
 observed-stock diagnostic, and the limited, overlapping set of market dates.
-The archived runner versions document the addition of the cohort selector during
-the original run; the numerical procedure was unchanged.
+The older `source/monthly_runner.jl` and `source/cohort_runner.jl` files document
+the historical untruncated runs. The current manifests point to the exact new
+source snapshots under `source/code/`; use the maintained drivers to reproduce
+the truncated-emission results.
 
 After rebuilding the manuscript, `python3 code/scripts/package_arxiv_source.py`
 creates `paper-arxiv/arxiv-source-v2.1.tar.gz` from the reachable TeX sources,
@@ -159,7 +163,8 @@ initialization, causal state filtering, recent volatility, random walks, and an
 unchanged-price benchmark on identical dates. Run
 `julia --project=code --startup-file=no code/scripts/diagnose_stock_forecasts.jl`
 and then `python3 code/scripts/summarize_stock_diagnosis.py` to reproduce it.
-The original portfolio and forecast outputs are preserved. The initialization
+The training-fitted portfolio is preserved. Forecast outputs have been regenerated
+with the explicitly truncated emission law described below. The initialization
 check is now incorporated into the manuscript, with the broader exploratory
 outputs retained separately.
 
@@ -174,11 +179,11 @@ candidate, date, horizon, and simulation-replicate scores are retained.
 
 ## Manuscript prepared for the author's prose pass
 
-The current 36-page `paper-arxiv/main.pdf` integrates the 2025 and 2026 stock
+The current `paper-arxiv/main.pdf` integrates the 2025 and 2026 stock
 comparisons in Table 4 and the supplement. The abstract, introduction, results,
 discussion, conclusion, and forecast captions distinguish illustrative scenarios,
 forecasts evaluated against later observations, and diagnostics supplied with
-future stock information. JumpHMM remains the original worked example. The
+future stock information. JumpHMM with explicitly truncated emissions remains the worked example. The
 results support controlled comparisons of IV assumptions; they do not establish
 a consistent stock or option forecasting advantage.
 
@@ -196,3 +201,53 @@ reachable manuscript sources, required figures, bibliography, and local style;
 it does not include old README files, raw data, or submission notes. Check the
 build log and rendered PDF again after a prose pass. The audit for this prepared
 version is recorded in `paper-arxiv/submission-check-v2.1.md`.
+
+
+## Truncated Student-t price simulations
+
+The September 14 correction draws each state emission as `mu + sigma * Z`,
+where `Z` follows Student-t conditional on `abs(Z) <= 10`. The bound uses fitted
+scale units, not standard deviations. State and jump paths are retained; rejected
+emissions are independently redrawn before drift shifts and exponentiation.
+No paths, stock prices, or option losses are clipped. The fitted IV surfaces and
+2014–2024 state parameters are retained. The cutoff is a stated stress assumption,
+not a number selected by forecast performance. See
+`code/results/truncated_emissions/PROTOCOL.md` and `FINDINGS.md`.
+
+The maintained scenario and forecast drivers read `JUMPHMM_EMISSION_CUTOFF`
+(default `10`). `SIMULATION_RESULTS_ROOT` redirects simulation outputs while
+retaining the canonical fitted models, contract inputs, and observed data.
+Library callers use `simulate_truncated(model, steps; emissions=TruncatedStudentT(10))`.
+Copula portfolios truncate marginal draws before rank reordering. Factor portfolios
+are rejected by the bounded sampler because their market and residual generators
+need a separate finite-moment specification. The older generic scenario APIs
+retain the separate clock and variance-engine limitations recorded in the audit;
+`ScenarioTemplate` and the chronological drivers are the manuscript implementations.
+
+To reproduce the wider-bound sensitivity, run the same fitted, ablation, forecast,
+and stock-comparison drivers with both environment variables set:
+
+```sh
+export SIMULATION_RESULTS_ROOT="$PWD/code/results/truncated_emissions/wide"
+export JUMPHMM_EMISSION_CUTOFF=20
+julia --project=code code/examples/reproduce_arxiv_scenarios.jl
+julia --project=code code/examples/dynamic_iv_ablation.jl
+julia --project=code code/scripts/run_chronological_forecasts.jl
+FORECAST_COHORT=short julia --project=code code/scripts/run_chronological_forecasts.jl
+julia --project=code code/scripts/run_small_stock_comparison.jl
+python3 code/scripts/summarize_small_stock_comparison.py
+unset SIMULATION_RESULTS_ROOT JUMPHMM_EMISSION_CUTOFF
+julia --project=code code/scripts/audit_truncated_emissions.jl
+python3 code/scripts/summarize_truncated_emissions.py
+```
+
+Run the baseline chronological forecasts before the baseline stock diagnosis and
+comparison, since they supply the new pilot constants. The baseline diagnosis is
+also regenerated with conditional emission likelihoods. Rebuild manuscript tables
+and figures after completing the simulations. Simulation manifests record the
+emission specification and source hashes, and scenario cache version 3 rejects
+old untruncated caches and caches made with a different cutoff.
+
+Option data provenance is settled: the author downloaded chains daily through a
+free Alpaca account. All option quote comparisons use Alpaca's indicative feed.
+The feed and retrieval timestamps do not establish exchange-quote agreement.

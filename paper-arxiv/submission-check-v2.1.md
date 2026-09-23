@@ -1,3 +1,28 @@
+# September 14 update: truncated return emissions
+
+The current manuscript is 40 pages. All six affected simulation experiment groups
+were regenerated with Student-t residuals truncated at ±10 fitted scale units and
+with ±20 for sensitivity. The fitted state parameters and neural surfaces were
+retained; pilot normalization constants were recomputed. Three new supplementary
+tables report return bounds and sensitivity. The Methods and quote-comparison
+captions identify Alpaca's free indicative feed.
+
+Verification passed: 251 Julia tests, six Python tests, 136 saved-forecast
+reconstruction checks, and 102 recorded source/input hashes across the twelve
+primary/sensitivity runs. All 44 figure/table labels are unique and cited in the
+Results. The strict latexmk build has no undefined references or layout warnings;
+the existing font-substitution warning remains. All 40 pages were inspected in
+rendered overviews, with the new appendix and changed figures checked separately.
+
+The refreshed source archive contains 55 files. Their hashes matched the package
+manifest, and an isolated strict build produced identical 40-page PDF text. The
+plain abstract is synchronized with the manuscript. Review artifacts are under
+`tmp/pdfs/truncated-emissions/`; numerical findings and verification metadata are
+in `code/results/truncated_emissions/`. No commit, push, or arXiv submission was
+performed. The historical checks below describe the earlier manuscript.
+
+---
+
 # Manuscript check before the author's prose pass
 
 Title update, September 7, 2026: the manuscript is now titled “Simulating American

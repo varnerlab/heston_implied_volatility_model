@@ -27,6 +27,15 @@ include(joinpath(@__DIR__, "..", "src", "ScenarioTemplate.jl"))
         @test !ScenarioTemplate._cache_matches(cache, ref)
     end
 
+    @testset "untruncated and other-cutoff caches cannot be reused" begin
+        ref=Dict{String,Any}("scenario_version"=>3,
+            "emission_spec"=>emission_metadata(TruncatedStudentT(10)))
+        @test !ScenarioTemplate._cache_matches(Dict("scenario_version"=>2),ref)
+        @test !ScenarioTemplate._cache_matches(merge(ref,Dict("emission_spec"=>
+            emission_metadata(TruncatedStudentT(20)))),ref)
+        @test ScenarioTemplate._cache_matches(copy(ref),ref)
+    end
+
     @testset "_cache_matches — drifted value invalidates" begin
         ref = Dict{String,Any}("S_0" => 100.0, "seed" => 20260429, "n_paths" => 1000)
         @test !ScenarioTemplate._cache_matches(merge(ref, Dict{String,Any}("seed" => 1)), ref)

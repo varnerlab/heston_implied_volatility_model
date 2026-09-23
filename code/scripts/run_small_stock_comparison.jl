@@ -1,19 +1,31 @@
+using HestonIV: simulate_truncated, emission_spec_from_env, emission_metadata
+const EMISSIONS = emission_spec_from_env()
 # Score the four frozen stock methods on identical 2025 and 2026 endpoints.
 using CSV,DataFrames,Dates,JLD2,JumpHMM,Random,Statistics,TOML,SHA,Test
 include(joinpath(@__DIR__,"..","src","ForecastValidation.jl"))
 using .ForecastValidation
 const ROOT=normpath(joinpath(@__DIR__,"..",".."))
 const OUT=joinpath(ROOT,"code/results/small_stock_comparison")
+const RESULT_ROOT=get(ENV,"SIMULATION_RESULTS_ROOT",joinpath(ROOT,"code/results"))
+const RUNOUT=joinpath(RESULT_ROOT,basename(OUT))
+mkpath(RUNOUT)
+open(joinpath(RUNOUT,"run_manifest.toml"),"w") do io
+    TOML.print(io,Dict("completed"=>false,"emission_spec"=>emission_metadata(EMISSIONS)))
+end
 const N=10000
 const SEEDS=[202609091,202609092,202609093]
 inputs=CSV.read(joinpath(OUT,"forecast_inputs.csv"),DataFrame;types=Dict(:period=>String))
 portfolio=JLD2.load(joinpath(ROOT,"code/data/pretrained-portfolio-surrogate.jld2"))
-pilots=TOML.parsefile(joinpath(ROOT,"code/results/chronological_validation/pilot_constants.toml"))
+pilots=TOML.parsefile(joinpath(RESULT_ROOT,"chronological_validation/pilot_constants.toml"))
+for ticker in ["GS","LLY"]
+    @assert pilots[ticker]["emission_spec"]==emission_metadata(EMISSIONS)
+end
 scores=NamedTuple[];analytic_checks=NamedTuple[]
-source_files=["code/scripts/run_small_stock_comparison.jl","code/src/ForecastValidation.jl",
+source_files=["code/scripts/run_small_stock_comparison.jl","code/src/TruncatedEmissions.jl","code/src/HestonIV.jl","code/Manifest.toml",
+    "code/results/truncated_emissions/PROTOCOL.md","code/src/ForecastValidation.jl",
     "code/results/small_stock_comparison/forecast_inputs.csv",
     "code/results/small_stock_comparison/frozen_settings.json",
-    "code/results/chronological_validation/pilot_constants.toml",
+    relpath(joinpath(RESULT_ROOT,"chronological_validation/pilot_constants.toml"),ROOT),
     "code/data/pretrained-portfolio-surrogate.jld2"]
 hashes=Dict(f=>(open(sha256,joinpath(ROOT,f))|>bytes2hex) for f in source_files)
 @testset "Small stock forecast distributions" begin
@@ -26,7 +38,7 @@ for (ticker_index,ticker) in enumerate(["GS","LLY"])
         @assert all(group.origin_spot.==S0) && all(group.daily_variance.==variance) && all(group.daily_drift.==drift)
         for (replicate,base_seed) in enumerate(SEEDS)
             seed=base_seed+1000ticker_index+10000Dates.value(origin-Date("2025-01-01"))
-            sim=JumpHMM.simulate(model,5;n_paths=N,seed)
+            sim=simulate_truncated(model,5;n_paths=N,seed,emissions=EMISSIONS)
             legacy=(hcat([p.observations for p in sim.paths]...).+shift.+model.rf).*model.dt
             innovations=randn(MersenneTwister(seed+1),5,N)
             adaptive=sqrt(variance).*innovations
@@ -60,9 +72,9 @@ for (ticker_index,ticker) in enumerate(["GS","LLY"])
     println("Completed ",ticker);flush(stdout)
 end
 end
-CSV.write(joinpath(OUT,"scores.csv"),DataFrame(scores))
-CSV.write(joinpath(OUT,"analytic_checks.csv"),DataFrame(analytic_checks))
-open(joinpath(OUT,"run_manifest.toml"),"w") do io
-    TOML.print(io,Dict("completed"=>true,"paths"=>N,"seeds"=>SEEDS,"source_sha256"=>hashes))
+CSV.write(joinpath(RUNOUT,"scores.csv"),DataFrame(scores))
+CSV.write(joinpath(RUNOUT,"analytic_checks.csv"),DataFrame(analytic_checks))
+open(joinpath(RUNOUT,"run_manifest.toml"),"w") do io
+    TOML.print(io,Dict("emission_spec"=>emission_metadata(EMISSIONS),"completed"=>true,"paths"=>N,"seeds"=>SEEDS,"source_sha256"=>hashes))
 end
 println("Completed frozen small comparison.")

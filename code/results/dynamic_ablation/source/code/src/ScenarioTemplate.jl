@@ -38,7 +38,8 @@ using Random
 using Statistics
 
 # We pull LR from the package so the pricer lives in one place.
-using HestonIV: lr_american_price, crr_american_price
+using HestonIV: lr_american_price, crr_american_price, simulate_truncated,
+    TruncatedStudentT, emission_spec_from_env, emission_metadata
 
 export ScenarioSpec, VarianceSpec, HestonSpec, run_short_scenario, render_scenario_figures,
        paper_figure_dirs
@@ -381,14 +382,15 @@ end
 
 function _simulate_paths(spec::ScenarioSpec, hspec::VarianceSpec, model::_RestoredModel,
                          S_0::Float64, port_path::String,
-                         trading_dates::Vector{Date}, calendar_dtes::Vector{Int})
+                         trading_dates::Vector{Date}, calendar_dtes::Vector{Int};
+                         emissions::TruncatedStudentT=TruncatedStudentT())
     println("\nLoading pretrained portfolio model...")
     portfolio = JLD2.load(port_path)
     marginal = portfolio["marginals"][spec.ticker]
 
     n_sim_steps = length(trading_dates) - 1
     println("Simulating $(spec.n_paths) $(spec.ticker) price paths over $(n_sim_steps) trading steps...")
-    sim = JumpHMM.simulate(marginal, n_sim_steps; n_paths=spec.n_paths, seed=spec.seed)
+    sim = simulate_truncated(marginal, n_sim_steps; n_paths=spec.n_paths, seed=spec.seed, emissions)
     n_actual = length(sim.paths)
 
     target_drift = spec.ticker_prior_ccgr_pct / 100.0
@@ -596,7 +598,8 @@ function run_short_scenario(spec::ScenarioSpec, hspec::VarianceSpec;
                       ladder_dir::String, sim_cache_path::String,
                       resim::Bool=false, use_per_ticker::Bool=true,
                       sector::Union{Nothing,String}=nothing,
-                      compute_greeks::Bool=true)
+                      compute_greeks::Bool=true,
+                      emissions::TruncatedStudentT=emission_spec_from_env())
     isfile(nn_cache_path) || error("NN cache missing at $(nn_cache_path).")
     isfile(port_path)     || error("Portfolio model missing at $(port_path).")
 
@@ -642,7 +645,8 @@ function run_short_scenario(spec::ScenarioSpec, hspec::VarianceSpec;
     # Caches written before a field existed fail the check and resimulate.
     psi_checksum = _psi_checksum(psi_nn)
     cache_ref = Dict{String,Any}(
-        "scenario_version"      => 2,
+        "scenario_version"      => 3,
+        "emission_spec"         => emission_metadata(emissions),
         "S_0"                   => S_0,
         "K_put"                 => spec.K_put,
         "K_call"                => spec.K_call,
@@ -682,12 +686,12 @@ function run_short_scenario(spec::ScenarioSpec, hspec::VarianceSpec;
     end
     if !sim_cache_valid
         S_paths, v_put_paths, v_call_paths = _simulate_paths(
-            spec, hspec, model, S_0, port_path, trading_dates, calendar_dtes)
+            spec, hspec, model, S_0, port_path, trading_dates, calendar_dtes; emissions)
         V_put, V_call = _price_paths(
             spec, hspec, model, S_paths, v_put_paths, v_call_paths, calendar_dtes)
         mkpath(dirname(sim_cache_path))
         JLD2.jldsave(sim_cache_path;
-            scenario_version=2,
+            scenario_version=3, emission_spec=emission_metadata(emissions),
             S_paths=S_paths, v_put_paths=v_put_paths, v_call_paths=v_call_paths,
             V_put=V_put, V_call=V_call,
             S_0=S_0, K_put=spec.K_put, K_call=spec.K_call,

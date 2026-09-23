@@ -1,3 +1,5 @@
+using HestonIV: simulate_truncated, emission_spec_from_env, emission_metadata
+const EMISSIONS = emission_spec_from_env()
 """
 Run the fixed dynamic-IV sensitivity experiment from the repository root:
     julia --project=code code/examples/dynamic_iv_ablation.jl
@@ -13,7 +15,8 @@ using .ScenarioTemplate, .DynamicAblation
 const ST = ScenarioTemplate
 const ROOT = abspath(joinpath(@__DIR__, "..", ".."))
 const SMOKE = "--smoke" in ARGS
-const OUT = joinpath(ROOT,"code","results",SMOKE ? "dynamic_ablation_smoke" : "dynamic_ablation")
+const OUT = joinpath(get(ENV,"SIMULATION_RESULTS_ROOT",joinpath(ROOT,"code/results")),
+    SMOKE ? "dynamic_ablation_smoke" : "dynamic_ablation")
 const SEEDS = SMOKE ? [20260429] : [20260429,20260430,20260431]
 const NPATHS = SMOKE ? 12 : 1000
 const PILOT_PATHS = SMOKE ? 100 : 10000
@@ -27,7 +30,7 @@ const COLORS = Dict(:frozen=>:gray45,:surface=>:darkorange,:relaxation=>:seagree
 filehash(path) = open(sha256,path) |> bytes2hex
 
 function growth_matrix(marginal,npaths,seed)
-    sim=JumpHMM.simulate(marginal,22;n_paths=npaths,seed)
+    sim=simulate_truncated(marginal,22;n_paths=npaths,seed,emissions=EMISSIONS)
     @assert length(sim.paths)==npaths
     g=hcat([p.observations for p in sim.paths]...)
     @assert size(g)==(22,npaths)
@@ -62,18 +65,19 @@ function run_experiment()
               capture=string(raw.capture_ts[1]),session=string(raw.und_session_date[1])))
     end
     CSV.write(joinpath(OUT,"corpus_manifest.csv"),sort(DataFrame(manifest),:path))
-    config=Dict("paths_per_seed"=>NPATHS,"seeds"=>SEEDS,"pilot_paths"=>PILOT_PATHS,
+    config=Dict("completed"=>false,"emission_spec"=>emission_metadata(EMISSIONS),"paths_per_seed"=>NPATHS,"seeds"=>SEEDS,"pilot_paths"=>PILOT_PATHS,
         "pilot_seed"=>PILOT_SEED,"steps"=>STEPS,"modes"=>collect(string.(MODES)),
         "kappa"=>15.0,"sigma_v"=>0.5,"rho"=>-0.6,"variance_floor"=>0.005^2,
         "r"=>0.0425,"q"=>0.0,"lr_depth"=>201,"julia_version"=>string(VERSION),
         "nn_sha256"=>filehash(nnpath),"portfolio_sha256"=>filehash(portpath),
         "corpus_manifest_sha256"=>filehash(joinpath(OUT,"corpus_manifest.csv")),
         "source_sha256"=>Dict(relpath(p,ROOT)=>filehash(p) for p in
-           [@__FILE__,joinpath(ROOT,"code","src","DynamicAblation.jl"),
+           [@__FILE__,joinpath(ROOT,"code","src","TruncatedEmissions.jl"),joinpath(ROOT,"code","src","DynamicAblation.jl"),
             joinpath(ROOT,"code","src","ScenarioTemplate.jl"),
             joinpath(ROOT,"code","src","LRTree.jl"),
             joinpath(ROOT,"code","src","CRRTree.jl"),
-            joinpath(ROOT,"code","Manifest.toml")]))
+            joinpath(ROOT,"code","Manifest.toml"),joinpath(ROOT,"code","src","HestonIV.jl"),
+            joinpath(ROOT,"code/results/truncated_emissions/PROTOCOL.md")]))
     open(joinpath(OUT,"config.toml"),"w") do io; TOML.print(io,config); end
     # Preserve the exact source used to simulate, even if later prose or render
     # changes are made in the working tree before the paper is submitted.
@@ -101,7 +105,7 @@ function run_experiment()
         @assert scale>0
         open(joinpath(OUT,lowercase(ticker)*"_pilot.toml"),"w") do io
             TOML.print(io,Dict("growth_shift"=>shift,"log_return_mean"=>mu,
-                "log_return_sd"=>scale,"marginal_rf"=>marginal.rf,"marginal_dt"=>marginal.dt))
+                "log_return_sd"=>scale,"emission_spec"=>emission_metadata(EMISSIONS),"marginal_rf"=>marginal.rf,"marginal_dt"=>marginal.dt))
         end
         for seed in SEEDS
             println("Ablation $ticker seed=$seed, $NPATHS paths"); flush(stdout)
@@ -144,7 +148,7 @@ function run_experiment()
                       surface_mark=marks[:surface][j,p,c],frozen_mark=marks[:frozen][j,p,c]))
             end
             JLD2.jldsave(joinpath(OUT,"$(lowercase(ticker))_$(seed).jld2");S,dates,dtes,
-                        zs,zi,targets,variances,marks,strikes,premiums)
+                        zs,zi,targets,variances,marks,strikes,premiums,emission_spec=emission_metadata(EMISSIONS))
             if seed==first(SEEDS)
                 grid=collect(range(0.8*S0,1.2*S0;length=11))
                 np=min(50,NPATHS)
@@ -243,6 +247,8 @@ function render_results()
     numerical=CSV.read(joinpath(OUT,"numerical_check.csv"),DataFrame)
     CSV.write(joinpath(OUT,"numerical_summary.csv"),combine(groupby(numerical,[:ticker,:mode]),
         :absolute_change=>median=>:median_abs_change,:absolute_change=>maximum=>:max_abs_change))
+    config=TOML.parsefile(joinpath(OUT,"config.toml"));config["completed"]=true
+    open(joinpath(OUT,"config.toml"),"w") do io;TOML.print(io,config);end
     println("Completed: $OUT"); flush(stdout)
     show(stdout,MIME("text/plain"),summary[(summary.step.==10).&(summary.seed.==0),:]); println()
 end

@@ -1,11 +1,18 @@
 """Regenerate the two fitted arXiv illustrations, figures, and table bodies."""
 ENV["GKSwstype"]="100"
-using Dates, CSV, DataFrames, Printf, Statistics
+using Dates, CSV, DataFrames, Printf, Statistics, SHA, TOML
+using HestonIV: emission_spec_from_env, emission_metadata
+const EMISSIONS=emission_spec_from_env()
 include(joinpath(@__DIR__,"..","src","ScenarioTemplate.jl"))
 using .ScenarioTemplate
 const ROOT=abspath(joinpath(@__DIR__,"..",".."))
-const OUT=joinpath(ROOT,"code","results","fitted_scenarios")
+const OUT=joinpath(get(ENV,"SIMULATION_RESULTS_ROOT",joinpath(ROOT,"code/results")),"fitted_scenarios")
 mkpath(OUT)
+manifest=Dict("completed"=>false,"emission_spec"=>emission_metadata(EMISSIONS),
+    "source_sha256"=>Dict(f=>(open(sha256,joinpath(ROOT,f)) |> bytes2hex) for f in
+        ["code/examples/reproduce_arxiv_scenarios.jl","code/src/ScenarioTemplate.jl",
+         "code/src/TruncatedEmissions.jl","code/src/HestonIV.jl","code/Manifest.toml"]))
+open(joinpath(OUT,"run_manifest.toml"),"w") do io;TOML.print(io,manifest);end
 
 function write_table(result,path)
     s=result.spec; a=result.summary_row
@@ -63,10 +70,13 @@ for ticker in ("GS","LLY")
         nn_cache_path=joinpath(ROOT,"code","figures","calibrate_ladders_per_ticker_nn_cache.jld2"),
         port_path=joinpath(ROOT,"code","data","pretrained-portfolio-surrogate.jld2"),
         ladder_dir=joinpath(ROOT,"code","data","ladder"),
-        sim_cache_path=joinpath(OUT,lowercase(ticker)*"_cache.jld2"))
-    render_scenario_figures(result,spec;plot_dir=joinpath(ROOT,"paper-arxiv","sections","figures",lowercase(ticker)))
+        sim_cache_path=joinpath(OUT,lowercase(ticker)*"_cache.jld2"),emissions=EMISSIONS)
+    !haskey(ENV,"SIMULATION_RESULTS_ROOT") && render_scenario_figures(result,spec;plot_dir=joinpath(ROOT,"paper-arxiv","sections","figures",lowercase(ticker)))
     write_table(result,joinpath(OUT,lowercase(ticker)*"_table.tex"))
     push!(rows,result.summary_row)
     CSV.write(joinpath(OUT,"summary.csv"),DataFrame(rows))
     ScenarioTemplate.print_summary(result)
 end
+
+manifest["completed"]=true
+open(joinpath(OUT,"run_manifest.toml"),"w") do io;TOML.print(io,manifest);end

@@ -1,3 +1,5 @@
+using HestonIV: simulate_truncated, emission_spec_from_env, emission_metadata
+const EMISSIONS=emission_spec_from_env()
 """
 A/B test: how much of the AVGO short-put price jumpiness is driven by
 Heston vol-of-vol versus by the JumpHMM emission tails + ψ_NN smile
@@ -144,7 +146,7 @@ function run_pipeline(sigma_v::Float64)
     println("\nRunning pipeline at σ_v = $sigma_v ...")
     portfolio = JLD2.load(PORT_PATH)
     ticker_model = portfolio["marginals"][TICKER]
-    sim = JumpHMM.simulate(ticker_model, T_DAYS; n_paths=N_PATHS, seed=SEED)
+    sim = simulate_truncated(ticker_model, T_DAYS; n_paths=N_PATHS, seed=SEED, emissions=EMISSIONS)
     n = length(sim.paths)
 
     # Drift anchor (same as production)

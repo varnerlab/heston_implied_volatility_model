@@ -88,7 +88,8 @@ for ticker in ("GS", "LLY")
     cachepath=joinpath(ROOT,"code/results/fitted_scenarios/$(lowercase(ticker))_cache.jld2")
     input_hashes["$(lowercase(ticker))_scenario_sha256"] = filehash(cachepath)
     c=JLD2.load(cachepath)
-    @assert c["scenario_version"]==2
+    @assert c["scenario_version"]==3
+    @assert c["emission_spec"]["family"]=="truncated_student_t"
     @assert size(c["S_paths"])==(23,1000)
     row=only(eachrow(summary[summary.ticker .== ticker,:]))
     dates=Date.(c["trading_dates"])

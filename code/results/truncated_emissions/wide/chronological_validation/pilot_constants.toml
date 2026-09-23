@@ -1,0 +1,27 @@
+[LLY]
+steps = 5
+pilot_seed = 202609052
+growth_shift = -0.1426835793584343
+log_return_sd = 0.017036009028817686
+paths = 10000
+log_return_mean = 0.00039682539682539693
+
+    [LLY.emission_spec]
+    family = "truncated_student_t"
+    standardized_cutoff = 20.0
+    bound_units = "fitted Student-t scale, not standard deviation"
+    sampler_version = 1
+
+[GS]
+steps = 5
+pilot_seed = 202609051
+growth_shift = -0.019301466427921105
+log_return_sd = 0.017986931327634945
+paths = 10000
+log_return_mean = 0.000396825396825397
+
+    [GS.emission_spec]
+    family = "truncated_student_t"
+    standardized_cutoff = 20.0
+    bound_units = "fitted Student-t scale, not standard deviation"
+    sampler_version = 1

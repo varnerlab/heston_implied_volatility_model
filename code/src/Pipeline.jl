@@ -41,11 +41,11 @@ function run_scenario(portfolio, heston_params::HestonParameters,
                       eval_step::Int=1,
                       r_f::Float64=0.05,
                       n_crr_steps::Int=200,
-                      seed::Union{Int,Nothing}=nothing)
+                      seed::Union{Int,Nothing}=nothing,
+                      emissions::TruncatedStudentT=TruncatedStudentT())
 
     # Step 1: Simulate multi-asset paths via JumpHMM
-    sim_result = JumpHMM.simulate(portfolio, n_sim_steps;
-                                  n_paths=n_paths, seed=seed)
+    sim_result = simulate_truncated(portfolio, n_sim_steps; n_paths, seed, emissions)
 
     # Extract paths for the target ticker
     ticker_result = sim_result.results[ticker]
@@ -65,8 +65,8 @@ function run_scenario(portfolio, heston_params::HestonParameters,
 
         # Simulate market model separately to get HMM states
         market_seed = seed !== nothing ? seed + 7 : nothing
-        market_result = JumpHMM.simulate(market_model, n_sim_steps + 1;
-                                          n_paths=n_actual_paths, seed=market_seed)
+        market_result = simulate_truncated(market_model, n_sim_steps + 1;
+                                          n_paths=n_actual_paths, seed=market_seed, emissions)
     else
         # Legacy: use marginal model for states and parameters
         marginal = portfolio.marginals[ticker]
@@ -200,7 +200,8 @@ function run_single_asset_scenario(model::JumpHMM.JumpHiddenMarkovModel,
                                    eval_step::Int=1,
                                    r_f::Float64=0.05,
                                    n_crr_steps::Int=200,
-                                   seed::Union{Int,Nothing}=nothing)
+                                   seed::Union{Int,Nothing}=nothing,
+                                   emissions::TruncatedStudentT=TruncatedStudentT())
 
     N_states = model.partition.N
     N_tail = model.jump.N_tail
@@ -208,7 +209,7 @@ function run_single_asset_scenario(model::JumpHMM.JumpHiddenMarkovModel,
     rf_model = model.rf
 
     # Simulate single-asset paths
-    sim_result = JumpHMM.simulate(model, n_sim_steps; n_paths=n_paths, seed=seed)
+    sim_result = simulate_truncated(model, n_sim_steps; n_paths, seed, emissions)
     n_actual_paths = length(sim_result.paths)
 
     # Build matrices

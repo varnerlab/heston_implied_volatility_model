@@ -1,6 +1,7 @@
 """Causal state inference and stock-only diagnostics for the saved JumpHMM."""
 module StockForecastDiagnosis
 using JumpHMM, Distributions, Random, LinearAlgebra, Statistics
+using HestonIV: TruncatedStudentT, truncated_standard_t
 export jump_components, initial_mass, propagate, condition, simulate_forward
 
 function jump_components(model; tolerance=1e-12)
@@ -36,8 +37,9 @@ function propagate(model,mass,components=jump_components(model))
     next
 end
 
-function condition(model,prior,growth)
-    log_likelihood=[logpdf(TDist(e.ν),(growth-e.μ)/e.σ)-log(e.σ) for e in model.emissions]
+function condition(model,prior,growth; emissions::TruncatedStudentT=TruncatedStudentT())
+    log_likelihood=[logpdf(truncated_standard_t(e.ν,emissions),(growth-e.μ)/e.σ)-log(e.σ)
+                    for e in model.emissions]
     logweights=log.(prior).+log_likelihood
     offset=maximum(logweights)
     isfinite(offset) || error("No finite observation likelihood")
@@ -45,20 +47,23 @@ function condition(model,prior,growth)
     posterior./sum(posterior)
 end
 
-function simulate_forward(model,mass,n,horizon,seed;shift=0.0,components=jump_components(model))
+function simulate_forward(model,mass,n,horizon,seed;shift=0.0,components=jump_components(model),
+                          emissions::TruncatedStudentT=TruncatedStudentT())
     rng=MersenneTwister(seed);states=model.partition.N
     initial_cdf=cumsum(vec(mass));initial_cdf[end]=1.0
     tail_cdf=cumsum(components.tail);tail_cdf[end]=1.0
     jump_cdf=cumsum(components.probabilities);jump_cdf[end]=1.0
     transition_cdf=cumsum(model.transition;dims=2);transition_cdf[:,end].=1.0
     @assert all(e.ν==model.ν for e in model.emissions)
-    emissions=TDist(model.ν);returns=Matrix{Float64}(undef,horizon,n)
+    distribution=truncated_standard_t(model.ν,emissions)
+    returns=Matrix{Float64}(undef,horizon,n)
     for path in 1:n
         initial=searchsortedfirst(initial_cdf,rand(rng))
         state=mod(initial-1,states)+1;remaining=div(initial-1,states)
         for t in 1:horizon
             # Fixed draw count makes the initial-state variants share innovations.
-            u_jump=rand(rng);u_duration=rand(rng);u_state=rand(rng);z=rand(rng,emissions)
+            u_jump=rand(rng);u_duration=rand(rng);u_state=rand(rng)
+            z=quantile(distribution,rand(rng))
             if remaining>0
                 state=searchsortedfirst(tail_cdf,u_state);remaining-=1
             elseif u_jump<model.jump.ϵ

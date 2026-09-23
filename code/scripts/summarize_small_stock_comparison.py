@@ -1,11 +1,12 @@
 """Report every frozen model and keep the two evaluation periods separate."""
 from pathlib import Path
+import os
 import json,tomllib
 import numpy as np
 import pandas as pd
 
 ROOT=Path(__file__).resolve().parents[2]
-OUT=ROOT/'code/results/small_stock_comparison'
+OUT=Path(os.environ.get('SIMULATION_RESULTS_ROOT',ROOT/'code/results'))/'small_stock_comparison'
 
 
 def main():
@@ -18,7 +19,7 @@ def main():
         cases=set(map(tuple,group[identifiers+['origin_spot','observed']].to_numpy()))
         if reference is None:reference=cases
         assert reference==cases
-    settings=json.loads((OUT/'frozen_settings.json').read_text())
+    settings=json.loads((ROOT/'code/results/small_stock_comparison/frozen_settings.json').read_text())
     if settings['selected_penalty']=='zero':
         a=x[x.method=='Adaptive volatility'].sort_values(identifiers+['replicate'])
         b=x[x.method=='Directional'].sort_values(identifiers+['replicate'])

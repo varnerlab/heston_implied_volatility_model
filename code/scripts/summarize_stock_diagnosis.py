@@ -1,11 +1,12 @@
 """Summarize every fixed stock diagnostic candidate and simulation replicate."""
 from pathlib import Path
+import os
 import tomllib
 import numpy as np
 import pandas as pd
 
 ROOT=Path(__file__).resolve().parents[2]
-OUT=ROOT/'code/results/stock_forecast_diagnosis'
+OUT=Path(os.environ.get('SIMULATION_RESULTS_ROOT',ROOT/'code/results'))/'stock_forecast_diagnosis'
 
 
 def main():

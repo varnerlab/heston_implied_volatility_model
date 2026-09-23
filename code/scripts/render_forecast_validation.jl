@@ -6,7 +6,7 @@ const OUT=joinpath(ROOT,"code/results/chronological_validation")
 const STYLE=(bg="gray95",background_color_outside=:white,framestyle=:box,
     fontfamily="sans-serif",grid=false,minorgrid=false,
     fg_legend=:transparent,background_color_legend=:transparent,
-    xguidefontsize=23,yguidefontsize=23,titlefontsize=21,tickfontsize=17,legendfontsize=17,
+    xguidefontsize=21,yguidefontsize=23,titlefontsize=21,tickfontsize=17,legendfontsize=17,
     bottom_margin=14Plots.mm,left_margin=12Plots.mm,top_margin=4Plots.mm,right_margin=4Plots.mm)
 rows=CSV.read(joinpath(OUT,"short_maturity","forecast_example.csv"),DataFrame)
 panels=Plots.Plot[]
