@@ -1,0 +1,8 @@
+n_inputs = 2
+test_rmse_pp = 14.756427197152586
+train_rmse_pp = 10.793026260607077
+config = "A2"
+seed = 44
+input_sha256 = "2df0e4537ae71890cfff0df470464f3c4a7e624cdeb1fcd31b63d9b8984095ae"
+completed = "2026-09-23T16:56:42.069"
+trainer_sha256 = "fa3f35804602df61ff6ff2f5c0e68813e2d78dafbd5c5d06c056fa3cc388731b"

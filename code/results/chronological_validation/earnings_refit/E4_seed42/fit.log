@@ -1,0 +1,23 @@
+2026-09-23T16:50:19.254 Fitting Financials on 83005 rows
+  [Financials] 83005 train obs, 4 tickers, n_inputs=4
+2026-09-23T16:50:55.245 Finished Financials
+2026-09-23T16:50:55.261 Fitting Healthcare on 126818 rows
+  [Healthcare] 126818 train obs, 8 tickers, n_inputs=4
+2026-09-23T16:51:30.853 Finished Healthcare
+2026-09-23T16:51:30.856 Fitting Energy on 34817 rows
+  [Energy] 34817 train obs, 3 tickers, n_inputs=4
+2026-09-23T16:51:39.322 Finished Energy
+2026-09-23T16:51:39.325 Fitting Retail on 50776 rows
+  [Retail] 50776 train obs, 3 tickers, n_inputs=4
+2026-09-23T16:51:52.084 Finished Retail
+2026-09-23T16:51:52.090 Fitting Tech on 374635 rows
+  [Tech] 374635 train obs, 10 tickers, n_inputs=4
+2026-09-23T16:53:33.916 Finished Tech
+2026-09-23T16:53:33.929 Fitting ETF on 503487 rows
+  [ETF] 503487 train obs, 3 tickers, n_inputs=4
+2026-09-23T16:56:08.670 Finished ETF
+train n=1173538 IV RMSE(pp)=10.36466462068591
+test n=425061 IV RMSE(pp)=13.962861383613573
+┌ Warning: Assignment to `saved` in soft scope is ambiguous because a global variable by the same name exists: `saved` will be treated as a new local. Disambiguate by using `local saved` to suppress this warning or `global saved` to assign to the existing global variable.
+└ @ ~/Desktop/julia_work/heston_implied_volatility_model/code/scripts/fit_chronological_surface_earnings.jl:39
+Saved /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/results/chronological_validation/earnings_refit/E4_seed42

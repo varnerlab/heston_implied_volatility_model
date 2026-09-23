@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  23 SEP 2026 16:37
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  23 SEP 2026 17:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -685,7 +685,7 @@ put line 12.
 [26] (./sections/generated/gs_scenario_table.tex)
 
 [27]
-<sections/figures/gs/gs_short_greeks.pdf, id=539, 1505.625pt x 1505.625pt>
+<sections/figures/gs/gs_short_greeks.pdf, id=542, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
@@ -696,13 +696,13 @@ Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
 [28] (./sections/generated/lly_scenario_table.tex)
 
 [29 <./sections/figures/gs/gs_short_greeks.pdf>]
-<sections/figures/lly/lly_short_paths.pdf, id=550, 1505.625pt x 602.25pt>
+<sections/figures/lly/lly_short_paths.pdf, id=553, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
 t line 261.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=551, 1104.125pt x 501.875pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=554, 1104.125pt x 501.875pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
@@ -711,7 +711,7 @@ input line 268.
 
 
 [30 <./sections/figures/lly/lly_short_paths.pdf>]
-<sections/figures/lly/lly_short_greeks.pdf, id=559, 1505.625pt x 1505.625pt>
+<sections/figures/lly/lly_short_greeks.pdf, id=562, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
@@ -743,24 +743,26 @@ ut line 275.
 [36] (./sections/generated/option_point_summary_table.tex)
 (./sections/generated/mechanism_checks_table.tex)
 
-[37]) (./sections/stock_validation_supp.tex
+[37] (./sections/generated/earnings_refit_table.tex)
+
+[38]) (./sections/stock_validation_supp.tex
 (./sections/generated/stock_initialization_table.tex)
 
-[38] (./sections/generated/stock_selection_table.tex)
+[39] (./sections/generated/stock_selection_table.tex)
+(./sections/generated/stock_validation_five_table.tex)
 
-[39] (./sections/generated/stock_validation_five_table.tex)
-(./sections/generated/stock_validation_one_table.tex))
+[40] (./sections/generated/stock_validation_one_table.tex))
 (./sections/truncated_emissions_supp.tex
 
-[40] (./sections/generated/emission_bounds_table.tex)
+[41] (./sections/generated/emission_bounds_table.tex)
 (./sections/generated/tail_sensitivity_table.tex)
 (./sections/generated/tail_forecast_table.tex)
 
-[41
+[42
 
 ])
 
-[42] (./main.aux)
+[43] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -773,13 +775,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: 82571A4C97580979229D19B085D96A38;4085.
  ) 
 Here is how much of TeX's memory you used:
- 14077 strings out of 473190
- 232932 string characters out of 5715801
- 652492 words of memory out of 5000000
- 36852 multiletter control sequences out of 15000+600000
+ 14088 strings out of 473190
+ 233340 string characters out of 5715801
+ 652992 words of memory out of 5000000
+ 36858 multiletter control sequences out of 15000+600000
  575880 words of font info for 74 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,3533b,580s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,4013b,572s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
@@ -798,10 +800,10 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/tex
 mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
 urw/times/utmri8a.pfb>
-Output written on main.pdf (42 pages, 2167994 bytes).
+Output written on main.pdf (43 pages, 2171087 bytes).
 PDF statistics:
- 758 PDF objects out of 1000 (max. 8388607)
- 652 compressed objects within 7 object streams
- 164 named destinations out of 1000 (max. 500000)
+ 768 PDF objects out of 1000 (max. 8388607)
+ 661 compressed objects within 7 object streams
+ 166 named destinations out of 1000 (max. 500000)
  219 words of extra memory for PDF output out of 10000 (max. 10000000)
 

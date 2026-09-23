@@ -11,6 +11,7 @@ const GEN=joinpath(ROOT,"paper-arxiv/sections/generated")
 const TICKERS=["GS","LLY"]
 rows=NamedTuple[]
 record!(check,ticker,value,unit)=push!(rows,(;check,ticker,value,unit))
+value_of(check,ticker)=only(r.value for r in rows if r.check==check && r.ticker==ticker)
 
 # Deterministic relaxation toward a unit step in the target, using the scenario factor defaults.
 steps=20
@@ -77,6 +78,18 @@ for ticker in TICKERS
     record!("surface_bias_after_max",ticker,maximum(after.bias_pp),"vol points")
 end
 
+# Bias in the five trading days before and after each ticker's latest report, across both splits.
+for (ticker,report) in [("GS",Date("2026-07-14")),("LLY",Date("2026-08-05"))]
+    @assert report in Date.(calendar.earnings_date[calendar.ticker.==ticker])
+    sub=bias[bias.ticker.==ticker,:]
+    days=sort(unique(Date.(sub.session)))
+    for (label,window) in [("before",filter(<(report),days)[end-4:end]),("after",filter(>(report),days)[1:5])]
+        w=sub[in(window).(Date.(sub.session)),:]
+        record!("report_bias_$(label)",ticker,sum(w.bias_pp.*w.n)/sum(w.n),"vol points")
+    end
+    record!("report_bias_change",ticker,value_of("report_bias_after",ticker)-value_of("report_bias_before",ticker),"vol points")
+end
+
 table=DataFrame(rows)
 CSV.write(joinpath(CHRONO,"mechanism_checks.csv"),table)
 value(check,ticker)=only(table.value[(table.check.==check).&(table.ticker.==ticker)])
@@ -102,6 +115,10 @@ open(joinpath(GEN,"mechanism_checks_table.tex"),"w") do io
     print(io,line("August 5","surface_bias_aug05"))
     print(io,line("August 6--September 4, mean","surface_bias_after_mean"))
     print(io,"August 6--September 4, range & ",range_cell("GS")," & ",range_cell("LLY")," \\\\\n")
+    print(io,"\\midrule\n\\multicolumn{3}{l}{\\textit{Surface bias around each ticker's latest report (points)}} \\\\\n")
+    print(io,line("Five trading days before","report_bias_before"))
+    print(io,line("Five trading days after","report_bias_after"))
+    print(io,line("Change","report_bias_change"))
     print(io,"\\bottomrule\n\\end{tabular}\n")
 end
 show(table;allrows=true)

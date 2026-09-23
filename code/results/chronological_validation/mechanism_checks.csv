@@ -34,3 +34,9 @@ surface_bias_aug05,LLY,-0.5314075196334723,vol points
 surface_bias_after_mean,LLY,6.173027429808795,vol points
 surface_bias_after_min,LLY,2.0393981032024153,vol points
 surface_bias_after_max,LLY,8.069638521641437,vol points
+report_bias_before,GS,-3.9305261369300344,vol points
+report_bias_after,GS,-0.5668150979147195,vol points
+report_bias_change,GS,3.363711039015315,vol points
+report_bias_before,LLY,-11.256910163176336,vol points
+report_bias_after,LLY,5.1921120211885645,vol points
+report_bias_change,LLY,16.4490221843649,vol points
