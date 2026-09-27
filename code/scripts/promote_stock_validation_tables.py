@@ -7,7 +7,7 @@ import pandas as pd
 ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'code/results/small_stock_comparison'
 GEN=ROOT/'paper-arxiv/sections/generated'
-LABELS={'JumpHMM':'JumpHMM','Unchanged':'Unchanged','Adaptive volatility':'Adaptive','Directional':'Directional'}
+LABELS={'JumpHMM':'JumpHMM','Unchanged':'Unchanged','Adaptive volatility':'Adaptive volatility','Directional':'Direction-predicting'}
 
 
 def write_table(name,header,rows,alignment):
