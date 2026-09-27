@@ -15,7 +15,7 @@ MODES=list(LABELS)
 
 def write_table(name,header,rows,align):
     text=[r'\begin{tabular}{'+align+'}',r'\toprule',header+r' \\',r'\midrule']
-    text.extend(' & '.join(map(str,row))+r' \\' for row in rows)
+    text.extend(row if isinstance(row,str) else ' & '.join(map(str,row))+r' \\' for row in rows)
     text.append(r'\bottomrule\end{tabular}')
     (GEN/name).write_text('\n'.join(text)+'\n')
 
@@ -63,18 +63,35 @@ def main():
                 min_mae_change=delta.min(),max_mae_change=delta.max(),
                 coupled_better_dates=int(delta.lt(0).sum()),n_dates=len(delta)))
     pd.DataFrame(paired).to_csv(OUT/'paired_skill_by_date.csv',index=False)
+    header=r'Ticker & IV variant & Dates & Quotes & MAE & CRPS & Coverage (\%) & Width'
     for conditioning,horizon,name in [('joint',5,'forecast_main_table.tex'),
         ('joint',1,'forecast_one_session_table.tex'),
         ('observed_stock',5,'forecast_conditional_table.tex')]:
+        cohort='monthly' if horizon==1 else 'short'
         rows=[]
         for ticker in ['GS','LLY']:
+            # Date-level MAE of each variant against frozen IV on the same origins.
+            g=pairs.loc[(cohort,conditioning,ticker,horizon)]
             for mode in MODES:
-                q=scores[scores.cohort.eq('monthly' if horizon==1 else 'short')&scores.conditioning.eq(conditioning)&scores.horizon.eq(horizon)&scores.ticker.eq(ticker)&scores['mode'].eq(mode)]
+                q=scores[scores.cohort.eq(cohort)&scores.conditioning.eq(conditioning)&scores.horizon.eq(horizon)&scores.ticker.eq(ticker)&scores['mode'].eq(mode)]
                 if q.empty:continue
                 r=q.iloc[0]
-                rows.append([ticker,LABELS[mode],int(r.n_dates),int(r.n_quotes),f'{r.absolute_error:.2f}',
-                    f'{r.crps:.2f}',f'{100*r.covered90:.1f}',f'{r.width90:.2f}'])
-        write_table(name,r'Ticker & IV variant & Dates & Quotes & MAE & CRPS & Coverage (\%) & Width',rows,'llrrrrrr')
+                row=[ticker,LABELS[mode],int(r.n_dates),int(r.n_quotes),f'{r.absolute_error:.2f}',
+                    f'{r.crps:.2f}',f'{100*r.covered90:.1f}',f'{r.width90:.2f}']
+                if name=='forecast_main_table.tex':
+                    delta=(g[mode]-g['frozen']).dropna()
+                    row.append('--' if mode=='frozen' else f'{int(delta.lt(0).sum())}/{len(delta)}')
+                if name=='forecast_conditional_table.tex':
+                    # Same origins and quotes, scored with simulated instead of observed stock paths.
+                    j=common_scores[common_scores.cohort.eq(cohort)&common_scores.conditioning.eq('joint')&common_scores.horizon.eq(horizon)&common_scores.ticker.eq(ticker)&common_scores['mode'].eq(mode)].iloc[0]
+                    row.append(f'{j.absolute_error:.2f}')
+                rows.append(row)
+        if name=='forecast_main_table.tex':
+            write_table(name,header+r' & Dates better',rows,'llrrrrrrr')
+        elif name=='forecast_conditional_table.tex':
+            write_table(name,header+r' & Simulated-path MAE',rows,'llrrrrrrr')
+        else:
+            write_table(name,header,rows,'llrrrrrr')
     rows=[]
     for r in availability.itertuples():
         rows.append([r.cohort,r.ticker,r.horizon,r.origins,r.selected,r.matched,r.selected-r.matched,r.complete_stock_path])
@@ -101,19 +118,53 @@ def main():
         records.append(dict(split=split,sector='Pooled',n=int(g.n.sum()),
             rmse_pp=np.sqrt(np.average(g.rmse_pp**2,weights=g.n)),bias_pp=np.average(g.bias_pp,weights=g.n)))
     summary=pd.DataFrame(records);summary.to_csv(OUT/'surface_summary.csv',index=False)
+    # The scenario tickers alone, pooled over observations like the sector rows.
+    for (split,ticker),g in surface[surface.ticker.isin(['GS','LLY'])].groupby(['split','ticker']):
+        records.append(dict(split=split,sector=ticker,n=int(g.n.sum()),
+            rmse_pp=np.sqrt(np.average(g.rmse_pp**2,weights=g.n)),bias_pp=np.average(g.bias_pp,weights=g.n)))
+    summary=pd.DataFrame(records)
     rows=[]
-    for sector in ['ETF','Financials','Energy','Retail','Healthcare','Tech','Pooled']:
+    for sector in ['ETF','Financials','Energy','Retail','Healthcare','Tech','Pooled','GS','LLY']:
+        if sector=='GS':rows.append(r'\midrule')
         tr=summary[summary.sector.eq(sector)&summary.split.eq('train')].iloc[0]
         te=summary[summary.sector.eq(sector)&summary.split.eq('test')].iloc[0]
         rows.append([sector,f'{int(tr.n):,}',f'{int(te.n):,}',f'{tr.rmse_pp:.2f}',f'{te.rmse_pp:.2f}',f'{te.bias_pp:+.2f}'])
-    write_table('chronological_surface_table.tex',r'Sector & Train rows & Test rows & Train RMSE & Test RMSE & Test bias',rows,'lrrrrr')
+    write_table('chronological_surface_table.tex',r'Group & Train rows & Test rows & Train RMSE & Test RMSE & Test bias',rows,'lrrrrr')
     wf=pd.read_csv(ROOT/'code/figures/walk_forward_extended_summary.csv')
     wf['month']=pd.to_datetime(wf.test_date).dt.strftime('%B')
     rows=[]
     for month in ['April','May','June','July']:
         g=wf[wf.month.eq(month)]
         rows.append([month,len(g),f'{100*g.test_rmse.median():.2f}',f'{100*g.test_rmse.min():.2f}',f'{100*g.test_rmse.max():.2f}'])
+    rows.append(r'\midrule')
+    rows.append(['All folds',len(wf),f'{100*wf.test_rmse.median():.2f}',f'{100*wf.test_rmse.min():.2f}',f'{100*wf.test_rmse.max():.2f}'])
     write_table('walk_forward_extended_table.tex',r'Test month & Folds & Median RMSE & Minimum & Maximum',rows,'lrrrr')
+    # Data audits behind the two chronological experiments.
+    legacy=pd.read_csv(OUT/'legacy_walk_forward_audit.csv')
+    info=json.loads((OUT/'data_summary.json').read_text())
+    dates=legacy.path.str.extract(r'options-(\d\d-\d\d-\d{4})')[0].nunique()
+    rows=[['Expanding-window folds','Capture dates',dates],
+        ['','Option files',f'{len(legacy):,}'],
+        ['','Accepted observations',f'{int(legacy.filtered_rows.sum()):,}'],
+        ['','Crossed or missing asks',int(legacy.crossed_or_missing_ask.sum())],
+        ['','Missing or nonpositive bid or ask sizes',int(legacy.missing_or_nonpositive_sizes.sum())],
+        r'\midrule',
+        ['July-cutoff surfaces','Downloaded files',f'{info["source_files"]:,}'],
+        ['','Files retrieved during trading hours (excluded)',info['excluded_capture_files']],
+        ['','Superseded files (excluded)',info['superseded_files']],
+        ['','Files retained',f'{info["selected_files"]:,}'],
+        ['',f'Training observations ({info["training_sessions"]} sessions)',f'{info["training_rows"]:,}'],
+        ['',f'Test observations ({info["test_sessions"]} sessions)',f'{info["test_rows"]:,}']]
+    write_table('chronological_data_audit_table.tex',r'Experiment & Check & Value',rows,'llr')
+    # Numerical precision of the forecast prices.
+    numerical=pd.concat([pd.read_csv(OUT/'numerical_check.csv'),pd.read_csv(OUT/'short_maturity/numerical_check.csv')])
+    mc=pd.read_csv(OUT/'monte_carlo_checks.csv')
+    mc=mc[mc.cohort.eq('short')&mc.horizon.eq(5)].set_index(['ticker','kind']).paired_mc_se
+    rows=[['Sampled prices, 201 and 401 steps']+[f'{int(numerical.ticker.eq(t).sum()):,}' for t in ['GS','LLY']],
+        ['Largest price change, 201 to 401 steps']+[f'{numerical[numerical.ticker.eq(t)].absolute_change.max():.4f}' for t in ['GS','LLY']],
+        ['Paired Monte Carlo SE, five-session put']+[f'{mc[(t,"put")]:.3f}' for t in ['GS','LLY']],
+        ['Paired Monte Carlo SE, five-session call']+[f'{mc[(t,"call")]:.3f}' for t in ['GS','LLY']]]
+    write_table('forecast_numerical_checks_table.tex',r'Check & GS & LLY',rows,'lrr')
     rows=[]
     for r in scores[scores.conditioning.eq('endpoint_repricing')].itertuples():
         rows.append([r.cohort,r.ticker,r.horizon,r.n_dates,r.n_quotes,f'{r.absolute_error:.2f}',f'{100*r.inside_spread:.1f}'])

@@ -26,6 +26,7 @@ def main():
         for file,digest in mapping.items():
             assert hashlib.sha256((ROOT/file).read_bytes()).hexdigest()==digest,file
     s=pd.read_csv(OUT/'summary.csv')
+    paired=pd.read_csv(OUT/'paired_comparison.csv')
     assert settings['selected_decay']==.97 and settings['selected_penalty']=='zero'
     for horizon,name,full in [(5,'stock_validation_main_table.tex',False),
         (5,'stock_validation_five_table.tex',True),(1,'stock_validation_one_table.tex',True)]:
@@ -40,9 +41,16 @@ def main():
                     if full:row.append(f'{r.rmse:.2f}')
                     row.extend([f'{r.crps:.2f}',f'{100*r.coverage:.1f}' if method!='Unchanged' else '--',
                         f'{r.width:.2f}' if method!='Unchanged' else '--'])
+                    if not full:
+                        # dates on which the adaptive model's date-level CRPS was below JumpHMM's
+                        if method=='Adaptive volatility':
+                            p=paired[(paired.period==period)&(paired.ticker==ticker)&(paired.horizon==horizon)&(paired.method==method)].iloc[0]
+                            assert int(p.n_dates)==int(r.n_dates)
+                            row.append(f'{int(p.dates_better)}/{int(p.n_dates)}')
+                        else:row.append('--')
                     rows.append(row)
-        header=r'Year & Stock & Model & Median MAE & '+(r'Mean RMSE & ' if full else '')+r'CRPS & Coverage (\%) & Width'
-        write_table(name,header,rows,'lll'+('rrrrr' if full else 'rrrr'))
+        header=r'Year & Stock & Model & Median MAE & '+(r'Mean RMSE & ' if full else '')+r'CRPS & Coverage (\%) & Width'+('' if full else r' & Dates with lower CRPS')
+        write_table(name,header,rows,'lll'+('rrrrr' if full else 'rrrrr'))
     v=pd.read_csv(OUT/'volatility_selection.csv').groupby('decay').loss.mean()
     d=pd.read_csv(OUT/'direction_selection.csv').groupby('penalty').loss.mean()
     rows=[['EWMA decay',f'{decay:.2f}',f'{loss:.6f}'] for decay,loss in v.items()]
