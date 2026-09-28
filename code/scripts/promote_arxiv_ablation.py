@@ -45,7 +45,7 @@ write_table("corpus_dates.tex", "lllr", "Snapshot label & Capture date & Underly
       f'{v["n"]:,}'] for label, v in sorted(dates.items())])
 
 labels = {"frozen": "Frozen IV", "surface": "Direct surface", "relaxation": "Mean reversion",
-          "uncoupled": r"Noise, $\rho=0$", "coupled": "Full factor"}
+          "uncoupled": "Uncoupled factor", "coupled": "Full factor"}
 audit = {(r["ticker"], r["mode"], r["check"]): r for r in read_rows("strike_audit_summary.csv")
          if r["depth"] == "401"}
 rows = []

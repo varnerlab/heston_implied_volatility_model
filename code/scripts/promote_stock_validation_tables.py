@@ -69,7 +69,7 @@ def main():
     f['median_error']=(f.predicted_median-f.observed).abs()
     dates=f.groupby(['ticker','mode','origin'])[['absolute_error','median_error','squared_error']].mean()
     points=dates.groupby(['ticker','mode']).mean()
-    labels={'frozen':'Frozen IV','surface':'Direct surface','relaxation':'Mean reversion','uncoupled':'Uncoupled factor','coupled':'Coupled factor'}
+    labels={'frozen':'Frozen IV','surface':'Direct surface','relaxation':'Mean reversion','uncoupled':'Uncoupled factor','coupled':'Full factor'}
     rows=[]
     for ticker in ['GS','LLY']:
         for mode,label in labels.items():

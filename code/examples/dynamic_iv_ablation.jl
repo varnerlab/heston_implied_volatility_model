@@ -23,7 +23,7 @@ const PILOT_PATHS = SMOKE ? 100 : 10000
 const PILOT_SEED = 20260905
 const STEPS = [0,5,10,15,20,22]
 const LABELS = Dict(:frozen=>"Frozen IV", :surface=>"Direct surface",
-    :relaxation=>"Mean reversion", :uncoupled=>"Noise, rho = 0", :coupled=>"Full factor")
+    :relaxation=>"Mean reversion", :uncoupled=>"Uncoupled factor", :coupled=>"Full factor")
 const COLORS = Dict(:frozen=>:gray45,:surface=>:darkorange,:relaxation=>:seagreen,
                     :uncoupled=>:mediumpurple,:coupled=>:steelblue)
 
@@ -231,7 +231,7 @@ function render_results()
             for mode in MODES
                 g=only(eachrow(summary[(summary.ticker.==ticker).&(summary.kind.==kind).&
                        (summary.mode.==string(mode)).&(summary.step.==10).&(summary.seed.==0),:]))
-                label=mode==:uncoupled ? raw"Noise, $\rho=0$" : LABELS[mode]
+                label=LABELS[mode]
                 @printf(io,"%s %s & %s & %.2f & %.2f & %+.2f (%.2f) & %.2f \\\\\n",
                         ticker,kind,label,g.mean_pnl,g.es05_pnl,g.mean_pnl_change,g.paired_se,g.mean_abs_mark_change)
             end

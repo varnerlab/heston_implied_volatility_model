@@ -3,25 +3,25 @@
 
 Every JumpHMM price simulation used the truncated emissions in~\eqref{eq:truncated_emission}, with $b=10$ as the primary cutoff and $b=20$ as the wider sensitivity case. We set both cutoffs as stress assumptions before rerunning the affected experiments, without reference to the largest observed return. The truncation also applied to the state-inference likelihoods, and each experiment recomputed its pilot or ensemble normalization under each cutoff.
 
-We converted the cutoffs to daily percentage returns using the pilot growth shift from the tests on later dates (Table~\ref{tab:emission_bounds}). These are the widest possible daily returns over all fitted states, not forecast intervals. The removed mass is the probability cut from the standardized Student-$t$ distribution, before state locations and scales are applied. Normalization constants differ slightly between experiments, so their daily limits differ slightly too.
+To show what the cutoffs mean for daily stock moves, we converted them to daily percentage returns using the pilot growth shift from the tests on later dates (Table~\ref{tab:emission_bounds}). These limits are the widest possible daily returns over all fitted states, not forecast intervals. The removed mass is the probability cut from the standardized Student-$t$ distribution, before state locations and scales are applied. Normalization constants differ slightly between experiments, and so do their daily limits.
 
 \begin{table}[H]
 \centering
-\caption{Daily return limits under the primary and wider cutoffs. The limits include the pilot growth shift from the tests on later dates and the $1/252$ year step. Removed mass is the probability excluded from the original Student-$t$ emission, in percent.}\label{tab:emission_bounds}
+\caption{Daily return limits under the primary ($b=10$) and wider ($b=20$) cutoffs. The limits include the pilot growth shift from the tests on later dates and the $1/252$ year step. Removed mass is the probability excluded from the original Student-$t$ emission, in percent.}\label{tab:emission_bounds}
 \input{sections/generated/emission_bounds_table}
 \end{table}
 
-The sensitivity comparison reran the GS and LLY illustrations, the IV ablation, both forecast cohorts, and the stock benchmarks with the same seeds and inputs at each cutoff. We compared short-call loss summaries for the illustrations and for the coupled-factor ablation after ten trading days (Table~\ref{tab:tail_sensitivity}). We also compared five-session coupled option errors in the shorter-maturity cohort and JumpHMM stock scores (Table~\ref{tab:tail_forecasts}). The differences come only from the changed cutoff and the recomputed normalization constants.
+To test whether the results depended on the cutoff, we reran the GS and LLY illustrations, the IV ablation, both forecast cohorts, and the stock benchmarks at each cutoff with the same seeds and inputs. Any differences therefore come only from the changed cutoff and the recomputed normalization constants. We compared short-call loss summaries for the illustrations and for the full-factor ablation after ten trading days (Table~\ref{tab:tail_sensitivity}). We also compared five-session full-factor option errors in the shorter-maturity cohort and JumpHMM stock scores (Table~\ref{tab:tail_forecasts}).
 
 \begin{table}[H]
 \centering
-\caption{Short-call P\&L sensitivity to the cutoff, in dollars per share. The illustration uses 1{,}000 paths and P\&L at expiration. The coupled-factor ablation uses 3{,}000 paths and P\&L from closing after ten trading days. Expected shortfall averages outcomes at or below the 5\% quantile.}\label{tab:tail_sensitivity}
+\caption{Sensitivity of short-call P\&L to the return cutoff $b$. Values are in dollars per share. The illustration uses 1{,}000 paths and P\&L at expiration. The full-factor ablation uses 3{,}000 paths and P\&L from closing after ten trading days. Expected shortfall (ES$_{5\%}$) averages outcomes at or below the 5\% quantile.}\label{tab:tail_sensitivity}
 \input{sections/generated/tail_sensitivity_table}
 \end{table}
 
 \begin{table}[H]
 \centering
-\caption{Five-session forecast sensitivity to the cutoff. Option MAE scores the coupled-factor forecast mean in the shorter-maturity cohort. Stock CRPS scores the JumpHMM forecast distribution in each period. Values are in dollars per share and use the same date and seed weighting as the main comparisons.}\label{tab:tail_forecasts}
+\caption{Sensitivity of five-session option and stock forecast scores to the return cutoff $b$. Option MAE scores the full-factor forecast mean in the shorter-maturity cohort. Stock CRPS scores the JumpHMM forecast distribution in each period. Values are in dollars per share and use the same date and seed weighting as the main comparisons.}\label{tab:tail_forecasts}
 \input{sections/generated/tail_forecast_table}
 \end{table}
 \FloatBarrier

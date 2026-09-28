@@ -1,11 +1,11 @@
 \clearpage
 \section{IV Ablation and Strike Audit}\label{sec:supp_ablation}
 
-At the primary endpoint, ten trading days after entry, we compared the P\&L from closing each short position under the five IV variants on shared stock paths (Table~\ref{tab:dynamic_ablation}). The three evaluation seeds repeat the comparison with the same fitted models and pilot constants (Table~\ref{tab:ablation_seeds}). The paired standard errors apply to mean differences only, so the table gives no interval for expected shortfall.
+At the primary endpoint, ten trading days after entry, we compared the P\&L from closing each short position under the five IV variants on shared stock paths (Table~\ref{tab:dynamic_ablation}). The paired standard errors apply to mean differences only, so we reported no interval for expected shortfall. The three evaluation seeds used the same fitted models and pilot constants. We reported them separately to show whether the differences and the numerical checks held across simulations (Table~\ref{tab:ablation_seeds}).
 
 \begin{table}[H]
 \centering
-\caption{Profit and loss from closing short positions after ten trading days (May 12, 2026), with 17 calendar DTE remaining. Each row uses 3{,}000 paths, and monetary values are in dollars per share. $\Delta$P\&L and mean $|\Delta P|$ compare each variant with the direct surface on identical paths. Parentheses give the paired Monte Carlo standard error of mean $\Delta$P\&L. A more negative 5\% expected shortfall means larger losses in the lower tail.}\label{tab:dynamic_ablation}
+\caption{Profit and loss (P\&L) from closing short positions after ten trading days, on May 12, 2026, with 17 calendar DTE remaining. Each row uses 3{,}000 paths. Monetary values are in dollars per share. The columns $\Delta$P\&L (paired P\&L difference) and mean $|\Delta P|$ (mean absolute price difference) compare each variant with the direct surface on identical paths. Parentheses give the paired Monte Carlo standard error of mean $\Delta$P\&L. A more negative 5\% expected shortfall (ES$_{5\%}$) means larger losses in the lower tail.}\label{tab:dynamic_ablation}
 \small
 \input{sections/generated/dynamic_ablation_table}
 \end{table}
@@ -13,21 +13,21 @@ At the primary endpoint, ten trading days after entry, we compared the P\&L from
 
 \begin{table}[H]
 \centering
-\caption{Full factor versus direct surface after ten trading days, with numerical diagnostics, by evaluation seed. Each row uses 1{,}000 paths, and monetary values are in dollars per share. Mean $|\Delta P|$, mean $\Delta$P\&L, and its paired standard error compare the full factor with the direct surface. Outside is the percentage of path dates before expiration on which strike/spot lay outside the 0.8 to 1.2 range of the calibration data. Floor is the largest percentage of simulated dates, across the five IV variants, on which the factor sat at the variance floor. Tree change is the largest absolute price change from 201 to 401 tree steps, across the five variants, on the first twenty paths after ten and twenty trading days.}\label{tab:ablation_seeds}
+\caption{Comparison of the full factor with the direct surface after ten trading days, with numerical diagnostics, for each evaluation seed. Each row uses 1{,}000 paths. Monetary values are in dollars per share. Mean $|\Delta P|$, mean $\Delta$P\&L, and its paired standard error compare the full factor with the direct surface. Outside is the percentage of path dates before expiration on which strike/spot lay outside the 0.8 to 1.2 range of the calibration data. Floor is the largest percentage of simulated dates on which the factor sat at the variance floor, taken across the five IV variants. Tree change is the largest absolute price change from 201 to 401 tree steps across the five variants. It uses the first twenty paths after ten and twenty trading days.}\label{tab:ablation_seeds}
 \resizebox{\textwidth}{!}{\input{sections/generated/ablation_seeds}}
 \end{table}
 
-The strike audit checked necessary conditions for consistent prices across strikes at 401 tree steps (Table~\ref{tab:strike_audit}). The grid had eleven fixed strikes at the scenario expiration, evaluated at entry and on fifty stock paths after ten and twenty trading days. As the stock moved, some strikes left the moneyness range of the calibration data, so the audit included extrapolated surface values. Each variant and ticker supplied 2{,}222 bound checks, 2{,}020 adjacent-strike checks, and 1{,}818 convexity checks across calls and puts. Violation counts were identical at 201 and 401 steps (Table~\ref{tab:strike_audit_depth}). The saved output lists each test location and violation size.
+Because the tree priced each option separately, nothing forced the prices to be consistent across strikes. The strike audit therefore checked necessary conditions for that consistency at 401 tree steps (Table~\ref{tab:strike_audit}). The grid had eleven fixed strikes at the scenario expiration, evaluated at entry and on fifty stock paths after ten and twenty trading days. As the stock moved, some strikes left the moneyness range of the calibration data, so the audit included extrapolated surface values. Each variant and ticker supplied 2{,}222 bound checks, 2{,}020 adjacent-strike checks, and 1{,}818 convexity checks across calls and puts. Violation counts were identical at 201 and 401 steps (Table~\ref{tab:strike_audit_depth}). The saved output lists each test location and violation size.
 
 \begin{table}[H]
 \centering
-\caption{Strike-condition violations exceeding \$0.01 per share at 401 tree steps. Entries show violations/tests. Vertical denotes the upper bound on an adjacent-strike option-price difference. Max reports the largest positive deviation across the four checks, including deviations below the reporting tolerance.}\label{tab:strike_audit}
+\caption{Strike-condition violations larger than \$0.01 per share at 401 tree steps, by ticker and IV variant. Each entry gives violations/tests. The vertical check tests the upper bound on the price difference between options at adjacent strikes. Max reports the largest positive deviation across the four checks, including deviations below the reporting tolerance.}\label{tab:strike_audit}
 \resizebox{\textwidth}{!}{\input{sections/generated/strike_audit_table}}
 \end{table}
 
 \begin{table}[H]
 \centering
-\caption{Strike-condition checks by tree depth. Viol.\ 201 and Viol.\ 401 count violations larger than \$0.01 per share at 201 and 401 tree steps. Tests is the number of checks per variant, which was the same at both depths. Max 201 and Max 401 give the largest positive deviation for that check, in dollars per share, including deviations below the reporting tolerance.}\label{tab:strike_audit_depth}
+\caption{Strike-condition checks at 201 and 401 tree steps, by ticker, IV variant, and check. Viol.\ 201 and Viol.\ 401 count violations larger than \$0.01 per share at each depth. Tests is the number of checks per variant, which was the same at both depths. Max 201 and Max 401 give the largest positive deviation for that check, in dollars per share, including deviations below the reporting tolerance.}\label{tab:strike_audit_depth}
 \small
 \input{sections/generated/strike_audit_depth_table}
 \end{table}

@@ -24,7 +24,7 @@ for h in [5,10]
     record!("factor_gap_closed_$(h)_sessions","all",100closed(h),"percent")
 end
 
-# Five-session forecasts on the scored short-maturity origins and matched contracts.
+# Five-session forecasts on the scored shorter-maturity origins and matched contracts.
 scores=CSV.read(joinpath(SHORT,"forecast_scores.csv"),DataFrame)
 scored=scores[(scores.horizon.==5).&(scores.conditioning.=="joint").&(scores.mode.=="coupled"),:]
 pilots=TOML.parsefile(joinpath(CHRONO,"pilot_constants.toml"))
@@ -98,11 +98,11 @@ line(label,check;digits=2)=string(label," & ",join((fmt(value(check,t);digits) f
 range_cell(t)=string(fmt(value("surface_bias_after_min",t))," to ",fmt(value("surface_bias_after_max",t)))
 open(joinpath(GEN,"mechanism_checks_table.tex"),"w") do io
     print(io,"\\begin{tabular}{lrr}\n\\toprule\nQuantity & GS & LLY \\\\\n\\midrule\n")
-    print(io,"\\multicolumn{3}{l}{\\textit{Five-session forecasts, short-maturity cohort}} \\\\\n")
+    print(io,"\\multicolumn{3}{l}{\\textit{Five-session forecasts, shorter-maturity cohort}} \\\\\n")
     print(io,line("JumpHMM median price change (\\%)","jumphmm_median_move_5"))
     print(io,line("JumpHMM log-return standard deviation (\\%)","jumphmm_log_sd_5"))
-    print(io,line("Coupled mean IV minus origin IV (points)","coupled_mean_iv_change_5"))
-    print(io,line("Coupled mean absolute IV change (points)","coupled_abs_iv_change_5"))
+    print(io,line("Full-factor mean IV minus origin IV (points)","coupled_mean_iv_change_5"))
+    print(io,line("Full-factor mean absolute IV change (points)","coupled_abs_iv_change_5"))
     print(io,line("Direct-surface mean absolute IV change (points)","surface_abs_iv_change_5"))
     print(io,"\\midrule\n\\multicolumn{3}{l}{\\textit{One-session stock return standard deviation (\\%)}} \\\\\n")
     print(io,line("JumpHMM pilot","pilot_one_session_sd"))

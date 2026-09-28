@@ -9,7 +9,7 @@ ROOT=Path(__file__).resolve().parents[2]
 OUT=ROOT/'code/results/chronological_validation'
 GEN=ROOT/'paper-arxiv/sections/generated'
 LABELS={'frozen':'Frozen IV','surface':'Direct surface','relaxation':'Mean reversion',
-        'uncoupled':'Uncoupled factor','coupled':'Coupled factor'}
+        'uncoupled':'Uncoupled factor','coupled':'Full factor'}
 MODES=list(LABELS)
 
 
