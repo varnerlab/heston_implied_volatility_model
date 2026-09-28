@@ -194,11 +194,12 @@ We calculated Greeks along each path by central finite differences on the same L
 \begin{algorithm}[H]
 \caption{Greeks by central finite differences along each path}\label{alg:greeks}
 \begin{algorithmic}[1]
-\Require State $(S,\sigma,\tau)$; contract $(K,r)$; LR tree steps $N_{\mathrm{LR}}$; relative spot bump $h_S$; absolute IV bump $h_\sigma$.
+\Require State $(S,\sigma,\tau)$ with calendar DTE $\tau$; contract $(K,r)$; LR tree steps $N_{\mathrm{LR}}$; relative spot bump $h_S$; absolute IV bump $h_\sigma$.
 \Ensure $\Delta$, $\Gamma$, and Vega.
-\State $P_+^S \gets \mathrm{LR}(S(1+h_S),K,\sigma,\tau,r)$ and $P_-^S \gets \mathrm{LR}(S(1-h_S),K,\sigma,\tau,r)$.
-\State $P_0 \gets \mathrm{LR}(S,K,\sigma,\tau,r)$.
-\State $P_+^\sigma \gets \mathrm{LR}(S,K,\sigma+h_\sigma,\tau,r)$ and $P_-^\sigma \gets \mathrm{LR}(S,K,\sigma-h_\sigma,\tau,r)$.
+\State $T_{\mathrm{yr}} \gets \tau/365$.
+\State $P_+^S \gets \mathrm{LR}(S(1+h_S),K,\sigma,T_{\mathrm{yr}},r)$ and $P_-^S \gets \mathrm{LR}(S(1-h_S),K,\sigma,T_{\mathrm{yr}},r)$.
+\State $P_0 \gets \mathrm{LR}(S,K,\sigma,T_{\mathrm{yr}},r)$.
+\State $P_+^\sigma \gets \mathrm{LR}(S,K,\sigma+h_\sigma,T_{\mathrm{yr}},r)$ and $P_-^\sigma \gets \mathrm{LR}(S,K,\sigma-h_\sigma,T_{\mathrm{yr}},r)$.
 \State $\Delta \gets (P_+^S-P_-^S)/(2h_SS)$.
 \State $\Gamma \gets (P_+^S-2P_0+P_-^S)/(h_SS)^2$.
 \State $\mathrm{Vega} \gets 0.01(P_+^\sigma-P_-^\sigma)/(2h_\sigma)$.

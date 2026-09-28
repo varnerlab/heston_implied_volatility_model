@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  27 SEP 2026 19:25
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  27 SEP 2026 20:20
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -596,7 +596,7 @@ File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 [8])) (./sections/results.tex
 
 [9]
-<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=295, 1104.125pt x 1
+<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=301, 1104.125pt x 1
 204.5pt>
 File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
  pdf)
@@ -606,8 +606,10 @@ Package pdftex.def Info: sections/figures/ladder_per_ticker_nn_smile_panels.pdf
 (pdftex.def)             Requested size: 397.48499pt x 433.61967pt.
 
 
-[10 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
-<sections/figures/ladder_price_error_three_tickers.pdf, id=312, 1204.5pt x 903.
+[10]
+
+[11 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
+<sections/figures/ladder_price_error_three_tickers.pdf, id=323, 1204.5pt x 903.
 375pt>
 File: sections/figures/ladder_price_error_three_tickers.pdf Graphic file (type 
 pdf)
@@ -617,15 +619,15 @@ Package pdftex.def Info: sections/figures/ladder_price_error_three_tickers.pdf
 (pdftex.def)             Requested size: 397.48499pt x 298.11467pt.
 
 
-[11 <./sections/figures/ladder_price_error_three_tickers.pdf>]
+[12 <./sections/figures/ladder_price_error_three_tickers.pdf>]
 (./sections/scenarios.tex
-<sections/figures/gs/gs_short_paths.pdf, id=337, 1505.625pt x 602.25pt>
+<sections/figures/gs/gs_short_paths.pdf, id=348, 1505.625pt x 602.25pt>
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
 line 7.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/gs/gs_iv_trajectories.pdf, id=338, 1104.125pt x 501.875pt>
+<sections/figures/gs/gs_iv_trajectories.pdf, id=349, 1104.125pt x 501.875pt>
 File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
@@ -633,11 +635,11 @@ put line 14.
 (pdftex.def)             Requested size: 397.48499pt x 180.67485pt.
 
 
-[12]
+[13]
 
-[13 <./sections/figures/gs/gs_short_paths.pdf> <./sections/figures/gs/gs_iv_tra
+[14 <./sections/figures/gs/gs_short_paths.pdf> <./sections/figures/gs/gs_iv_tra
 jectories.pdf>] (./sections/dynamic_ablation.tex
-<sections/figures/dynamic_ablation.pdf, id=369, 1104.125pt x 521.95pt>
+<sections/figures/dynamic_ablation.pdf, id=379, 1104.125pt x 521.95pt>
 File: sections/figures/dynamic_ablation.pdf Graphic file (type pdf)
 <use sections/figures/dynamic_ablation.pdf>
 Package pdftex.def Info: sections/figures/dynamic_ablation.pdf  used on input l
@@ -645,10 +647,10 @@ ine 5.
 (pdftex.def)             Requested size: 397.48499pt x 187.90186pt.
 
 
-[14 <./sections/figures/dynamic_ablation.pdf>]))
+[15 <./sections/figures/dynamic_ablation.pdf>]))
 (./sections/chronological_results.tex
 (./sections/generated/forecast_main_table.tex)
-<sections/figures/chronological_forecast.pdf, id=401, 1505.625pt x 602.25pt>
+<sections/figures/chronological_forecast.pdf, id=411, 1505.625pt x 602.25pt>
 File: sections/figures/chronological_forecast.pdf Graphic file (type pdf)
 <use sections/figures/chronological_forecast.pdf>
 Package pdftex.def Info: sections/figures/chronological_forecast.pdf  used on i
@@ -656,80 +658,82 @@ nput line 13.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 
 
-[15]) (./sections/stock_validation_results.tex
+[16]) (./sections/stock_validation_results.tex
 (./sections/generated/stock_validation_main_table.tex)
 
-[16 <./sections/figures/chronological_forecast.pdf>]))
+[17 <./sections/figures/chronological_forecast.pdf>]))
 (./sections/discussion.tex
 
-[17]
+[18]
 
-[18]) (./sections/conclusion.tex
+[19]) (./sections/conclusion.tex
 
-[19]) (./main.bbl
+[20]) (./main.bbl
 
-[20])
+[21]
 
-[21] (./sections/supplement.tex (./sections/generated/corpus_dates.tex)
+[22])
 
-[22
+[23] (./sections/supplement.tex (./sections/generated/corpus_dates.tex)
+
+[24
 
 ] (./sections/generated/per_ticker_comparison_table.tex)
 (./sections/generated/smile_date_bias_table.tex)
 
-[23]
+[25]
 
-[24]
+[26]
 
-[25] (./sections/generated/gs_scenario_table.tex)
+[27] (./sections/generated/gs_scenario_table.tex)
 pdfTeX warning (ext4): destination with the same identifier (name{algorithm.1})
  has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.207 \end{algorithm}
+l.208 \end{algorithm}
                      
-<sections/figures/gs/gs_short_greeks.pdf, id=565, 1505.625pt x 1505.625pt>
+
+[28]
+<sections/figures/gs/gs_short_greeks.pdf, id=584, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
- line 211.
+ line 212.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
+ (./sections/generated/lly_scenario_table.tex)
 
-
-[26] (./sections/generated/lly_scenario_table.tex)
-
-[27 <./sections/figures/gs/gs_short_greeks.pdf>]
-<sections/figures/lly/lly_short_paths.pdf, id=575, 1505.625pt x 602.25pt>
+[29 <./sections/figures/gs/gs_short_greeks.pdf>]
+<sections/figures/lly/lly_short_paths.pdf, id=590, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
-t line 227.
+t line 228.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=578, 1104.125pt x 501.875pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=593, 1104.125pt x 501.875pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
-input line 234.
+input line 235.
 (pdftex.def)             Requested size: 397.48499pt x 180.67485pt.
 
 
-[28 <./sections/figures/lly/lly_short_paths.pdf>]
-<sections/figures/lly/lly_short_greeks.pdf, id=586, 1505.625pt x 1505.625pt>
+[30 <./sections/figures/lly/lly_short_paths.pdf>]
+<sections/figures/lly/lly_short_greeks.pdf, id=601, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
-ut line 241.
+ut line 242.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
 )
 (./sections/dynamic_ablation_supp.tex
 
-[29 <./sections/figures/lly/lly_iv_trajectories.pdf>]
+[31 <./sections/figures/lly/lly_iv_trajectories.pdf>]
 
-[30 <./sections/figures/lly/lly_short_greeks.pdf>]
+[32 <./sections/figures/lly/lly_short_greeks.pdf>]
 (./sections/generated/dynamic_ablation_table.tex)
 (./sections/generated/ablation_seeds.tex)
 
-[31
+[33
 
 ] (./sections/generated/strike_audit_table.tex)
 (./sections/generated/strike_audit_depth_table.tex)
@@ -739,43 +743,43 @@ Overfull \hbox (1.74962pt too wide) in paragraph at lines 1--33
 
 
 
-[32]) (./sections/chronological_supp.tex
+[34]) (./sections/chronological_supp.tex
 (./sections/generated/walk_forward_extended_table.tex)
 
-[33] (./sections/generated/chronological_surface_table.tex)
+[35] (./sections/generated/chronological_surface_table.tex)
 (./sections/generated/chronological_data_audit_table.tex)
 (./sections/generated/forecast_availability_table.tex)
 
-[34] (./sections/generated/forecast_one_session_table.tex)
+[36] (./sections/generated/forecast_one_session_table.tex)
 (./sections/generated/forecast_conditional_table.tex)
 (./sections/generated/forecast_stock_table.tex)
 
-[35] (./sections/generated/forecast_repricing_table.tex)
+[37] (./sections/generated/forecast_repricing_table.tex)
 (./sections/generated/option_point_summary_table.tex)
 
-[36] (./sections/generated/forecast_numerical_checks_table.tex)
+[38] (./sections/generated/forecast_numerical_checks_table.tex)
 (./sections/generated/mechanism_checks_table.tex)
 
-[37] (./sections/generated/earnings_refit_table.tex)
+[39] (./sections/generated/earnings_refit_table.tex)
 
-[38]) (./sections/stock_validation_supp.tex
+[40]) (./sections/stock_validation_supp.tex
 (./sections/generated/stock_initialization_table.tex)
 
-[39] (./sections/generated/stock_selection_table.tex)
+[41] (./sections/generated/stock_selection_table.tex)
 (./sections/generated/stock_validation_five_table.tex)
 
-[40] (./sections/generated/stock_validation_one_table.tex))
+[42] (./sections/generated/stock_validation_one_table.tex))
 (./sections/truncated_emissions_supp.tex
 
-[41] (./sections/generated/emission_bounds_table.tex)
+[43] (./sections/generated/emission_bounds_table.tex)
 (./sections/generated/tail_sensitivity_table.tex)
 (./sections/generated/tail_forecast_table.tex)
 
-[42
+[44
 
 ])
 
-[43] (./main.aux)
+[45] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -788,13 +792,13 @@ Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: A7F86D78A0A8344247E283DBDB7D9150;3631.
  ) 
 Here is how much of TeX's memory you used:
- 14120 strings out of 473190
- 235108 string characters out of 5715801
- 658897 words of memory out of 5000000
- 36878 multiletter control sequences out of 15000+600000
+ 14130 strings out of 473190
+ 235276 string characters out of 5715801
+ 659056 words of memory out of 5000000
+ 36884 multiletter control sequences out of 15000+600000
  575180 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,3716b,562s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,3721b,608s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
@@ -813,10 +817,10 @@ xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/tex
 mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fo
 nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
 urw/times/utmri8a.pfb>
-Output written on main.pdf (43 pages, 2171144 bytes).
+Output written on main.pdf (45 pages, 2173555 bytes).
 PDF statistics:
- 804 PDF objects out of 1000 (max. 8388607)
- 695 compressed objects within 7 object streams
- 166 named destinations out of 1000 (max. 500000)
+ 821 PDF objects out of 1000 (max. 8388607)
+ 709 compressed objects within 8 object streams
+ 170 named destinations out of 1000 (max. 500000)
  219 words of extra memory for PDF output out of 10000 (max. 10000000)
 

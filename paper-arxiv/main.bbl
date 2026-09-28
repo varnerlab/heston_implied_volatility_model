@@ -1,4 +1,4 @@
-\begin{thebibliography}{31}
+\begin{thebibliography}{33}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -152,6 +152,12 @@ S.~L. Heston.
   327--343, 1993.
 \newblock \doi{10.1093/rfs/6.2.327}.
 
+\bibitem[Hoerl and Kennard(1970)]{hoerl1970}
+A.~E. Hoerl and R.~W. Kennard.
+\newblock Ridge regression: Biased estimation for nonorthogonal problems.
+\newblock \emph{Technometrics}, 12\penalty0 (1):\penalty0 55--67, 1970.
+\newblock \doi{10.1080/00401706.1970.10488634}.
+
 \bibitem[Horvath et~al.(2021)Horvath, Muguruza, and Tomas]{horvath2021}
 B.~Horvath, A.~Muguruza, and M.~Tomas.
 \newblock Deep learning volatility: a deep neural network perspective on
@@ -165,12 +171,15 @@ R.~J. Hyndman and G.~Athanasopoulos.
 \newblock OTexts, 3 edition, 2021.
 \newblock URL \url{https://otexts.com/fpp3/accuracy.html}.
 
-\bibitem[Jarrow and Rudd(1982)]{jarrow1983}
-R.~Jarrow and A.~Rudd.
-\newblock Approximate option valuation for arbitrary stochastic processes.
-\newblock \emph{Journal of Financial Economics}, 10\penalty0 (3):\penalty0
-  347--369, 1982.
-\newblock \doi{10.1016/0304-405X(82)90007-1}.
+\bibitem[Jarrow and Rudd(1983)]{jarrow1983}
+R.~A. Jarrow and A.~Rudd.
+\newblock \emph{Option Pricing}.
+\newblock Richard D. Irwin, Homewood, IL, 1983.
+
+\bibitem[{J.P. Morgan/Reuters}(1996)]{riskmetrics1996}
+{J.P. Morgan/Reuters}.
+\newblock \emph{{RiskMetrics}---Technical Document}.
+\newblock Morgan Guaranty Trust Company, New York, fourth edition, 1996.
 
 \bibitem[Leisen and Reimer(1996)]{leisen1996}
 D.~P.~J. Leisen and M.~Reimer.

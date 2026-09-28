@@ -78,7 +78,7 @@ for ticker in TICKERS
     record!("surface_bias_after_max",ticker,maximum(after.bias_pp),"vol points")
 end
 
-# Bias in the five trading days before and after each ticker's latest report, across both splits.
+# Observation-weighted bias over the five observed sessions before and after each ticker's latest report, across both splits.
 for (ticker,report) in [("GS",Date("2026-07-14")),("LLY",Date("2026-08-05"))]
     @assert report in Date.(calendar.earnings_date[calendar.ticker.==ticker])
     sub=bias[bias.ticker.==ticker,:]
@@ -116,8 +116,8 @@ open(joinpath(GEN,"mechanism_checks_table.tex"),"w") do io
     print(io,line("August 6--September 4, mean","surface_bias_after_mean"))
     print(io,"August 6--September 4, range & ",range_cell("GS")," & ",range_cell("LLY")," \\\\\n")
     print(io,"\\midrule\n\\multicolumn{3}{l}{\\textit{Surface bias around each ticker's latest report (points)}} \\\\\n")
-    print(io,line("Five trading days before","report_bias_before"))
-    print(io,line("Five trading days after","report_bias_after"))
+    print(io,line("Five observed sessions before","report_bias_before"))
+    print(io,line("Five observed sessions after","report_bias_after"))
     print(io,line("Change","report_bias_change"))
     print(io,"\\bottomrule\n\\end{tabular}\n")
 end
