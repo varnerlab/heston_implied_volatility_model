@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  27 SEP 2026 22:39
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.3.8)  28 SEP 2026 13:11
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main
+**main.tex
 (./main.tex
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
@@ -265,6 +265,13 @@ Document Style - pseudocode environments for use with the `algorithmicx' style
 ) (/usr/local/texlive/2025/texmf-dist/tex/latex/placeins/placeins.sty
 Package: placeins 2005/04/18  v 2.2
 )
+(/usr/local/texlive/2025/texmf-dist/tex/latex/xurl/xurl.sty
+Package: xurl 2022/01/09 v 0.10 modify URL breaks
+
+(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
+\Urlmuskip=\muskip18
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+))
 (/usr/local/texlive/2025/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2024-11-05 v7.01l Hypertext links for LaTeX
 
@@ -344,11 +351,6 @@ Package hyperref Info: Backreferencing OFF on input line 4177.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4424.
 \c@Hy@tempcnt=\count310
-
-(/usr/local/texlive/2025/texmf-dist/tex/latex/url/url.sty
-\Urlmuskip=\muskip18
-Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
-)
 LaTeX Info: Redefining \url on input line 4763.
 \XeTeXLinkMargin=\dimen184
 
@@ -403,7 +405,7 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 \Hy@SectionHShift=\skip62
 )
 LaTeX Font Info:    Trying to load font information for OT1+ptm on input line 2
-2.
+3.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ot1ptm.fd
 File: ot1ptm.fd 2001/06/04 font definitions for OT1/ptm.
 )
@@ -415,24 +417,24 @@ File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
 (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 22.
-LaTeX Font Info:    ... okay on input line 22.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 23.
+LaTeX Font Info:    ... okay on input line 23.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -536,40 +538,38 @@ File: color.cfg 2016/01/02 v1.6 sample color configuration
 Package color Info: Driver file: pdftex.def on input line 149.
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/graphics/mathcolor.ltx))
-Package hyperref Info: Link coloring ON on input line 22.
+Package hyperref Info: Link coloring ON on input line 23.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
 \openout3 = `main.out'.
 
-LaTeX Font Info:    Trying to load font information for U+msa on input line 26.
+LaTeX Font Info:    Trying to load font information for U+msa on input line 27.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 26.
+LaTeX Font Info:    Trying to load font information for U+msb on input line 27.
 
 
 (/usr/local/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
-LaTeX Font Info:    Trying to load font information for OMS+cmtt on input line 
-26.
-LaTeX Font Info:    No file OMScmtt.fd. on input line 26.
+LaTeX Font Info:    Trying to load font information for T1+ptm on input line 27
+.
 
-
-LaTeX Font Warning: Font shape `OMS/cmtt/m/n' undefined
-(Font)              using `OMS/cmsy/m/n' instead
-(Font)              for symbol `textbraceleft' on input line 26.
-
+(/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/t1ptm.fd
+File: t1ptm.fd 2001/06/04 font definitions for T1/ptm.
+)
 (./sections/abstract.tex) (./sections/introduction.tex
 
 [1
 
 
 {/usr/local/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}{/usr/loc
-al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}])
+al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}{/usr/local/texlive/2025
+/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}])
 (./sections/methods.tex
 
 [2]
@@ -579,27 +579,25 @@ al/texlive/2025/texmf-dist/fonts/enc/dvips/base/8r.enc}])
 [4]
 
 [5]
-LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 1
-00.
+LaTeX Font Info:    Trying to load font information for TS1+ptm on input line 9
+6.
  (/usr/local/texlive/2025/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 File: ts1ptm.fd 2001/06/04 font definitions for TS1/ptm.
 )
+Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
+put line 99.
+
 
 [6]
-Package hyperref Info: bookmark level for unknown algorithm defaults to 0 on in
-put line 103.
-
 
 [7] (./sections/chronological_methods.tex
 
-[8]
+[8]) (./sections/stock_validation_methods.tex
 
-[9]) (./sections/stock_validation_methods.tex
+[9])) (./sections/results.tex
 
-[10])) (./sections/results.tex
-
-[11]
-<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=308, 1104.125pt x 1
+[10]
+<sections/figures/ladder_per_ticker_nn_smile_panels.pdf, id=302, 1104.125pt x 1
 204.5pt>
 File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
  pdf)
@@ -607,42 +605,37 @@ File: sections/figures/ladder_per_ticker_nn_smile_panels.pdf Graphic file (type
 Package pdftex.def Info: sections/figures/ladder_per_ticker_nn_smile_panels.pdf
   used on input line 22.
 (pdftex.def)             Requested size: 397.48499pt x 433.61967pt.
+<sections/figures/ladder_price_error_six_tickers.pdf, id=305, 1656.1875pt x 953
+.5625pt>
+File: sections/figures/ladder_price_error_six_tickers.pdf Graphic file (type pd
+f)
+<use sections/figures/ladder_price_error_six_tickers.pdf>
+Package pdftex.def Info: sections/figures/ladder_price_error_six_tickers.pdf  u
+sed on input line 28.
+(pdftex.def)             Requested size: 397.48499pt x 228.84512pt.
 
 
-[12]
-
-[13 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
-<sections/figures/ladder_price_error_three_tickers.pdf, id=336, 1204.5pt x 903.
-375pt>
-File: sections/figures/ladder_price_error_three_tickers.pdf Graphic file (type 
-pdf)
-<use sections/figures/ladder_price_error_three_tickers.pdf>
-Package pdftex.def Info: sections/figures/ladder_price_error_three_tickers.pdf 
- used on input line 30.
-(pdftex.def)             Requested size: 397.48499pt x 298.11467pt.
-
-
-[14 <./sections/figures/ladder_price_error_three_tickers.pdf>]
+[11 <./sections/figures/ladder_per_ticker_nn_smile_panels.pdf>]
 (./sections/scenarios.tex
-<sections/figures/gs/gs_short_paths.pdf, id=361, 1505.625pt x 602.25pt>
+
+[12 <./sections/figures/ladder_price_error_six_tickers.pdf>]
+<sections/figures/gs/gs_short_paths.pdf, id=334, 1505.625pt x 602.25pt>
 File: sections/figures/gs/gs_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_paths.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_paths.pdf  used on input 
-line 7.
+line 5.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/gs/gs_iv_trajectories.pdf, id=362, 1104.125pt x 501.875pt>
+<sections/figures/gs/gs_iv_trajectories.pdf, id=335, 1104.125pt x 501.875pt>
 File: sections/figures/gs/gs_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_iv_trajectories.pdf  used on in
-put line 14.
+put line 12.
 (pdftex.def)             Requested size: 397.48499pt x 180.67485pt.
 
 
-[15]
-
-[16 <./sections/figures/gs/gs_short_paths.pdf> <./sections/figures/gs/gs_iv_tra
-jectories.pdf>] (./sections/dynamic_ablation.tex
-<sections/figures/dynamic_ablation.pdf, id=391, 1104.125pt x 521.95pt>
+[13 <./sections/figures/gs/gs_short_paths.pdf>]
+(./sections/dynamic_ablation.tex
+<sections/figures/dynamic_ablation.pdf, id=359, 1104.125pt x 521.95pt>
 File: sections/figures/dynamic_ablation.pdf Graphic file (type pdf)
 <use sections/figures/dynamic_ablation.pdf>
 Package pdftex.def Info: sections/figures/dynamic_ablation.pdf  used on input l
@@ -650,10 +643,12 @@ ine 5.
 (pdftex.def)             Requested size: 397.48499pt x 187.90186pt.
 
 
-[17 <./sections/figures/dynamic_ablation.pdf>]))
+[14 <./sections/figures/gs/gs_iv_trajectories.pdf>]))
 (./sections/chronological_results.tex
+
+[15 <./sections/figures/dynamic_ablation.pdf>]
 (./sections/generated/forecast_main_table.tex)
-<sections/figures/chronological_forecast.pdf, id=421, 1505.625pt x 602.25pt>
+<sections/figures/chronological_forecast.pdf, id=396, 1505.625pt x 602.25pt>
 File: sections/figures/chronological_forecast.pdf Graphic file (type pdf)
 <use sections/figures/chronological_forecast.pdf>
 Package pdftex.def Info: sections/figures/chronological_forecast.pdf  used on i
@@ -661,156 +656,136 @@ nput line 13.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
 
 
-[18]) (./sections/stock_validation_results.tex
+[16 <./sections/figures/chronological_forecast.pdf>])
+(./sections/stock_validation_results.tex
+(./sections/generated/stock_validation_main_table.tex)
 
-[19 <./sections/figures/chronological_forecast.pdf>]
-(./sections/generated/stock_validation_main_table.tex)))
-(./sections/discussion.tex
+[17])) (./sections/discussion.tex
 
-[20]
+[18]) (./sections/conclusion.tex) (./sections/data_availability.tex
 
-[21]
+[19]) (./main.bbl
 
-[22]) (./sections/conclusion.tex) (./sections/data_availability.tex
+[20])
 
-[23]) (./main.bbl
-Underfull \hbox (badness 10000) in paragraph at lines 9--14
-[]\OT1/ptm/m/n/10 Alpaca Mar-kets.  Mar-ket data FAQ.  [][]$\OT1/cmtt/m/n/10 ht
-tps : / / docs . alpaca . markets / us / docs /
- []
+[21] (./sections/supplement.tex (./sections/generated/corpus_dates.tex)
 
-
-
-[24])
-
-[25] (./sections/supplement.tex (./sections/generated/corpus_dates.tex)
-
-[26
+[22
 
 ] (./sections/generated/per_ticker_comparison_table.tex)
-(./sections/generated/smile_date_bias_table.tex)
 
-[27]
+[23] (./sections/generated/smile_date_bias_table.tex)
 
-[28]
+[24] (./sections/generated/price_error_summary_table.tex)
 
-[29] (./sections/generated/gs_scenario_table.tex)
+[25]
+
+[26] (./sections/generated/gs_scenario_table.tex)
 pdfTeX warning (ext4): destination with the same identifier (name{algorithm.1})
  has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.210 \end{algorithm}
+l.203 \end{algorithm}
                      
 
-[30]
-<sections/figures/gs/gs_short_greeks.pdf, id=599, 1505.625pt x 1505.625pt>
+[27]
+<sections/figures/gs/gs_short_greeks.pdf, id=551, 1505.625pt x 1505.625pt>
 File: sections/figures/gs/gs_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/gs/gs_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/gs/gs_short_greeks.pdf  used on input
- line 214.
+ line 207.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
  (./sections/generated/lly_scenario_table.tex)
 
-[31 <./sections/figures/gs/gs_short_greeks.pdf>]
-<sections/figures/lly/lly_short_paths.pdf, id=606, 1505.625pt x 602.25pt>
+[28 <./sections/figures/gs/gs_short_greeks.pdf>]
+<sections/figures/lly/lly_short_paths.pdf, id=557, 1505.625pt x 602.25pt>
 File: sections/figures/lly/lly_short_paths.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_paths.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_paths.pdf  used on inpu
-t line 230.
+t line 223.
 (pdftex.def)             Requested size: 397.48499pt x 158.98897pt.
-<sections/figures/lly/lly_iv_trajectories.pdf, id=609, 1104.125pt x 501.875pt>
+<sections/figures/lly/lly_iv_trajectories.pdf, id=560, 1104.125pt x 501.875pt>
 File: sections/figures/lly/lly_iv_trajectories.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_iv_trajectories.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_iv_trajectories.pdf  used on 
-input line 237.
+input line 230.
 (pdftex.def)             Requested size: 397.48499pt x 180.67485pt.
 
 
-[32 <./sections/figures/lly/lly_short_paths.pdf>]
-<sections/figures/lly/lly_short_greeks.pdf, id=617, 1505.625pt x 1505.625pt>
+[29 <./sections/figures/lly/lly_short_paths.pdf>]
+<sections/figures/lly/lly_short_greeks.pdf, id=568, 1505.625pt x 1505.625pt>
 File: sections/figures/lly/lly_short_greeks.pdf Graphic file (type pdf)
 <use sections/figures/lly/lly_short_greeks.pdf>
 Package pdftex.def Info: sections/figures/lly/lly_short_greeks.pdf  used on inp
-ut line 244.
+ut line 237.
 (pdftex.def)             Requested size: 397.48499pt x 397.47244pt.
 )
 (./sections/dynamic_ablation_supp.tex
 
-[33 <./sections/figures/lly/lly_iv_trajectories.pdf>]
+[30 <./sections/figures/lly/lly_iv_trajectories.pdf>]
 
-[34 <./sections/figures/lly/lly_short_greeks.pdf>]
+[31 <./sections/figures/lly/lly_short_greeks.pdf>]
 (./sections/generated/dynamic_ablation_table.tex)
 (./sections/generated/ablation_seeds.tex)
 
-[35
+[32
 
 ] (./sections/generated/strike_audit_table.tex)
 (./sections/generated/strike_audit_depth_table.tex)
-Overfull \hbox (8.51762pt too wide) in paragraph at lines 1--33
- [][] 
- []
 
+[33]) (./sections/chronological_supp.tex
 
-
-[36]) (./sections/chronological_supp.tex
-(./sections/generated/walk_forward_extended_table.tex)
-
-[37] (./sections/generated/chronological_surface_table.tex)
+[34] (./sections/generated/walk_forward_extended_table.tex)
+(./sections/generated/chronological_surface_table.tex)
 (./sections/generated/chronological_data_audit_table.tex)
-(./sections/generated/forecast_availability_table.tex)
 
-[38] (./sections/generated/forecast_one_session_table.tex)
+[35] (./sections/generated/forecast_availability_table.tex)
+
+[36] (./sections/generated/forecast_one_session_table.tex)
 (./sections/generated/forecast_conditional_table.tex)
 (./sections/generated/forecast_stock_table.tex)
 
-[39] (./sections/generated/forecast_repricing_table.tex)
+[37] (./sections/generated/forecast_repricing_table.tex)
 (./sections/generated/option_point_summary_table.tex)
 
-[40] (./sections/generated/forecast_numerical_checks_table.tex)
+[38] (./sections/generated/forecast_numerical_checks_table.tex)
 (./sections/generated/mechanism_checks_table.tex)
 
-[41] (./sections/generated/earnings_refit_table.tex)
+[39] (./sections/generated/earnings_refit_table.tex)
 
-[42]) (./sections/stock_validation_supp.tex
+[40]) (./sections/stock_validation_supp.tex
 (./sections/generated/stock_initialization_table.tex)
 
-[43] (./sections/generated/stock_selection_table.tex)
+[41] (./sections/generated/stock_selection_table.tex)
 (./sections/generated/stock_validation_five_table.tex)
 
-[44] (./sections/generated/stock_validation_one_table.tex))
+[42] (./sections/generated/stock_validation_one_table.tex))
 (./sections/truncated_emissions_supp.tex
 
-[45] (./sections/generated/emission_bounds_table.tex)
+[43] (./sections/generated/emission_bounds_table.tex)
 (./sections/generated/tail_sensitivity_table.tex)
 (./sections/generated/tail_forecast_table.tex)
 
-[46
+[44
 
 ])
 
-[47] (./main.aux)
+[45] (./main.aux)
  ***********
 LaTeX2e <2024-11-01> patch level 2
 L3 programming layer <2025-01-18>
  ***********
-
-
-LaTeX Font Warning: Some font shapes were not available, defaults substituted.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
 (rerunfilecheck)             Checksum: A7F86D78A0A8344247E283DBDB7D9150;3631.
  ) 
 Here is how much of TeX's memory you used:
- 14147 strings out of 473190
- 235672 string characters out of 5715801
- 661874 words of memory out of 5000000
- 36894 multiletter control sequences out of 15000+600000
- 575180 words of font info for 73 fonts, out of 8000000 for 9000
+ 14191 strings out of 473190
+ 236768 string characters out of 5715801
+ 669125 words of memory out of 5000000
+ 36930 multiletter control sequences out of 15000+600000
+ 577137 words of font info for 75 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,12n,79p,4128b,580s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,12n,79p,2523b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
 ></usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></
@@ -826,13 +801,14 @@ ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></usr/local/texlive/
 5/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2025/
 texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb></usr/local/texlive/2025/te
 xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2025/tex
-mf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/fo
-nts/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/
-urw/times/utmri8a.pfb>
-Output written on main.pdf (47 pages, 2191423 bytes).
+mf-dist/fonts/type1/public/cm-super/sftt1000.pfb></usr/local/texlive/2025/texmf
+-dist/fonts/type1/urw/times/utmb8a.pfb></usr/local/texlive/2025/texmf-dist/font
+s/type1/urw/times/utmr8a.pfb></usr/local/texlive/2025/texmf-dist/fonts/type1/ur
+w/times/utmri8a.pfb>
+Output written on main.pdf (45 pages, 2266233 bytes).
 PDF statistics:
- 836 PDF objects out of 1000 (max. 8388607)
- 722 compressed objects within 8 object streams
- 174 named destinations out of 1000 (max. 500000)
+ 800 PDF objects out of 1000 (max. 8388607)
+ 683 compressed objects within 7 object streams
+ 169 named destinations out of 1000 (max. 500000)
  219 words of extra memory for PDF output out of 10000 (max. 10000000)
 

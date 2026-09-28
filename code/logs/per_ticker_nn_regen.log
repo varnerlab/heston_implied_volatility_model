@@ -1,0 +1,21 @@
+Loading ladder data...
+  234549 observations, 31 tickers, 6 sectors
+
+Qualification threshold: N >= 2000
+  Qualified (29):   AAPL, ABBV, AMD, AMGN, AVGO, BAC, CVX, GOOG, GS, INTC, IWM, JNJ, JPM, LLY, META, MRNA, MSFT, MU, NVDA, OXY, QCOM, QQQ, SPY, TGT, UNH, UPS, WFC, WMT, XOM
+  Unqualified (2): BMY, PFE
+
+Cache hit (calibrate_ladders_per_ticker_nn_cache.jld2): loading trained models — pass --retrain to refit.
+
+Generating figures...
+  -> saved ladder_per_ticker_nn_smile_panels.png/pdf
+
+======================================================================
+  SUMMARY
+======================================================================
+  Corpus: 234549 obs, 31 tickers (29 qualified for per-ticker NN)
+  Sector NN overall:                        10.24% IV
+  Per-ticker (qualified) + sector NN combo:  9.73% IV  (0.51 improvement)
+  Tickers improved over sector NN: 21  |  regressed: 8
+
+[promote] copied ladder_per_ticker_nn_smile_panels.pdf -> paper/sections/figures/

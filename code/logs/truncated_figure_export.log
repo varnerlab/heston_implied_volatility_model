@@ -1,0 +1,11 @@
+Exported frozen figure inputs to /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/results/figure_revision
+6×10 DataFrame
+ Row │ ticker  date        scope                    displayed_dte  n      mean_observed_iv  mean_predicted_iv  mean_bias  rmse      median_bias
+     │ String  String      String                   Int64          Int64  Float64           Float64            Float64    Float64   Float64
+─────┼──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ SPY     2026-05-11  near_atm_shown_maturity              7     52           13.5735            13.7489   0.175422  0.474467     0.106312
+   2 │ NVDA    2026-05-11  near_atm_shown_maturity              7      2           38.645             34.0223  -4.62267   4.70852     -4.62267
+   3 │ MSFT    2026-05-11  near_atm_shown_maturity              9     14           28.4679            37.9165   9.44864   9.5004       9.85526
+   4 │ LLY     2026-05-11  near_atm_shown_maturity             11     20           38.589             46.486    7.89704   7.93885      8.03683
+   5 │ GS      2026-05-11  near_atm_shown_maturity             11     24           32.0592            31.7411  -0.318039  0.638307    -0.379186
+   6 │ AVGO    2026-05-11  near_atm_shown_maturity              9     14           49.0836            43.7171  -5.3665    5.41239     -5.53341

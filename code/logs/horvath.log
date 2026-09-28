@@ -1,0 +1,47 @@
+┌ Warning: `Flux.params(m...)` is deprecated. Use `Flux.trainable(model)` for parameter collection,
+│ and the explicit `gradient(m -> loss(m, x, y), model)` for gradient computation.
+└ @ Flux ~/.julia/packages/Flux/DZYiO/src/deprecations.jl:93
+Loading earnings calendar...
+Loading train+test splits...
+  train: 103897 obs    test: 26833 obs
+  31 tickers in universe
+  Xtr size: (4, 103897)    ytr size: (103897,)
+  embedding params: 248   trunk params: 1505   total: 1753
+
+Training Horvath direct NN...
+  epoch  100  train_mse=0.01989  best=0.01989
+  epoch  200  train_mse=0.01459  best=0.01459
+  epoch  300  train_mse=0.01197  best=0.01197
+  epoch  400  train_mse=0.01028  best=0.01028
+  epoch  500  train_mse=0.00921  best=0.00921
+  epoch  600  train_mse=0.00879  best=0.00879
+  epoch  700  train_mse=0.00840  best=0.00840
+  epoch  800  train_mse=0.00804  best=0.00804
+  epoch  900  train_mse=0.00771  best=0.00771
+  epoch 1000  train_mse=0.00745  best=0.00745
+  epoch 1100  train_mse=0.00736  best=0.00736
+  epoch 1200  train_mse=0.00727  best=0.00727
+  epoch 1300  train_mse=0.00719  best=0.00719
+  epoch 1400  train_mse=0.00711  best=0.00711
+  epoch 1500  train_mse=0.00704  best=0.00704
+  epoch 1600  train_mse=0.00701  best=0.00701
+  epoch 1700  train_mse=0.00698  best=0.00698
+  epoch 1800  train_mse=0.00694  best=0.00694
+  epoch 1900  train_mse=0.00691  best=0.00691
+  epoch 2000  train_mse=0.00687  best=0.00687
+
+  Train RMSE:  8.29%   Test RMSE: 12.36%   Gen gap: +4.07%
+
+Per-sector test RMSE (%):
+  Sector         N_test   RMSE
+  -----------------------------------
+  ETF            10755     7.89
+  Energy           908     9.96
+  Financials      2009     6.87
+  Healthcare      3267    12.50
+  Retail          1599    10.59
+  Tech            8295    17.55
+
+[csv] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/horvath_direct_summary.csv
+
+Done.

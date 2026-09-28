@@ -1,0 +1,33 @@
+Loading ladder corpus for standardisation...
+  S_0 (AVGO, anchored to 2026-04-28) = $399.83
+Loading per-ticker NN ψ surface for AVGO...
+
+Running pipeline at σ_v = 0.0 ...
+  Pricing put paths via LR...
+    200/1000
+    400/1000
+    600/1000
+    800/1000
+    1000/1000
+
+Running pipeline at σ_v = 0.5 ...
+  Pricing put paths via LR...
+    200/1000
+    400/1000
+    600/1000
+    800/1000
+    1000/1000
+
+→ /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../../paper/sections/figures/avgo/avgo_sigma_v_ab.pdf
+
+============================================================
+  PUT-PRICE JUMPINESS METRICS  (|day-over-day Δ| in $)
+============================================================
+                       σ_v=0.0      σ_v=0.5     ratio (B/A)
+  Median |ΔV/day|     $0.669       $0.725      1.09×
+  95%ile |ΔV/day|     $5.708       $5.897      1.03×
+  std(V_terminal)     $15.94       $15.94      1.00×
+
+  Interpretation: ratio ≈ 1.0 → σ_v innocent (jumpiness from
+  JumpHMM emissions + ψ_NN smile blow-up at low DTE).
+  Ratio ≫ 1.0 → σ_v contributes materially.

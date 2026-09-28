@@ -1,0 +1,400 @@
+
+==============================================================================
+  TICKER 1/5:  SPY  (sector=ETF  per_ticker=true)
+==============================================================================
+Scenario clock: 31 calendar days, 22 trading steps (2026-04-28 to 2026-05-29)
+Loading ladder corpus for standardisation constants...
+  S_0 (SPY, anchored to 2026-04-28) = $711.68
+Loading NN ψ surface for SPY ...
+  ψ source: per_ticker    θ̄ = 0.0956  →  IV 30.9%
+  Real-contract setup (SPY 2026-05-29, 31 calendar DTE):
+    Put  K=$696.00   market Δ=-0.298   mid=$6.96   market IV=17.3%   (model NN-IV=17.2%)
+    Call K=$729.00   market Δ=+0.303   mid=$5.28   market IV=13.4%   (model NN-IV=14.6%)
+Cache parameters drifted from current spec; resimulating.
+
+Loading pretrained portfolio model...
+Simulating 1000 SPY price paths over 22 trading steps...
+  Drift anchor: empirical +8.12%/yr → target +8.00%/yr   (shift -0.12%/yr)
+Evolving per-contract CIR variance with leverage coupling (κ=15.0, σ_v=0.5, ρ=-0.6)...
+Pricing put + call at every (t, path) via Leisen-Reimer American (n_steps=201)...
+     100 / 1000 paths priced
+     200 / 1000 paths priced
+     300 / 1000 paths priced
+     400 / 1000 paths priced
+     500 / 1000 paths priced
+     600 / 1000 paths priced
+     700 / 1000 paths priced
+     800 / 1000 paths priced
+     900 / 1000 paths priced
+    1000 / 1000 paths priced
+[cache] saved -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/spy_short_premium_simulation_cache.jld2
+
+Computing Leisen-Reimer American Greeks via finite differences (h=1.5% S, dσ=±0.5 IV pts)...
+    Greeks:  100 / 1000 paths done
+    Greeks:  200 / 1000 paths done
+    Greeks:  300 / 1000 paths done
+    Greeks:  400 / 1000 paths done
+    Greeks:  500 / 1000 paths done
+    Greeks:  600 / 1000 paths done
+    Greeks:  700 / 1000 paths done
+    Greeks:  800 / 1000 paths done
+    Greeks:  900 / 1000 paths done
+    Greeks: 1000 / 1000 paths done
+Rendering figure A: stock + put premium ...
+Rendering figure B: stock + call premium ...
+Rendering figure A+B: combined 2x2 ...
+Rendering figure C: terminal short P&L distributions ...
+Rendering figure D: IV trajectories ...
+Rendering figure E: Greeks trajectories ...
+Mirrored 12 figure file(s) to 1 other paper variant(s).
+
+==============================================================================
+  SHORT-PREMIUM SCENARIO SUMMARY  (SPY, 31 calendar days, 22 trading steps, 1000 paths)
+==============================================================================
+  Spot:                S_0 = $711.68
+  30Δ put strike:      K = $696.00   (K/S = 0.978)
+  30Δ call strike:     K = $729.00   (K/S = 1.024)
+  CIR-like (κ, σ_v):   (15.0, 0.5); return-shock coupling ρ = -0.60
+
+  stat          Short PUT P&L ($)       Short CALL P&L ($)
+  ------------------------------------------------------------
+  Premium                        +6.96                   +5.28
+  Mean                           +0.88                   -3.47
+  Median                         +6.96                   +5.28
+  Std                           +15.46                  +16.69
+  5%-tile                       -30.05                  -41.08
+  ES (5%)                       -51.01                  -58.24
+  Min                          -201.69                 -106.77
+  Max                            +6.96                   +5.28
+
+  Premium kept in full (PUT):    74.1% of paths
+    Wilson 95% CI:              [ 71.3%,  76.7%]
+  Premium kept in full (CALL):   62.5% of paths
+    Wilson 95% CI:              [ 59.5%,  65.4%]
+
+  Worst-5% terminal-price range:  $487.35 .. $658.52
+  Mean short-PUT P&L on worst-5% paths:  $-51.01
+  Mean short-CALL P&L on top-5%   paths: $-58.24
+
+==============================================================================
+  TICKER 2/5:  XOM  (sector=Energy  per_ticker=true)
+==============================================================================
+Scenario clock: 31 calendar days, 22 trading steps (2026-04-28 to 2026-05-29)
+Loading ladder corpus for standardisation constants...
+  S_0 (XOM, anchored to 2026-04-28) = $150.55
+Loading NN ψ surface for XOM ...
+  ψ source: per_ticker    θ̄ = 0.2171  →  IV 46.6%
+  Real-contract setup (XOM 2026-05-29, 31 calendar DTE):
+    Put  K=$145.00   market Δ=-0.321   mid=$3.29   market IV=34.0%   (model NN-IV=30.9%)
+    Call K=$160.00   market Δ=+0.276   mid=$2.20   market IV=30.8%   (model NN-IV=32.9%)
+Cache parameters drifted from current spec; resimulating.
+
+Loading pretrained portfolio model...
+Simulating 1000 XOM price paths over 22 trading steps...
+  Drift anchor: empirical -3.13%/yr → target +8.00%/yr   (shift +11.13%/yr)
+Evolving per-contract CIR variance with leverage coupling (κ=15.0, σ_v=0.5, ρ=-0.6)...
+Pricing put + call at every (t, path) via Leisen-Reimer American (n_steps=201)...
+     100 / 1000 paths priced
+     200 / 1000 paths priced
+     300 / 1000 paths priced
+     400 / 1000 paths priced
+     500 / 1000 paths priced
+     600 / 1000 paths priced
+     700 / 1000 paths priced
+     800 / 1000 paths priced
+     900 / 1000 paths priced
+    1000 / 1000 paths priced
+[cache] saved -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/xom_short_premium_simulation_cache.jld2
+
+Computing Leisen-Reimer American Greeks via finite differences (h=1.5% S, dσ=±0.5 IV pts)...
+    Greeks:  100 / 1000 paths done
+    Greeks:  200 / 1000 paths done
+    Greeks:  300 / 1000 paths done
+    Greeks:  400 / 1000 paths done
+    Greeks:  500 / 1000 paths done
+    Greeks:  600 / 1000 paths done
+    Greeks:  700 / 1000 paths done
+    Greeks:  800 / 1000 paths done
+    Greeks:  900 / 1000 paths done
+    Greeks: 1000 / 1000 paths done
+Rendering figure A: stock + put premium ...
+Rendering figure B: stock + call premium ...
+Rendering figure A+B: combined 2x2 ...
+Rendering figure C: terminal short P&L distributions ...
+Rendering figure D: IV trajectories ...
+Rendering figure E: Greeks trajectories ...
+Mirrored 12 figure file(s) to 1 other paper variant(s).
+
+==============================================================================
+  SHORT-PREMIUM SCENARIO SUMMARY  (XOM, 31 calendar days, 22 trading steps, 1000 paths)
+==============================================================================
+  Spot:                S_0 = $150.55
+  30Δ put strike:      K = $145.00   (K/S = 0.963)
+  30Δ call strike:     K = $160.00   (K/S = 1.063)
+  CIR-like (κ, σ_v):   (15.0, 0.5); return-shock coupling ρ = -0.60
+
+  stat          Short PUT P&L ($)       Short CALL P&L ($)
+  ------------------------------------------------------------
+  Premium                        +3.29                   +2.20
+  Mean                           +1.40                   +0.35
+  Median                         +3.29                   +2.20
+  Std                            +4.38                   +4.72
+  5%-tile                        -8.26                  -10.03
+  ES (5%)                       -13.62                  -16.75
+  Min                           -29.03                  -31.61
+  Max                            +3.29                   +2.20
+
+  Premium kept in full (PUT):    71.8% of paths
+    Wilson 95% CI:              [ 68.9%,  74.5%]
+  Premium kept in full (CALL):   75.0% of paths
+    Wilson 95% CI:              [ 72.2%,  77.6%]
+
+  Worst-5% terminal-price range:  $112.68 .. $133.42
+  Mean short-PUT P&L on worst-5% paths:  $-13.62
+  Mean short-CALL P&L on top-5%   paths: $-16.75
+
+==============================================================================
+  TICKER 3/5:  AMD  (sector=Tech  per_ticker=true)
+==============================================================================
+Scenario clock: 31 calendar days, 22 trading steps (2026-04-28 to 2026-05-29)
+Loading ladder corpus for standardisation constants...
+  S_0 (AMD, anchored to 2026-04-28) = $323.08
+Loading NN ψ surface for AMD ...
+  ψ source: per_ticker    θ̄ = 0.5587  →  IV 74.7%
+  Real-contract setup (AMD 2026-05-29, 31 calendar DTE):
+    Put  K=$300.00   market Δ=-0.303   mid=$13.29   market IV=65.7%   (model NN-IV=65.2%)
+    Call K=$365.00   market Δ=+0.302   mid=$10.68   market IV=64.7%   (model NN-IV=64.6%)
+Cache parameters drifted from current spec; resimulating.
+
+Loading pretrained portfolio model...
+Simulating 1000 AMD price paths over 22 trading steps...
+  Drift anchor: empirical +18.28%/yr → target +12.00%/yr   (shift -6.28%/yr)
+Evolving per-contract CIR variance with leverage coupling (κ=15.0, σ_v=0.5, ρ=-0.6)...
+Pricing put + call at every (t, path) via Leisen-Reimer American (n_steps=201)...
+     100 / 1000 paths priced
+     200 / 1000 paths priced
+     300 / 1000 paths priced
+     400 / 1000 paths priced
+     500 / 1000 paths priced
+     600 / 1000 paths priced
+     700 / 1000 paths priced
+     800 / 1000 paths priced
+     900 / 1000 paths priced
+    1000 / 1000 paths priced
+[cache] saved -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/amd_short_premium_simulation_cache.jld2
+
+Computing Leisen-Reimer American Greeks via finite differences (h=1.5% S, dσ=±0.5 IV pts)...
+    Greeks:  100 / 1000 paths done
+    Greeks:  200 / 1000 paths done
+    Greeks:  300 / 1000 paths done
+    Greeks:  400 / 1000 paths done
+    Greeks:  500 / 1000 paths done
+    Greeks:  600 / 1000 paths done
+    Greeks:  700 / 1000 paths done
+    Greeks:  800 / 1000 paths done
+    Greeks:  900 / 1000 paths done
+    Greeks: 1000 / 1000 paths done
+Rendering figure A: stock + put premium ...
+Rendering figure B: stock + call premium ...
+Rendering figure A+B: combined 2x2 ...
+Rendering figure C: terminal short P&L distributions ...
+Rendering figure D: IV trajectories ...
+Rendering figure E: Greeks trajectories ...
+Mirrored 12 figure file(s) to 1 other paper variant(s).
+
+==============================================================================
+  SHORT-PREMIUM SCENARIO SUMMARY  (AMD, 31 calendar days, 22 trading steps, 1000 paths)
+==============================================================================
+  Spot:                S_0 = $323.08
+  30Δ put strike:      K = $300.00   (K/S = 0.929)
+  30Δ call strike:     K = $365.00   (K/S = 1.130)
+  CIR-like (κ, σ_v):   (15.0, 0.5); return-shock coupling ρ = -0.60
+
+  stat          Short PUT P&L ($)       Short CALL P&L ($)
+  ------------------------------------------------------------
+  Premium                       +13.29                  +10.68
+  Mean                           +4.90                   +0.85
+  Median                        +13.29                  +10.68
+  Std                           +18.39                  +25.36
+  5%-tile                       -32.99                  -52.39
+  ES (5%)                       -57.66                  -88.50
+  Min                          -148.68                 -214.89
+  Max                           +13.29                  +10.68
+
+  Premium kept in full (PUT):    69.3% of paths
+    Wilson 95% CI:              [ 66.4%,  72.1%]
+  Premium kept in full (CALL):   76.5% of paths
+    Wilson 95% CI:              [ 73.8%,  79.0%]
+
+  Worst-5% terminal-price range:  $138.03 .. $253.27
+  Mean short-PUT P&L on worst-5% paths:  $-57.66
+  Mean short-CALL P&L on top-5%   paths: $-88.50
+
+==============================================================================
+  TICKER 4/5:  PFE  (sector=Healthcare  per_ticker=false)
+==============================================================================
+Scenario clock: 31 calendar days, 22 trading steps (2026-04-28 to 2026-05-29)
+Loading ladder corpus for standardisation constants...
+  S_0 (PFE, anchored to 2026-04-28) = $26.48
+Loading NN ψ surface for PFE ...
+  ψ source: sector    θ̄ = 0.2172  →  IV 46.6%
+  Real-contract setup (PFE 2026-05-29, 31 calendar DTE):
+    Put  K=$26.00   market Δ=-0.381   mid=$0.67   market IV=30.8%   (model NN-IV=36.3%)
+    Call K=$28.00   market Δ=+0.234   mid=$0.24   market IV=23.0%   (model NN-IV=35.2%)
+Cache parameters drifted from current spec; resimulating.
+
+Loading pretrained portfolio model...
+Simulating 1000 PFE price paths over 22 trading steps...
+  Drift anchor: empirical -4.13%/yr → target +7.00%/yr   (shift +11.13%/yr)
+Evolving per-contract CIR variance with leverage coupling (κ=15.0, σ_v=0.5, ρ=-0.6)...
+Pricing put + call at every (t, path) via Leisen-Reimer American (n_steps=201)...
+     100 / 1000 paths priced
+     200 / 1000 paths priced
+     300 / 1000 paths priced
+     400 / 1000 paths priced
+     500 / 1000 paths priced
+     600 / 1000 paths priced
+     700 / 1000 paths priced
+     800 / 1000 paths priced
+     900 / 1000 paths priced
+    1000 / 1000 paths priced
+[cache] saved -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/pfe_short_premium_simulation_cache.jld2
+
+Computing Leisen-Reimer American Greeks via finite differences (h=1.5% S, dσ=±0.5 IV pts)...
+    Greeks:  100 / 1000 paths done
+    Greeks:  200 / 1000 paths done
+    Greeks:  300 / 1000 paths done
+    Greeks:  400 / 1000 paths done
+    Greeks:  500 / 1000 paths done
+    Greeks:  600 / 1000 paths done
+    Greeks:  700 / 1000 paths done
+    Greeks:  800 / 1000 paths done
+    Greeks:  900 / 1000 paths done
+    Greeks: 1000 / 1000 paths done
+Rendering figure A: stock + put premium ...
+Rendering figure B: stock + call premium ...
+Rendering figure A+B: combined 2x2 ...
+Rendering figure C: terminal short P&L distributions ...
+Rendering figure D: IV trajectories ...
+Rendering figure E: Greeks trajectories ...
+Mirrored 12 figure file(s) to 1 other paper variant(s).
+
+==============================================================================
+  SHORT-PREMIUM SCENARIO SUMMARY  (PFE, 31 calendar days, 22 trading steps, 1000 paths)
+==============================================================================
+  Spot:                S_0 = $26.48
+  30Δ put strike:      K = $26.00   (K/S = 0.982)
+  30Δ call strike:     K = $28.00   (K/S = 1.057)
+  CIR-like (κ, σ_v):   (15.0, 0.5); return-shock coupling ρ = -0.60
+
+  stat          Short PUT P&L ($)       Short CALL P&L ($)
+  ------------------------------------------------------------
+  Premium                        +0.67                   +0.24
+  Mean                           +0.28                   +0.00
+  Median                         +0.67                   +0.24
+  Std                            +0.77                   +0.62
+  5%-tile                        -1.33                   -1.48
+  ES (5%)                        -2.22                   -2.28
+  Min                            -6.38                   -3.78
+  Max                            +0.67                   +0.24
+
+  Premium kept in full (PUT):    63.6% of paths
+    Wilson 95% CI:              [ 60.6%,  66.5%]
+  Premium kept in full (CALL):   77.5% of paths
+    Wilson 95% CI:              [ 74.8%,  80.0%]
+
+  Worst-5% terminal-price range:  $18.95 .. $23.97
+  Mean short-PUT P&L on worst-5% paths:  $-2.22
+  Mean short-CALL P&L on top-5%   paths: $-2.28
+
+==============================================================================
+  TICKER 5/5:  JNJ  (sector=Healthcare  per_ticker=true)
+==============================================================================
+Scenario clock: 31 calendar days, 22 trading steps (2026-04-28 to 2026-05-29)
+Loading ladder corpus for standardisation constants...
+  S_0 (JNJ, anchored to 2026-04-28) = $227.75
+Loading NN ψ surface for JNJ ...
+  ψ source: per_ticker    θ̄ = 0.1560  →  IV 39.5%
+  Real-contract setup (JNJ 2026-05-29, 31 calendar DTE):
+    Put  K=$220.00   market Δ=-0.308   mid=$3.44   market IV=25.4%   (model NN-IV=22.0%)
+    Call K=$235.00   market Δ=+0.316   mid=$2.77   market IV=21.2%   (model NN-IV=21.9%)
+Cache parameters drifted from current spec; resimulating.
+
+Loading pretrained portfolio model...
+Simulating 1000 JNJ price paths over 22 trading steps...
+  Drift anchor: empirical +1.42%/yr → target +8.00%/yr   (shift +6.58%/yr)
+Evolving per-contract CIR variance with leverage coupling (κ=15.0, σ_v=0.5, ρ=-0.6)...
+Pricing put + call at every (t, path) via Leisen-Reimer American (n_steps=201)...
+     100 / 1000 paths priced
+     200 / 1000 paths priced
+     300 / 1000 paths priced
+     400 / 1000 paths priced
+     500 / 1000 paths priced
+     600 / 1000 paths priced
+     700 / 1000 paths priced
+     800 / 1000 paths priced
+     900 / 1000 paths priced
+    1000 / 1000 paths priced
+[cache] saved -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/jnj_short_premium_simulation_cache.jld2
+
+Computing Leisen-Reimer American Greeks via finite differences (h=1.5% S, dσ=±0.5 IV pts)...
+    Greeks:  100 / 1000 paths done
+    Greeks:  200 / 1000 paths done
+    Greeks:  300 / 1000 paths done
+    Greeks:  400 / 1000 paths done
+    Greeks:  500 / 1000 paths done
+    Greeks:  600 / 1000 paths done
+    Greeks:  700 / 1000 paths done
+    Greeks:  800 / 1000 paths done
+    Greeks:  900 / 1000 paths done
+    Greeks: 1000 / 1000 paths done
+Rendering figure A: stock + put premium ...
+Rendering figure B: stock + call premium ...
+Rendering figure A+B: combined 2x2 ...
+Rendering figure C: terminal short P&L distributions ...
+Rendering figure D: IV trajectories ...
+Rendering figure E: Greeks trajectories ...
+Mirrored 12 figure file(s) to 1 other paper variant(s).
+
+==============================================================================
+  SHORT-PREMIUM SCENARIO SUMMARY  (JNJ, 31 calendar days, 22 trading steps, 1000 paths)
+==============================================================================
+  Spot:                S_0 = $227.75
+  30Δ put strike:      K = $220.00   (K/S = 0.966)
+  30Δ call strike:     K = $235.00   (K/S = 1.032)
+  CIR-like (κ, σ_v):   (15.0, 0.5); return-shock coupling ρ = -0.60
+
+  stat          Short PUT P&L ($)       Short CALL P&L ($)
+  ------------------------------------------------------------
+  Premium                        +3.44                   +2.77
+  Mean                           +2.11                   +0.35
+  Median                         +3.44                   +2.77
+  Std                            +4.14                   +5.03
+  5%-tile                        -5.24                  -11.15
+  ES (5%)                       -12.06                  -16.67
+  Min                           -58.69                  -29.69
+  Max                            +3.44                   +2.77
+
+  Premium kept in full (PUT):    79.9% of paths
+    Wilson 95% CI:              [ 77.3%,  82.3%]
+  Premium kept in full (CALL):   68.5% of paths
+    Wilson 95% CI:              [ 65.6%,  71.3%]
+
+  Worst-5% terminal-price range:  $157.87 .. $211.21
+  Mean short-PUT P&L on worst-5% paths:  $-12.06
+  Mean short-CALL P&L on top-5%   paths: $-16.67
+
+[csv] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/expanded_scenarios_summary.csv
+
+========================================================================================================================
+  EXPANDED CROSS-TICKER SCENARIOS — entry-edge, P&L, premium-kept summary
+========================================================================================================================
+  ticker  sector       ψ-src     K_put    K_call    entry_edge_put   entry_edge_call   worst_loss_put   worst_loss_call   kept_put(%)  kept_call(%)
+  ------------------------------------------------------------------------------------------------------------------------
+  SPY     ETF          per_ticker  696.00   729.00         -0.074            +0.939          -201.69          -106.77          74.1          62.5
+  XOM     Energy       per_ticker  145.00   160.00         -0.464            +0.317           -29.03           -31.61          71.8          75.0
+  AMD     Tech         per_ticker  300.00   365.00         +0.148            -0.315          -148.68          -214.89          69.3          76.5
+  PFE     Healthcare   sector      26.00    28.00         +0.177            +0.304            -6.38            -3.78          63.6          77.5
+  JNJ     Healthcare   per_ticker  220.00   235.00         -0.981            +0.445           -58.69           -29.69          79.9          68.5
+
+Done.

@@ -1,0 +1,170 @@
+Loading earnings calendar from /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../data/earnings/earnings_calendar.csv ...
+  loaded 28 tickers
+Loading full 15-date ladder corpus ...
+  234549 total obs across 31 tickers, 15 dates
+
+======================================================================
+  FOLD: WF k=5 train=1..5, test=6 (2026-04-22)  (n_inputs=2, train=88346, test=15551)
+======================================================================
+  [ETF] 39665 train obs, 3 tickers, n_inputs=2
+  [Energy] 3257 train obs, 3 tickers, n_inputs=2
+  [Financials] 7841 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 10216 train obs, 8 tickers, n_inputs=2
+  [Retail] 4262 train obs, 3 tickers, n_inputs=2
+  [Tech] 23105 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  7.61%   Test RMSE: 10.47%   Gen gap: +2.87%
+
+  FOLD k= 5  train_obs= 88346  test_obs=15551  train= 7.61%  test=10.47%  gap=+2.87%  earnings=Y
+
+======================================================================
+  FOLD: WF k=6 train=1..6, test=7 (2026-04-23)  (n_inputs=2, train=103897, test=11482)
+======================================================================
+  [ETF] 46291 train obs, 3 tickers, n_inputs=2
+  [Energy] 3790 train obs, 3 tickers, n_inputs=2
+  [Financials] 9036 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 12125 train obs, 8 tickers, n_inputs=2
+  [Retail] 5045 train obs, 3 tickers, n_inputs=2
+  [Tech] 27610 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  8.05%   Test RMSE: 17.45%   Gen gap: +9.41%
+
+  FOLD k= 6  train_obs=103897  test_obs=11482  train= 8.05%  test=17.45%  gap=+9.41%  earnings=Y
+
+======================================================================
+  FOLD: WF k=7 train=1..7, test=8 (2026-04-24)  (n_inputs=2, train=115379, test=15351)
+======================================================================
+  [ETF] 50805 train obs, 3 tickers, n_inputs=2
+  [Energy] 4230 train obs, 3 tickers, n_inputs=2
+  [Financials] 9990 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 13604 train obs, 8 tickers, n_inputs=2
+  [Retail] 5814 train obs, 3 tickers, n_inputs=2
+  [Tech] 30936 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  9.34%   Test RMSE:  7.79%   Gen gap: -1.55%
+
+  FOLD k= 7  train_obs=115379  test_obs=15351  train= 9.34%  test= 7.79%  gap=-1.55%  earnings=Y
+
+======================================================================
+  FOLD: WF k=8 train=1..8, test=9 (2026-04-27)  (n_inputs=2, train=130730, test=11379)
+======================================================================
+  [ETF] 57046 train obs, 3 tickers, n_inputs=2
+  [Energy] 4698 train obs, 3 tickers, n_inputs=2
+  [Financials] 11045 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 15392 train obs, 8 tickers, n_inputs=2
+  [Retail] 6644 train obs, 3 tickers, n_inputs=2
+  [Tech] 35905 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  9.16%   Test RMSE: 12.57%   Gen gap: +3.41%
+
+  FOLD k= 8  train_obs=130730  test_obs=11379  train= 9.16%  test=12.57%  gap=+3.41%  earnings=Y
+
+======================================================================
+  FOLD: WF k=9 train=1..9, test=10 (2026-04-28)  (n_inputs=2, train=142109, test=16776)
+======================================================================
+  [ETF] 61196 train obs, 3 tickers, n_inputs=2
+  [Energy] 5077 train obs, 3 tickers, n_inputs=2
+  [Financials] 11848 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 16766 train obs, 8 tickers, n_inputs=2
+  [Retail] 7249 train obs, 3 tickers, n_inputs=2
+  [Tech] 39973 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  9.42%   Test RMSE: 12.86%   Gen gap: +3.44%
+
+  FOLD k= 9  train_obs=142109  test_obs=16776  train= 9.42%  test=12.86%  gap=+3.44%  earnings=Y
+
+======================================================================
+  FOLD: WF k=10 train=1..10, test=11 (2026-04-29)  (n_inputs=2, train=158885, test=16811)
+======================================================================
+  [ETF] 69147 train obs, 3 tickers, n_inputs=2
+  [Energy] 5608 train obs, 3 tickers, n_inputs=2
+  [Financials] 12869 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 18497 train obs, 8 tickers, n_inputs=2
+  [Retail] 7925 train obs, 3 tickers, n_inputs=2
+  [Tech] 44839 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE:  9.78%   Test RMSE: 13.12%   Gen gap: +3.34%
+
+  FOLD k=10  train_obs=158885  test_obs=16811  train= 9.78%  test=13.12%  gap=+3.34%  earnings=Y
+
+======================================================================
+  FOLD: WF k=11 train=1..11, test=12 (2026-05-01)  (n_inputs=2, train=175696, test=14825)
+======================================================================
+  [ETF] 76815 train obs, 3 tickers, n_inputs=2
+  [Energy] 6146 train obs, 3 tickers, n_inputs=2
+  [Financials] 13957 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 20291 train obs, 8 tickers, n_inputs=2
+  [Retail] 8692 train obs, 3 tickers, n_inputs=2
+  [Tech] 49795 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE: 10.11%   Test RMSE: 10.08%   Gen gap: -0.03%
+
+  FOLD k=11  train_obs=175696  test_obs=14825  train=10.11%  test=10.08%  gap=-0.03%  earnings=Y
+
+======================================================================
+  FOLD: WF k=12 train=1..12, test=13 (2026-05-06)  (n_inputs=2, train=190521, test=17293)
+======================================================================
+  [ETF] 84210 train obs, 3 tickers, n_inputs=2
+  [Energy] 6588 train obs, 3 tickers, n_inputs=2
+  [Financials] 14892 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 21738 train obs, 8 tickers, n_inputs=2
+  [Retail] 9261 train obs, 3 tickers, n_inputs=2
+  [Tech] 53832 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE: 10.10%   Test RMSE: 11.28%   Gen gap: +1.18%
+
+  FOLD k=12  train_obs=190521  test_obs=17293  train=10.10%  test=11.28%  gap=+1.18%  earnings=Y
+
+======================================================================
+  FOLD: WF k=13 train=1..13, test=14 (2026-05-08)  (n_inputs=2, train=207814, test=12293)
+======================================================================
+  [ETF] 91645 train obs, 3 tickers, n_inputs=2
+  [Energy] 7087 train obs, 3 tickers, n_inputs=2
+  [Financials] 16112 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 23526 train obs, 8 tickers, n_inputs=2
+  [Retail] 10011 train obs, 3 tickers, n_inputs=2
+  [Tech] 59433 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE: 10.18%   Test RMSE: 10.82%   Gen gap: +0.64%
+
+  FOLD k=13  train_obs=207814  test_obs=12293  train=10.18%  test=10.82%  gap=+0.64%  earnings=Y
+
+======================================================================
+  FOLD: WF k=14 train=1..14, test=15 (2026-05-11)  (n_inputs=2, train=220107, test=14442)
+======================================================================
+  [ETF] 96845 train obs, 3 tickers, n_inputs=2
+  [Energy] 7410 train obs, 3 tickers, n_inputs=2
+  [Financials] 16904 train obs, 4 tickers, n_inputs=2
+  [Healthcare] 24697 train obs, 8 tickers, n_inputs=2
+  [Retail] 10579 train obs, 3 tickers, n_inputs=2
+  [Tech] 63672 train obs, 10 tickers, n_inputs=2
+
+  Train RMSE: 10.21%   Test RMSE: 10.89%   Gen gap: +0.68%
+
+  FOLD k=14  train_obs=220107  test_obs=14442  train=10.21%  test=10.89%  gap=+0.68%  earnings=N
+
+[csv] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/walk_forward_summary.csv
+
+================================================================================
+  WALK-FORWARD SUMMARY
+================================================================================
+   k    test_date    n_train    n_test    train(%)    test(%)    gap(%)    e?
+  ---------------------------------------------------------------------------
+   5   2026-04-22     88346    15551      7.61       10.47     +2.87    Y
+   6   2026-04-23    103897    11482      8.05       17.45     +9.41    Y
+   7   2026-04-24    115379    15351      9.34        7.79     -1.55    Y
+   8   2026-04-27    130730    11379      9.16       12.57     +3.41    Y
+   9   2026-04-28    142109    16776      9.42       12.86     +3.44    Y
+  10   2026-04-29    158885    16811      9.78       13.12     +3.34    Y
+  11   2026-05-01    175696    14825     10.11       10.08     -0.03    Y
+  12   2026-05-06    190521    17293     10.10       11.28     +1.18    Y
+  13   2026-05-08    207814    12293     10.18       10.82     +0.64    Y
+  14   2026-05-11    220107    14442     10.21       10.89     +0.68    N
+
+  median test RMSE: 11.08%   median gap: +2.02%
+  mean   test RMSE: 11.73%   mean   gap: +2.34%
+
+Rendering walk-forward gap figure...
+[fig] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/walk_forward_gap.pdf / .png
+
+Done.

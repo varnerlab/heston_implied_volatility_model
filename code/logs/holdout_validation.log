@@ -1,0 +1,34 @@
+┌ Warning: Assignment to `holdout_date` in soft scope is ambiguous because a global variable by the same name exists: `holdout_date` will be treated as a new local. Disambiguate by using `local holdout_date` to suppress this warning or `global holdout_date` to assign to the existing global variable.
+└ @ ~/Desktop/julia_work/heston_implied_volatility_model/code/examples/holdout_validation_sector_nn.jl:45
+Loading ladder corpus...
+  234549 observations, 31 tickers, 15 capture dates
+  date range: 2026-04-13 → 2026-05-11
+
+  Holding out 2026-05-11: 14442 test obs (6.2% of corpus); 220107 train obs across 14 dates
+
+========================================================================
+  TRAINING SECTOR NNS ON TRAIN SPLIT (14 dates)
+========================================================================
+  [ETF        ]  train n= 96845 RMSE= 6.12%   |   test n= 5893 RMSE= 5.87%   gap=-0.25%
+  [Energy     ]  train n=  7410 RMSE= 7.74%   |   test n=  422 RMSE= 9.97%   gap=+2.23%
+  [Financials ]  train n= 16904 RMSE= 6.72%   |   test n= 1034 RMSE= 6.32%   gap=-0.40%
+  [Healthcare ]  train n= 24697 RMSE=12.58%   |   test n= 1690 RMSE=12.00%   gap=-0.58%
+  [Retail     ]  train n= 10579 RMSE= 9.21%   |   test n=  741 RMSE=13.17%   gap=+3.96%
+  [Tech       ]  train n= 63672 RMSE=14.45%   |   test n= 4662 RMSE=15.04%   gap=+0.58%
+
+========================================================================
+  SUMMARY — leave-one-date-out  (holdout = 2026-05-11)
+========================================================================
+  Overall train RMSE: 10.21%   (n = 220107)
+  Overall test  RMSE: 10.89%   (n = 14442)
+  Generalization gap: +0.68% IV
+
+  Per-sector gap:
+  Sector        train(%)   test(%)   gap(%)
+  ------------------------------------------------
+  ETF              6.12       5.87    -0.25
+  Energy           7.74       9.97    +2.23
+  Financials       6.72       6.32    -0.40
+  Healthcare      12.58      12.00    -0.58
+  Retail           9.21      13.17    +3.96
+  Tech            14.45      15.04    +0.58

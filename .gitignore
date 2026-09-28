@@ -45,3 +45,8 @@ texput.log
 code/results/chronological_validation/training.csv
 code/results/chronological_validation/surface_test.csv
 code/results/chronological_validation/surface_predictions.csv
+
+# Local manuscript review snapshots and LaTeX build caches
+/tmp/
+*.fdb_latexmk
+*.fls

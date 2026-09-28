@@ -1,0 +1,56 @@
+Scenario clock: 31 calendar days, 22 trading steps (2026-04-28 to 2026-05-29)
+Loading ladder corpus for standardisation constants...
+  S_0 (GS, anchored to 2026-04-28) = $926.38
+Loading NN ψ surface for GS ...
+  ψ source: per_ticker    θ̄ = 0.1784  →  IV 42.2%
+  Real-contract setup (GS 2026-05-29, 31 calendar DTE):
+    Put  K=$890.00   market Δ=-0.295   mid=$16.51   market IV=31.2%   (model NN-IV=31.6%)
+    Call K=$970.00   market Δ=+0.328   mid=$16.09   market IV=28.9%   (model NN-IV=29.3%)
+Cache hit: loading prior simulation from gs_short_premium_simulation_cache.jld2
+
+Computing Leisen-Reimer American Greeks via finite differences (h=1.5% S, dσ=±0.5 IV pts)...
+    Greeks:  100 / 1000 paths done
+    Greeks:  200 / 1000 paths done
+    Greeks:  300 / 1000 paths done
+    Greeks:  400 / 1000 paths done
+    Greeks:  500 / 1000 paths done
+    Greeks:  600 / 1000 paths done
+    Greeks:  700 / 1000 paths done
+    Greeks:  800 / 1000 paths done
+    Greeks:  900 / 1000 paths done
+    Greeks: 1000 / 1000 paths done
+Rendering figure A: stock + put premium ...
+Rendering figure B: stock + call premium ...
+Rendering figure A+B: combined 2x2 ...
+Rendering figure C: terminal short P&L distributions ...
+Rendering figure D: IV trajectories ...
+Rendering figure E: Greeks trajectories ...
+Mirrored 12 figure file(s) to 1 other paper variant(s).
+
+==============================================================================
+  SHORT-PREMIUM SCENARIO SUMMARY  (GS, 31 calendar days, 22 trading steps, 1000 paths)
+==============================================================================
+  Spot:                S_0 = $926.38
+  30Δ put strike:      K = $890.00   (K/S = 0.961)
+  30Δ call strike:     K = $970.00   (K/S = 1.047)
+  CIR-like (κ, σ_v):   (15.0, 0.5); return-shock coupling ρ = -0.60
+
+  stat          Short PUT P&L ($)       Short CALL P&L ($)
+  ------------------------------------------------------------
+  Premium                       +16.51                  +16.09
+  Mean                           +4.65                   -1.01
+  Median                        +16.51                  +16.09
+  Std                           +27.44                  +37.17
+  5%-tile                       -59.61                  -83.67
+  ES (5%)                       -90.73                 -125.62
+  Min                          -176.95                 -277.29
+  Max                           +16.51                  +16.09
+
+  Premium kept in full (PUT):    73.7% of paths
+    Wilson 95% CI:              [ 70.9%,  76.3%]
+  Premium kept in full (CALL):   68.8% of paths
+    Wilson 95% CI:              [ 65.9%,  71.6%]
+
+  Worst-5% terminal-price range:  $696.54 .. $811.33
+  Mean short-PUT P&L on worst-5% paths:  $-90.73
+  Mean short-CALL P&L on top-5%   paths: $-125.62

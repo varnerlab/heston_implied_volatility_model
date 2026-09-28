@@ -1,0 +1,8 @@
+4×10 DataFrame
+ Row │ ticker  cutoff   original_probability_removed  min_daily_log_return  max_daily_log_return  min_daily_return_pct  max_daily_return_pct  conditional_residual_variance  simulated_max_abs_residual  growth_shift
+     │ String  Float64  Float64                       Float64               Float64               Float64               Float64               Float64                        Float64                     Float64
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ GS         10.0                   0.000170948             -0.307488              0.329266              -26.4708               38.9948                        1.63797                      9.9367    -0.019087
+   2 │ LLY        10.0                   0.000170948             -0.238617              0.329191              -21.2283               38.9844                        1.63797                      9.9367    -0.142622
+   3 │ GS         20.0                   5.77552e-6              -0.557377              0.597902              -42.7291               81.8299                        1.66281                     16.8104    -0.0193015
+   4 │ LLY        20.0                   5.77552e-6              -0.481555              0.59944               -38.2178               82.1098                        1.66281                     16.8104    -0.142684

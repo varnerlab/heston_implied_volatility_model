@@ -1,0 +1,35 @@
+[options-04-14-2026]  23 ticker files
+[options-04-15-2026]  31 ticker files
+[options-04-16-2026]  31 ticker files
+[options-04-17-2026]  31 ticker files
+[options-04-21-2026]  31 ticker files
+[options-04-22-2026]  31 ticker files
+[options-04-23-2026]  31 ticker files
+[options-04-24-2026]  31 ticker files
+[options-04-27-2026]  31 ticker files
+[options-04-28-2026]  31 ticker files
+[options-04-29-2026]  31 ticker files
+[options-05-01-2026]  31 ticker files
+[options-05-06-2026]  31 ticker files
+[options-05-08-2026]  31 ticker files
+[options-05-11-2026]  31 ticker files
+
+========  SABR per-day baseline summary  ========
+  n_fits          = 2024 (date × ticker × maturity slices)
+  n_residuals     = 234549 total IV-vs-fit residuals across all rows
+  Pooled RMSE     =  9.05% IV
+
+  Per-sector pooled RMSE:
+  Sector         N_resid    RMSE(%)
+  ----------------------------------------
+  ETF             102738     8.10
+  Energy            7832     8.11
+  Financials       17938     7.19
+  Healthcare       26387     9.31
+  Retail           11320     8.36
+  Tech             68334    10.79
+
+[jld2] wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/sabr_per_day_fits.jld2
+[csv]  wrote -> /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../figures/sabr_per_day_summary.csv
+
+Done.
