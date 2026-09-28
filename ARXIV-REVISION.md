@@ -1,5 +1,17 @@
 # ArXiv revision: changes and remaining evidence
 
+## Current submission revision: September 28, 2026
+
+The current manuscript has 45 pages and its source archive has 63 files. The
+final prose pass preserves the requested paragraph structure and frames the
+experiments as fixed-horizon valuation comparisons. Supporting checks include
+six-ticker pricing errors, the network-size diagnostic, the stored-DTE offset,
+and paired-bootstrap uncertainty for expected-shortfall differences. The PDF,
+plain abstract, and archive are synchronized; both the working source and the
+extracted archive build without warnings and produce identical PDF text. See
+`paper-arxiv/submission-check-v2.1.md` for the final checks and `README.md` for
+reproduction commands. Earlier page counts below are historical.
+
 ## Completed work
 
 - September 14: explicitly truncated Student-t price emissions at ±10 fitted
@@ -34,11 +46,13 @@
 
 ## Interpretation of the new evidence
 
-The ablation can establish how IV assumptions affect interim marks and
-liquidation risk on fixed stock paths. It cannot select the best model of
-future observed IV. Expected shortfall changes are descriptive; paired
-standard errors in the paper apply to mean P&L differences only. Simulation
-uncertainty excludes fitted-model and pilot uncertainty.
+The ablation establishes how IV assumptions affect interim marks and
+hypothetical short-position P&L at fixed horizons on shared stock paths. It
+cannot select the best model of future observed IV or establish an exit rule.
+Paired Monte Carlo standard errors describe mean P&L differences; paired
+bootstrap standard errors now also describe the coupling change in expected
+shortfall. These quantify simulation precision conditional on the fitted models
+and pilot constants, not uncertainty across market dates.
 
 The GS direct surface and some factor variants violate necessary strike
 conditions on the diagnostic grid. This is an empirical limitation, not

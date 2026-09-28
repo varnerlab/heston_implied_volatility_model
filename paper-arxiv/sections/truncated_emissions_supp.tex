@@ -3,7 +3,7 @@
 
 Every JumpHMM price simulation used the truncated emissions in~\eqref{eq:truncated_emission}, with $b=10$ as the primary cutoff and $b=20$ as the wider sensitivity case. We set both cutoffs as stress assumptions before rerunning the affected experiments, without reference to the largest observed return. The truncation also applied to the state-inference likelihoods, and each experiment recomputed its pilot or ensemble normalization under each cutoff.
 
-To show what the cutoffs mean for daily stock moves, we converted them to daily percentage returns using the pilot growth shift from the tests on later dates (Table~\ref{tab:emission_bounds}). These limits are the widest possible daily returns over all fitted states, not forecast intervals. The removed mass is the probability cut from the standardized Student-$t$ distribution, before state locations and scales are applied. Normalization constants differ slightly between experiments, and so do their daily limits.
+To show what the cutoffs mean for daily stock moves, we converted them to daily percentage returns using the pilot growth shift from the tests on later dates (Table~\ref{tab:emission_bounds}). These limits are the widest possible daily returns over all fitted states, not forecast intervals. The removed mass is the probability cut from the standardized Student-$t$ distribution, before state locations and scales are applied. Both models used five degrees of freedom in every state, so the removed mass was the same for GS and LLY. The upper limits nearly matched because each model's highest state had a similar fitted location and scale, 15.30 and 6.77 for GS and 15.00 and 6.81 for LLY, in annualized growth-rate units. The lowest states differed more, so the lower limits did not match. Growth shifts differ between experiments, and so do their daily limits.
 
 \begin{table}[H]
 \centering
@@ -11,11 +11,11 @@ To show what the cutoffs mean for daily stock moves, we converted them to daily 
 \input{sections/generated/emission_bounds_table}
 \end{table}
 
-To test whether the results depended on the cutoff, we reran the GS and LLY illustrations, the IV ablation, both forecast cohorts, and the stock benchmarks at each cutoff with the same seeds and inputs. Any differences therefore come only from the changed cutoff and the recomputed normalization constants. We compared short-call loss summaries for the illustrations and for the full-factor ablation after ten trading days (Table~\ref{tab:tail_sensitivity}). We also compared five-session full-factor option errors in the shorter-maturity cohort and JumpHMM stock scores (Table~\ref{tab:tail_forecasts}).
+To test whether the results depended on the cutoff, we reran the GS and LLY illustrations, the IV ablation, both forecast cohorts, and the stock benchmarks at each cutoff with the same seeds and inputs. Any differences therefore come only from the changed cutoff and the recomputed normalization constants. We compared short-call losses at expiration in the illustrations and after ten trading days in the full-factor ablation (Table~\ref{tab:tail_sensitivity}). We also compared five-session full-factor option errors in the shorter-maturity cohort and JumpHMM stock scores (Table~\ref{tab:tail_forecasts}).
 
 \begin{table}[H]
 \centering
-\caption{Sensitivity of short-call P\&L to the return cutoff $b$. Values are in dollars per share. The illustration uses 1{,}000 paths and P\&L at expiration. The full-factor ablation uses 3{,}000 paths and P\&L from closing after ten trading days. Expected shortfall (ES$_{5\%}$) averages outcomes at or below the 5\% quantile.}\label{tab:tail_sensitivity}
+\caption{Sensitivity of short-call P\&L to the return cutoff $b$. Values are in dollars per share. The illustration uses 1{,}000 paths and P\&L at expiration. The full-factor ablation uses 3{,}000 paths and hypothetical P\&L at the fixed ten-trading-day horizon. Expected shortfall (ES$_{5\%}$) averages outcomes at or below the 5\% quantile.}\label{tab:tail_sensitivity}
 \input{sections/generated/tail_sensitivity_table}
 \end{table}
 

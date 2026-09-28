@@ -177,7 +177,7 @@ five-session distribution score in both test periods, but did not improve GS's;
 it did not establish a general improvement in central price forecasts. All
 candidate, date, horizon, and simulation-replicate scores are retained.
 
-## Manuscript prepared for the author's prose pass
+## September 28 manuscript revision
 
 The current `paper-arxiv/main.pdf` integrates the 2025 and 2026 stock
 comparisons in Table 4 and the supplement. The abstract, introduction, results,
@@ -190,8 +190,7 @@ a consistent stock or option forecasting advantage.
 After editing the manuscript prose, regenerate the submission files with:
 
 ```sh
-python3 code/scripts/promote_stock_validation_tables.py
-make -C paper-arxiv all
+latexmk -cd -pdf -halt-on-error -interaction=nonstopmode paper-arxiv/main.tex
 python3 code/scripts/package_arxiv_source.py
 ```
 
@@ -201,6 +200,34 @@ reachable manuscript sources, required figures, bibliography, and local style;
 it does not include old README files, raw data, or submission notes. Check the
 build log and rendered PDF again after a prose pass. The audit for this prepared
 version is recorded in `paper-arxiv/submission-check-v2.1.md`.
+
+
+The September 28 revision preserves fixed-horizon valuation comparisons and
+explicitly distinguishes them from an exit rule or a trading backtest. It adds
+six-ticker price-error summaries, an in-sample network-size diagnostic, a check
+of the April 23 DTE offset, and paired-bootstrap uncertainty for the coupling
+change in expected shortfall. Reproduce these supporting checks from the
+repository root with:
+
+```sh
+julia --project=code code/examples/price_error_figure.jl
+julia --project=code code/scripts/diagnose_per_ticker_regressions.jl
+python3 code/scripts/promote_per_ticker_table.py
+julia --project=code code/scripts/check_holdout_dte_offset.jl
+python3 code/scripts/bootstrap_ablation_es.py
+julia --project=code code/scripts/render_ablation_figure.jl
+```
+
+The network-size and DTE checks refit models and can take substantially longer
+than the figure and saved-output checks. Their saved outputs are
+`code/results/per_ticker_regression_diagnosis.csv`,
+`code/results/holdout_dte_offset.csv`, and
+`code/results/dynamic_ablation/es_coupling_bootstrap.csv`. The pricing script
+writes `paper-arxiv/sections/generated/price_error_summary_table.tex` and the
+six-ticker price-error figure. The network-size script leaves the original
+simulation fits unchanged. Bootstrap standard errors describe simulation
+precision conditional on the saved models and paths, not variation across
+market dates.
 
 
 ## Truncated Student-t price simulations

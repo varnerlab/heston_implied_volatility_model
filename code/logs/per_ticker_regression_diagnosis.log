@@ -1,0 +1,24 @@
+234549 observations across 31 tickers
+18 tickers used the small network
+ABBV  Healthcare N= 2525  sector  9.13 | small final  8.95 (log  8.95) best  8.95 | large final  8.63 best  8.63
+AMD   Tech       N= 4566  sector 17.74 | small final 17.13 (log 17.13) best 17.13 | large final 17.03 best 17.03
+AMGN  Healthcare N= 3383  sector 13.36 | small final 12.14 (log 12.14) best 12.14 | large final 11.70 best 11.70
+BAC   Financials N= 2399  sector  9.47 | small final  9.53 (log  9.53) best  9.53 | large final  8.31 best  8.31
+CVX   Energy     N= 2453  sector  7.70 | small final  7.81 (log  7.81) best  7.81 | large final  7.53 best  7.53
+GOOG  Tech       N= 4433  sector  9.57 | small final  9.05 (log  9.05) best  9.05 | large final  8.72 best  8.72
+INTC  Tech       N= 3417  sector 17.78 | small final 16.29 (log 16.29) best 16.29 | large final 15.99 best 15.99
+JNJ   Healthcare N= 2190  sector 11.14 | small final  7.17 (log  7.17) best  7.17 | large final  6.80 best  6.80
+JPM   Financials N= 3720  sector  6.18 | small final  6.65 (log  6.65) best  6.65 | large final  5.97 best  5.97
+MRNA  Healthcare N= 2851  sector 17.49 | small final 13.74 (log 13.74) best 13.74 | large final 13.46 best 13.46
+OXY   Energy     N= 2559  sector  8.60 | small final  8.81 (log  8.81) best  8.81 | large final  8.34 best  8.34
+QCOM  Tech       N= 3375  sector 21.46 | small final 20.99 (log 20.99) best 20.99 | large final 20.32 best 20.32
+TGT   Retail     N= 3957  sector  9.54 | small final  9.48 (log  9.48) best  9.48 | large final  9.11 best  9.11
+UNH   Healthcare N= 3760  sector 10.39 | small final  9.77 (log  9.77) best  9.77 | large final  9.28 best  9.28
+UPS   Retail     N= 3526  sector 11.44 | small final 11.68 (log 11.68) best 11.69 | large final 11.09 best 11.09
+WFC   Financials N= 3047  sector  7.94 | small final  8.17 (log  8.17) best  8.17 | large final  7.63 best  7.63
+WMT   Retail     N= 3837  sector  7.23 | small final  7.52 (log  7.52) best  7.52 | large final  6.70 best  6.70
+XOM   Energy     N= 2820  sector  7.31 | small final  7.41 (log  7.41) best  7.41 | large final  7.21 best  7.21
+
+Worse than sector network: small final 8, small best 8, large final 0, large best 0 (of 18)
+Max |small final - logged| = 0.005 points
+Wrote /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/scripts/../results/per_ticker_regression_diagnosis.csv

@@ -1,11 +1,11 @@
 \section{Interpretation of the IV Factor}\label{sec:supp_sigma_decomp}
 
-A continuous-time square-root process motivated the Euler update in~\eqref{eq:euler}. For a fixed target, the process is given by:
+A continuous-time square-root process motivated the Euler update in~\eqref{eq:euler}. The continuous-time process is given by:
 \begin{equation}\label{eq:level_sde}
     dv_{a,t}=\kappa(\bar v_{a,t}-v_{a,t})\,dt
     +\sigma_v\sqrt{v_{a,t}}\,dW_{a,t},
 \end{equation}
-where contract $a$ indexes ticker, strike, and expiration, and the target $\bar v_{a,t}$ from~\eqref{eq:theta} changes with current moneyness and calendar DTE. The stationary mean of this process, when it exists, equals the fixed target $\bar v_a$. The simulation departed from this setting in two ways. The target moved every trading day, and the floor in~\eqref{eq:euler} modified the process. The stationary mean therefore explains why each factor reverts toward its target, but it does not give the simulated distribution.
+where contract $a$ indexes ticker, strike, and expiration, and the target $\bar v_{a,t}$ from~\eqref{eq:theta} changes with current moneyness and calendar DTE. With the target held constant at $\bar v_a$, the stationary mean, when it exists, equals that target. The simulation instead used a moving target, discrete Euler steps, a variance floor, and non-normal stock-linked shocks. Mean reversion motivated the update, but the fixed-target stationary distribution does not describe the simulated factors.
 
 \section{Calibration Details}\label{sec:supp_sector_nn}
 
@@ -14,7 +14,7 @@ The \href{https://github.com/varnerlab/heston_implied_volatility_model}{source r
 Each calibration snapshot had a label, a capture timestamp, and an underlying-session date, and these did not always coincide (Table~\ref{tab:corpus_dates}). The distinction matters because the holdout tests split dates in different ways. All dates are in 2026. For example, the snapshot for the May 11 underlying session was captured on May 12. The first snapshot contained 23 tickers, and each later snapshot contained 31.
 \begin{table}[H]
 \centering
-\caption{Labels, capture dates, and underlying-session dates of the calibration snapshots. The April earnings holdout split dates by snapshot label. The May 11 single-date holdout used the underlying-session date. The first snapshot is labeled April 14, but its underlying close was from April 13. Rows counts the filtered observations from each snapshot.}\label{tab:corpus_dates}
+\caption{Labels, capture dates, and underlying-session dates of the calibration snapshots. The April earnings holdout split dates by snapshot label. The May 11 single-date holdout used the underlying-session date. The first snapshot is labeled April 14, but its underlying close was from April 13. The Rows column counts filtered observations from each snapshot.}\label{tab:corpus_dates}
 \input{sections/generated/corpus_dates}
 \end{table}
 \FloatBarrier
@@ -54,9 +54,11 @@ Technology & 15.58 & 15.31 & 14.47 &  68{,}334 \\
 \end{tabular}
 \end{table}
 
+The per-ticker comparison reflected network size as well as sharing across stocks (Table~\ref{tab:per_ticker_comparison}). Sector networks improved on the global network in all six groups, but technology and healthcare retained the largest errors and weakest individual fits (Tables~\ref{tab:per_sector} and~\ref{tab:worst_tickers}). Of the 29 tickers with their own network, 21 improved on their sector fit. The eight exceptions were financials, energy, or retail stocks with fewer than 5{,}000 observations, which received 105-parameter networks rather than the sector networks' 337 parameters. Refitting all 18 small networks at the larger size with the same data, seed, and schedule made every refit outperform its sector fit. Retaining final rather than lowest-loss weights did not explain the losses: those errors differed by less than 0.001 volatility points. These diagnostics supported network size as the explanation for the eight exceptions, but did not establish better out-of-sample performance. We retained the original size rule, chosen to limit overfitting. The per-ticker surfaces used in the simulations, including GS and LLY, already had the larger architecture.
+
 \begin{table}[H]
 \centering
-\caption{In-sample IV RMSE of the sector and per-ticker networks for the 29 qualified tickers. Rows are sorted by the reduction from the sector network to the ticker's own network. A positive reduction means the ticker's own network fitted better than its sector network. The final rows count the tickers that improved and worsened. Two tickers, BMY and PFE, kept their sector surfaces. Combining per-ticker networks with these sector fallbacks reduced pooled RMSE from 10.24 to 9.73 volatility percentage points (Table~\ref{tab:three_way}).}\label{tab:per_ticker_comparison}
+\caption{In-sample IV RMSE of the sector and per-ticker networks for the 29 qualified tickers. Rows are sorted by the reduction from the sector network to the ticker's own network. A positive reduction means the ticker's own network fitted better than its sector network. Units gives the width of each hidden layer of the ticker's own network, 16 for tickers with at least 5{,}000 observations and 8 otherwise. The 16-unit refit column repeats each 8-unit fit with 16-unit layers and the same data, seed, and training schedule. These refits served only as a diagnostic and entered no other result. The final rows count the tickers that improved and worsened and the refits that fitted better than their sector network. Two tickers, BMY and PFE, kept their sector surfaces. Combining per-ticker networks with these sector fallbacks reduced pooled RMSE from 10.24 to 9.73 volatility percentage points (Table~\ref{tab:three_way}).}\label{tab:per_ticker_comparison}
 \input{sections/generated/per_ticker_comparison_table}
 \end{table}
 
@@ -68,18 +70,9 @@ Technology & 15.58 & 15.31 & 14.47 &  68{,}334 \\
 
 \begin{table}[H]
 \centering
-\caption{Median half-spreads and American-option pricing errors on May 11 for the contracts plotted in Fig.~\ref{fig:price_error}. Dollar values are medians across the plotted contracts. Each error is the absolute difference between the tree price and the market mid. The per-ticker column used a per-ticker surface where the ticker qualified and a sector surface otherwise. Inside spread is the share of contracts whose absolute per-ticker error was at most their half-spread. The market-IV reference passed each contract's reported IV to the same 200-step CRR tree.}\label{tab:price_error_summary}
+\caption{Median half-spreads and American-option pricing errors on May 11 for the contracts plotted in Fig.~\ref{fig:price_error}. Dollar values are medians across the plotted contracts. The per-ticker error is the absolute difference between the tree price using fitted IV and the market mid. Inside spread is the share of contracts whose absolute per-ticker error was at most their half-spread. The market-IV reference passed each contract's reported IV to the same 200-step CRR tree.}\label{tab:price_error_summary}
 \resizebox{\textwidth}{!}{%
-\begin{tabular}{lrrrrrr}
-\toprule
-Ticker & DTE & $N$ & Median half-spread & Median per-ticker error & Inside spread & Median market-IV error \\
-\midrule
-SPY  &  7 & 176 & \$0.03 & \$0.12 & 33\% & \$0.01 \\
-NVDA &  7 &  34 & \$0.04 & \$0.13 & 35\% & \$0.12 \\
-LLY  & 11 & 156 & \$2.98 & \$4.01 & 30\% & \$0.67 \\
-GS   & 11 & 145 & \$1.56 & \$0.46 & 88\% & \$0.12 \\
-\bottomrule
-\end{tabular}}
+\input{sections/generated/price_error_summary_table}}
 \end{table}
 
 \begin{table}[H]
@@ -137,7 +130,7 @@ We broke the April earnings-holdout result down by technology ticker and found t
 
 \begin{table}[H]
 \centering
-\caption{Test RMSE of the technology tickers in the April earnings holdout under the pooled two-input model (A) and the earnings-aware model (C). The inputs $e$ and $e^{\mathrm{peer}}$ are the median signed ticker distance and the minimum peer distance to an earnings date, in days. Error differences are in volatility percentage points.}\label{tab:tech_pivot}
+\caption{Test RMSE of the technology tickers in the April earnings holdout under the pooled two-input sector model (A) and the earnings-aware model (C). The columns $e$ and $e^{\mathrm{peer}}$ give test-row medians of the signed ticker and absolute nearest-peer earnings distances, capped at 30 days in magnitude. Differences are C minus A, in volatility percentage points.}\label{tab:tech_pivot}
 \begin{tabular}{lrrrrr}
 \toprule
 Ticker & $e$ & $e^{\mathrm{peer}}$ & A: pooled & C: event inputs & Difference \\
@@ -159,7 +152,7 @@ INTC & $-1$  & $5$ & 33.17 & 35.94 & $+2.77$ \\
 \FloatBarrier
 \section{Scenario Statistics and Greeks}\label{sec:supp_short_premium}
 
-The GS and LLY illustrations shared one simulation design (Table~\ref{tab:scenario_settings}). For GS, the seller usually kept the full premium but faced large losses in the lower tail (Table~\ref{tab:gs_scenario}). The premium-retained interval is a two-sided 95\% Wilson interval for the fraction of paths that expired out of the money. It measures only the Monte Carlo sampling error in that fraction.
+The GS and LLY illustrations shared one simulation design (Table~\ref{tab:scenario_settings}). For GS, the seller usually kept the full premium but faced large losses in the lower P\&L tail (Table~\ref{tab:gs_scenario}). The premium-retained interval is a two-sided 95\% Wilson interval for the fraction of paths that expired out of the money. It measures only the Monte Carlo sampling error in that fraction.
 
 \begin{table}[H]
 \centering
@@ -228,14 +221,14 @@ We calculated Greeks along each path by central finite differences on the same L
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_short_paths.pdf}
-\caption{Simulated evolution of LLY stock prices (a), put values (b), and call values (c) along 1{,}000 paths between April 28 and May 29, 2026. The fitted surfaces included observations from this period, so these paths illustrate the model and are not an out-of-sample forecast. Time is measured in calendar days from April 28. Black curves show pointwise medians, and shading contains the middle 90\% of values. Red and blue curves show medians of the paths whose terminal stock price fell in the 1st--5th and 95th--99th percentiles. Option values are in dollars per share and equal a short seller's cost of buying back the option. Entry premiums were \$23.30 per share for the put and \$20.76 for the call (Supplementary Table~\ref{tab:lly_scenario}).}
+\caption{Simulated evolution of LLY stock prices (a), put values (b), and call values (c) along 1{,}000 paths between April 28 and May 29, 2026. The fitted surfaces included observations from this period, so these paths illustrate the model and are not an out-of-sample forecast. Time is measured in calendar days from April 28. Black curves show pointwise medians, and shading contains the middle 90\% of values. Red and blue curves show medians of the paths whose terminal stock price fell in the 1st--5th and 95th--99th percentiles. Option values are in dollars per share and give the modeled cost of buying back the option for a short seller. Entry premiums were \$23.30 per share for the put and \$20.76 for the call (Supplementary Table~\ref{tab:lly_scenario}).}
 \label{fig:lly_paths}
 \end{figure}
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\textwidth]{sections/figures/lly/lly_iv_trajectories.pdf}
-\caption{Simulated evolution of annualized IV at the LLY put strike (a) and call strike (b). Both panels express IV as percentages on the same vertical scale. Curves show pointwise medians across all 1{,}000 paths and within the terminal-stock groups in Supplementary Fig.~\ref{fig:lly_paths}. Shading shows the 5th--95th percentile band. Time is measured in calendar days from April 28, 2026. The curves stop before expiration because the payoff at expiration does not depend on IV.}
+\caption{Simulated evolution of annualized IV at the LLY put strike (a) and call strike (b). Both panels express IV as percentages on the same vertical scale. Curves show pointwise medians across all 1{,}000 paths and within the terminal-stock groups in Supplementary Fig.~\ref{fig:lly_paths}. Shading shows the 5th--95th percentile band across all paths. Time is measured in calendar days from April 28, 2026. The curves stop before expiration because the payoff at expiration does not depend on IV.}
 \label{fig:lly_iv}
 \end{figure}
 

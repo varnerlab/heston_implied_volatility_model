@@ -1,3 +1,47 @@
+# September 28, 2026: final arXiv revision check
+
+The current manuscript is **45 pages**. The Introduction retains three paragraphs
+and ends on page 2. The Results retains ten narrative paragraphs. This final
+preflight correction preserved all paragraph boundaries.
+
+Resolved the remaining attribution claims: observed-stock substitution identifies
+stock prediction as a major source of error; adding earnings inputs reduced LLY's
+bias but did not establish a causal decomposition of forecast errors. The paper
+reports hypothetical short-position P&L at fixed horizons and does not claim an
+exit-selection rule or a trading backtest.
+
+Verification completed on the final files:
+
+- Strict `latexmk -pdf -halt-on-error -interaction=nonstopmode` builds passed for
+  the manuscript and for a fresh extraction of the exact upload archive. Both
+  logs contain no warnings, undefined references, overfull boxes, or underfull
+  boxes. The local S16 table padding, author-email font encoding, and bibliography
+  URL wrapping resolve the three remaining layout/font warnings.
+- All 45 final pages were inspected in rendered overviews. The author block and
+  Table S16 were also inspected separately. No clipping or overlap was found.
+- The source archive contains **63 files**. Every archive member matches its
+  source and the SHA-256 manifest. The isolated build's layout-preserving PDF
+  text matches the reviewed PDF exactly.
+- The synchronized plain-text abstract contains **293 words and 1,905 ASCII
+  characters**, excluding its trailing newline. The packaging helper now rejects
+  non-ASCII metadata or abstracts exceeding 1,920 characters.
+- The per-ticker comparison table and the paired expected-shortfall bootstrap
+  CSV reproduced byte-for-byte from saved inputs. Relevant Python scripts passed
+  syntax parsing, and the four supporting Julia scripts passed `Meta.parseall`.
+- `git diff --check` passed. No production simulations, network refits, or full
+  numerical test suite were rerun for these final prose and packaging changes.
+
+Upload `arxiv-source-v2.1.tar.gz` and use `abstract-v2.1.txt` for the abstract
+field. Review `main.pdf`. The package manifest is
+`code/results/chronological_validation/arxiv_source_manifest.json`; local audit
+artifacts are in `tmp/arxiv_release_20260928/`. Supporting diagnostic scripts,
+saved outputs, and reproduction commands accompany this repository revision.
+The author handles arXiv submission separately.
+
+---
+
+# Historical checks (superseded by the September 28 record above)
+
 # September 14 update: truncated return emissions
 
 The current manuscript is 40 pages. All six affected simulation experiment groups

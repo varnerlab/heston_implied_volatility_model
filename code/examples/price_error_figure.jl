@@ -1,8 +1,9 @@
 """
-Pricing-error figure: model_price − market_mid for SPY, NVDA, LLY.
+Pricing-error figure: model_price − market_mid for the six smile-panel tickers
+(SPY, NVDA, MSFT, LLY, GS, AVGO).
 
 Loads the JLD2 cache produced by `calibrate_ladders_per_ticker_nn.jl`, prices
-each contract via CRR American (n_steps=200, r=4.5%, q=0) using each of:
+each contract via CRR American (n_steps=200, r=4.25%, q=0) using each of:
   - polynomial 5β baseline
   - sector NN
   - per-ticker NN
@@ -30,7 +31,11 @@ const LADDER_DIR    = joinpath(@__DIR__, "..", "data", "ladder")
 const PLOT_DIR      = joinpath(@__DIR__, "..", "figures")
 const CACHE_PATH    = joinpath(PLOT_DIR, "calibrate_ladders_per_ticker_nn_cache.jld2")
 
-const PANEL_TICKERS = ["SPY", "NVDA", "LLY", "GS"]
+# Same six tickers, in the same order, as the smile panels
+# (`calibrate_ladders_per_ticker_nn.jl`), so the price check covers the
+# tickers with the largest IV biases rather than a subset.
+const PANEL_TICKERS = ["SPY", "NVDA", "MSFT", "LLY", "GS", "AVGO"]
+const GEN_DIR = joinpath(@__DIR__, "..", "..", "paper-arxiv", "sections", "generated")
 # Risk-free rate: ~3-month T-bill area as of the late-April 2026 capture window.
 const R_FREE  = 0.0425
 const N_STEPS = 200
@@ -276,9 +281,9 @@ for (k, t) in enumerate(PANEL_TICKERS)
              ylabel = "Pricing error (\$, model − market mid)",
              legend = show_legend ? :topright : false,
              legendfontsize = 7,
-             titlefontsize  = 11,
-             guidefontsize  = 10,
-             tickfontsize   = 9,
+             titlefontsize  = 12,
+             guidefontsize  = 11,
+             tickfontsize   = 10,
              framestyle = :box,
              grid = true, gridalpha = 0.25,
              foreground_color_grid = :gray,
@@ -365,8 +370,8 @@ for (k, t) in enumerate(PANEL_TICKERS)
 end
 
 p_fig = plot(p_panels...,
-             layout = (2, 2),
-             size = (1200, 900),
+             layout = (2, 3),
+             size = (1650, 950),
              dpi = 200,
              left_margin   = 6mm,
              right_margin  = 4mm,
@@ -374,13 +379,16 @@ p_fig = plot(p_panels...,
              top_margin    = 4mm)
 
 mkpath(PLOT_DIR)
-out_pdf = joinpath(PLOT_DIR, "ladder_price_error_three_tickers.pdf")
-out_png = joinpath(PLOT_DIR, "ladder_price_error_three_tickers.png")
+out_pdf = joinpath(PLOT_DIR, "ladder_price_error_six_tickers.pdf")
+out_png = joinpath(PLOT_DIR, "ladder_price_error_six_tickers.png")
 savefig(p_fig, out_pdf)
 savefig(p_fig, out_png)
 
-include(joinpath(@__DIR__, "..", "scripts", "promote_figures.jl"))
-promote_figures()
+# Copy only this figure into the arXiv paper. A full promote_figures() here
+# overwrote the arXiv smile panels and nested GS/LLY figures with older copies
+# from code/figures/ and paper-jcf/ (2026-09-28).
+cp(out_pdf, joinpath(@__DIR__, "..", "..", "paper-arxiv", "sections", "figures",
+                     basename(out_pdf)); force = true)
 
 # ============================================================================
 # Summary
@@ -412,3 +420,16 @@ println("  Per-ticker dividend yield (continuous):")
 for t in PANEL_TICKERS
     @printf("    %-5s  q = %.4f\n", t, default_q(t))
 end
+
+# Supplementary table (arXiv): one row per panel ticker
+money(x) = @sprintf("\\\$%.2f", x)
+open(joinpath(GEN_DIR, "price_error_summary_table.tex"), "w") do io
+    println(io, "\\begin{tabular}{lrrrrrr}\n\\toprule")
+    println(io, "Ticker & DTE & \$N\$ & Median half-spread & Median per-ticker error & Inside spread & Median market-IV error \\\\\n\\midrule")
+    for r in mae_summary
+        @printf(io, "%s & %d & %d & %s & %s & %.0f\\%% & %s \\\\\n", r.ticker, r.dte, r.n,
+                money(r.median_half_spread), money(r.pt), r.in_pt, money(r.mkt))
+    end
+    println(io, "\\bottomrule\n\\end{tabular}")
+end
+println("Wrote ", joinpath(GEN_DIR, "price_error_summary_table.tex"))

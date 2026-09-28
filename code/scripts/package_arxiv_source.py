@@ -43,10 +43,12 @@ def main():
     # Keep the text-box abstract synchronized with the exact manuscript source.
     abstract = (PAPER / 'sections/abstract.tex').read_text()
     abstract = abstract.replace('{,}', ',').replace(r'\$', '$').replace(r'\%', '%').replace(r'\&', '&')
-    abstract = abstract.replace('---', '—').replace('--', '–')
     if re.search(r'\\[A-Za-z]+|[{}]', abstract):
         raise ValueError('The abstract contains unsupported LaTeX; extend the plain-text conversion explicitly.')
-    abstract = ' '.join(abstract.split()) + '\n'
+    abstract = ' '.join(abstract.split())
+    if not abstract.isascii() or len(abstract) > 1920:
+        raise ValueError('arXiv abstract metadata must be ASCII and at most 1920 characters.')
+    abstract += '\n'
     (PAPER / 'abstract-v2.1.txt').write_text(abstract)
     archive = PAPER / 'arxiv-source-v2.1.tar.gz'
     with tarfile.open(archive, 'w:gz') as bundle:

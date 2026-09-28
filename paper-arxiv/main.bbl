@@ -1,4 +1,4 @@
-\begin{thebibliography}{34}
+\begin{thebibliography}{31}
 \providecommand{\natexlab}[1]{#1}
 \providecommand{\url}[1]{\texttt{#1}}
 \expandafter\ifx\csname urlstyle\endcsname\relax
@@ -97,13 +97,6 @@ J.~C. Cox, S.~A. Ross, and M.~Rubinstein.
   229--263, 1979.
 \newblock \doi{10.1016/0304-405X(79)90015-1}.
 
-\bibitem[Demarta and McNeil(2005)]{demarta2005}
-S.~Demarta and A.~J. McNeil.
-\newblock The $t$ copula and related copulas.
-\newblock \emph{International Statistical Review}, 73\penalty0 (1):\penalty0
-  111--129, 2005.
-\newblock \doi{10.1111/j.1751-5823.2005.tb00254.x}.
-
 \bibitem[Derman and Kani(1994)]{derman1994}
 E.~Derman and I.~Kani.
 \newblock Riding on a smile.
@@ -200,14 +193,6 @@ D.~P.~J. Leisen and M.~Reimer.
   319--346, 1996.
 \newblock \doi{10.1080/13504869600000015}.
 
-\bibitem[Merton(1980)]{merton1980}
-R.~C. Merton.
-\newblock On estimating the expected return on the market: An exploratory
-  investigation.
-\newblock \emph{Journal of Financial Economics}, 8\penalty0 (4):\penalty0
-  323--361, 1980.
-\newblock \doi{10.1016/0304-405X(80)90007-0}.
-
 \bibitem[Patell and Wolfson(1979)]{patell1979}
 J.~M. Patell and M.~A. Wolfson.
 \newblock Anticipated information releases reflected in call option prices.
@@ -221,14 +206,6 @@ Y.~Tian.
 \newblock \emph{Journal of Futures Markets}, 13\penalty0 (5):\penalty0
   563--577, 1993.
 \newblock \doi{10.1002/fut.3990130509}.
-
-\bibitem[Welch and Goyal(2008)]{welch2008}
-I.~Welch and A.~Goyal.
-\newblock A comprehensive look at the empirical performance of equity premium
-  prediction.
-\newblock \emph{The Review of Financial Studies}, 21\penalty0 (4):\penalty0
-  1455--1508, 2008.
-\newblock \doi{10.1093/rfs/hhm014}.
 
 \bibitem[Wiese et~al.(2020)Wiese, Knobloch, Korn, and Kretschmer]{wiese2020}
 M.~Wiese, R.~Knobloch, R.~Korn, and P.~Kretschmer.

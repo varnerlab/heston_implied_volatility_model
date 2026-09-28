@@ -1,0 +1,2 @@
+Rendered coupling effects by stock return; all four paired contrasts match saved summaries.
+julia --project=. scripts/render_ablation_figure.jl  7.03s user 6.33s system 152% cpu 8.747 total

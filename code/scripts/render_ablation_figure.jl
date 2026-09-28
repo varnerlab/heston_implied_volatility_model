@@ -34,8 +34,8 @@ for (ticker, letter) in [("GS", "a"), ("LLY", "b")]
         xlims=(-12, 12), xticks=-10:5:10, ylims=(-4, 4), yticks=-4:2:4)
     hline!(panel, [0.0]; c=:gray, ls=:dash, lw=1, label="")
     for (kind, label, color, marker) in [
-            ("put", "Short put", "#e63946", :circle),
-            ("call", "Short call", "#1d3557", :diamond)]
+            ("put", "Short put", "#e63946", :diamond),
+            ("call", "Short call", "#1d3557", :circle)]
         rows = raw[(raw.ticker .== ticker) .& (raw.kind .== kind) .& (raw.step .== 10), :]
         u = sort(rows[rows.mode .== "uncoupled", :], [:seed, :path])
         c = sort(rows[rows.mode .== "coupled", :], [:seed, :path])
@@ -61,7 +61,7 @@ for (ticker, letter) in [("GS", "a"), ("LLY", "b")]
         @assert all(-12 .< q.return_median .< 12)
         @assert all(-4 .< q.pnl_q25) && all(q.pnl_q75 .< 4)
         plot!(panel, q.return_median, q.pnl_median; c=color, lw=2.5,
-            marker, ms=4, markerstrokewidth=0, label,
+            marker, ms=(marker == :diamond ? 6 : 5), markerstrokewidth=0, label,
             ribbon=(q.pnl_median .- q.pnl_q25, q.pnl_q75 .- q.pnl_median),
             fillcolor=color, fillalpha=.15)
     end

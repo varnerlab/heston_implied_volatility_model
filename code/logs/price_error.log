@@ -1,0 +1,37 @@
+Loading ladder data...
+  234549 observations across 31 tickers
+Loading trained models from calibrate_ladders_per_ticker_nn_cache.jld2...
+
+==============================================================================
+  PRICING ERROR PER CONTRACT — $ medians and % inside the bid–ask spread
+==============================================================================
+  tkr   DTE     N   ½sp |    poly     sec   p-tkr   mkt-IV
+                    ($) |   Med|e|   Med|e|   Med|e|   Med|e|
+  ----------------------------------------------------------------------------
+  SPY   7     176  0.03 |    1.29    0.42    0.12    0.01
+                        |     18%     23%     33%     88%   (inside ±½ spread)
+  NVDA  7      34  0.04 |    0.19    0.25    0.13    0.12
+                        |     32%     32%     35%     65%   (inside ±½ spread)
+  MSFT  9      91  0.36 |    1.59    1.78    1.48    0.37
+                        |     19%     16%     20%     77%   (inside ±½ spread)
+  LLY   11    156  2.98 |    3.00    3.02    4.01    0.67
+                        |     41%     44%     30%    100%   (inside ±½ spread)
+  GS    11    145  1.56 |    0.54    1.03    0.46    0.12
+                        |     83%     63%     88%    100%   (inside ±½ spread)
+  AVGO  9     116  0.81 |    0.51    0.35    0.57    0.06
+                        |     64%     84%     56%    100%   (inside ±½ spread)
+
+  Reading guide:
+    • Inside ±½ bid–ask spread = error indistinguishable from market quote.
+    • A market-maker would not requote outside the spread, so >1 spread = real miss.
+    • Mkt-IV column re-prices yfinance's own IV through CRR (sanity check).
+
+  Pricing assumptions: CRR American, n_steps=200, r=0.0425
+  Per-ticker dividend yield (continuous):
+    SPY    q = 0.0000
+    NVDA   q = 0.0000
+    MSFT   q = 0.0000
+    LLY    q = 0.0000
+    GS     q = 0.0000
+    AVGO   q = 0.0000
+Wrote /Users/jdv27/Desktop/julia_work/heston_implied_volatility_model/code/examples/../../paper-arxiv/sections/generated/price_error_summary_table.tex
