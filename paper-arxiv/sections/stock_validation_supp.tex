@@ -4,7 +4,7 @@ The saved GS and LLY models used daily steps of $1/252$ year and annualized exce
 
 \begin{table}[H]
 \centering
-\caption{Stock forecast errors under original and history-conditioned initialization on identical 2026 endpoints. Each ticker has 21 one-session and 17 five-session origins. MAE scores the forecast median. Errors are in dollars per share and average three 10{,}000-path runs. Filtered denotes initialization from available past returns, including inference of remaining jump duration.}\label{tab:stock_initialization}
+\caption{Stock forecast errors under original and history-conditioned initialization on identical 2026 endpoints. Each ticker has 21 one-session and 17 five-session origins. The MAE scores the forecast median. Errors are in dollars per share and average three 10{,}000-path runs. Filtered denotes initialization from available past returns, including inference of remaining jump duration.}\label{tab:stock_initialization}
 \resizebox{\textwidth}{!}{\input{sections/generated/stock_initialization_table}}
 \end{table}
 
@@ -20,7 +20,7 @@ Historical close series for GS, LLY, and SPY shared the same recorded session gr
 
 \begin{table}[H]
 \centering
-\caption{Complete five-session stock forecast scores for the four selected candidates. Each ticker has 245 origins in 2025 and 17 in August--September 2026. MAE scores medians and RMSE scores means. Monetary values are in dollars per share, and coverage and width describe central 90\% intervals. Scores average dates within each of three 10{,}000-path runs and then average the runs. Direction-predicting equals Adaptive volatility because earlier-data selection chose zero drift.}\label{tab:stock_validation_five}
+\caption{Complete five-session stock forecast scores for the four selected candidates. Each ticker has 245 origins in 2025 and 17 in August--September 2026. The MAE scores medians and the RMSE scores means. Monetary values are in dollars per share, and coverage and width describe central 90\% intervals. Scores average dates within each of three 10{,}000-path runs and then average the runs. Direction-predicting equals Adaptive volatility because earlier-data selection chose zero drift.}\label{tab:stock_validation_five}
 \resizebox{\textwidth}{!}{\input{sections/generated/stock_validation_five_table}}
 \end{table}
 

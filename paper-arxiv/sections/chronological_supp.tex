@@ -4,7 +4,7 @@ Fold errors for the 53 expanding-window splits are summarized by test month (Tab
 
 \begin{table}[H]
 \centering
-\caption{Sector-surface prediction errors across the 53 expanding-window folds. Each fold fitted earlier capture dates and evaluated the next captured date using its observed stock price. RMSE is in IV percentage points. The last row pools all 53 folds.}\label{tab:walk_forward_extended}
+\caption{Sector-surface prediction errors across the 53 expanding-window folds. Each fold fitted earlier capture dates and evaluated the next captured date using its observed stock price. The RMSE is in IV percentage points. The last row pools all 53 folds.}\label{tab:walk_forward_extended}
 \input{sections/generated/walk_forward_extended_table}
 \end{table}
 
@@ -30,7 +30,7 @@ Options were chosen at each origin before any later quote was examined. The avai
 
 \begin{table}[H]
 \centering
-\caption{One-session option forecasts for the monthly cohort. Scores first average matched contracts within each ticker and origin and then average dates. MAE, CRPS, and central 90\% interval width are in dollars per share. Coverage averages the within-origin fraction of observed midpoints inside that interval across dates.}\label{tab:forecast_one_session}
+\caption{One-session option forecasts for the monthly cohort. Scores first average matched contracts within each ticker and origin and then average dates. Monetary quantities (MAE, CRPS, and central 90\% interval width) are in dollars per share. Coverage averages the within-origin fraction of observed midpoints inside that interval across dates.}\label{tab:forecast_one_session}
 \resizebox{\textwidth}{!}{\input{sections/generated/forecast_one_session_table}}
 \end{table}
 
@@ -42,13 +42,13 @@ Options were chosen at each origin before any later quote was examined. The avai
 
 \begin{table}[H]
 \centering
-\caption{Stock forecast scores at the observed endpoint dates for the original 1{,}000-path forecasts. MAE scores forecast means. The random walk has zero log drift and the fixed pilot's one-session return standard deviation. Monetary errors are in dollars per share, and coverage refers to central 90\% forecast intervals.}\label{tab:forecast_stock}
+\caption{Stock forecast scores at the observed endpoint dates for the original 1{,}000-path forecasts. The MAE scores forecast means. The random walk has zero log drift and the fixed pilot's one-session return standard deviation. Monetary errors are in dollars per share, and coverage refers to central 90\% forecast intervals.}\label{tab:forecast_stock}
 \resizebox{\textwidth}{!}{\input{sections/generated/forecast_stock_table}}
 \end{table}
 
 \begin{table}[H]
 \centering
-\caption{American-tree prices computed with the IV reported at the endpoint, for matched options with valid reported IV. This diagnostic uses information from the endpoint, so it is not a forecast. MAE is in dollars per share. Inside-spread frequencies compare each price with Alpaca's indicative bid and ask.}\label{tab:forecast_repricing}
+\caption{American-tree prices computed with the IV reported at the endpoint, for matched options with valid reported IV. This diagnostic uses information from the endpoint, so it is not a forecast. The MAE is in dollars per share. Inside-spread frequencies compare each price with Alpaca's indicative bid and ask.}\label{tab:forecast_repricing}
 \input{sections/generated/forecast_repricing_table}
 \end{table}
 
@@ -70,11 +70,11 @@ Several quantities explain the forecast outcomes (Table~\ref{tab:mechanism_check
 
 \begin{table}[H]
 \centering
-\caption{Diagnostics of IV-factor persistence, central stock drift, stock volatility, and surface bias. Five-session rows average the scored short-maturity origins and matched options. IV changes are in volatility percentage points relative to the observed origin IV. One-session stock rows use the 2025 and August--September 2026 stock-benchmark origins. Surface bias is predicted minus observed IV for the July-cutoff sector surface, in volatility percentage points. LLY reported earnings on August 5, 2026, and GS on July 14, 2026. Report rows exclude the report day.}\label{tab:mechanism_checks}
+\caption{Diagnostics of IV-factor persistence, central stock drift, stock volatility, and surface bias. Five-session rows average the scored short-maturity origins and matched options. Changes in IV are in volatility percentage points relative to the observed origin IV. One-session stock rows use the 2025 and August--September 2026 stock-benchmark origins. Surface bias is predicted minus observed IV for the July-cutoff sector surface, in volatility percentage points. Earnings reports fell on August 5, 2026, for LLY and July 14, 2026, for GS. Report rows exclude the report day.}\label{tab:mechanism_checks}
 \input{sections/generated/mechanism_checks_table}
 \end{table}
 
-We tested the earnings explanation by refitting the July surfaces with the two earnings inputs used in the April holdout (Table~\ref{tab:earnings_refit}). A protocol written before fitting kept the two-input surfaces' training and test rows, architecture, and training schedule. It fitted seeds 42, 43, and 44 for both versions, with the underlying session as the observation date. The protocol called the explanation supported if the earnings inputs at least halved LLY's mean absolute bias from August 6 through September 4, with every earnings-aware seed below every two-input seed. It called the explanation not supported if they did not reduce the bias. The earnings inputs reduced that bias from 6.17 to 3.85 volatility points on average, and every earnings-aware seed fell below every two-input seed. The 38\% reduction fell short of half, so the prespecified verdict was partial. The inputs also reduced LLY's underprediction on August 4 from 17.90 to 12.86 points and pooled held-out RMSE from 14.75 to 13.94 points, while GS's held-out RMSE changed by less than 0.1 point. The two-input refits varied by less than 0.05 points across seeds in every reported quantity, so these differences exceed seed variation. Each sector network shares one earnings response across its tickers, so the refit could represent a typical report effect but not one sized to each ticker. LLY's bias shifted about five times as much as GS's across their latest reports (Table~\ref{tab:mechanism_checks}).
+We tested the earnings explanation by refitting the July surfaces with the two earnings inputs used in the April holdout (Table~\ref{tab:earnings_refit}). A protocol written before fitting kept the two-input surfaces' training and test rows, architecture, and training schedule. It fitted seeds 42, 43, and 44 for both versions, with the underlying session as the observation date. The protocol called the explanation supported if the earnings inputs at least halved LLY's mean absolute bias from August 6 through September 4, with every earnings-aware seed below every two-input seed. It called the explanation not supported if they did not reduce the bias. The earnings inputs reduced that bias from 6.17 to 3.85 volatility points on average, and every earnings-aware seed fell below every two-input seed. The 38\% reduction fell short of half, so the prespecified verdict was partial. The inputs also reduced LLY's underprediction on August 4 from 17.90 to 12.86 points and pooled held-out RMSE from 14.75 to 13.94 points, while GS's held-out RMSE changed by less than 0.1 point. The two-input refits varied by less than 0.05 points across seeds in every reported quantity, so these differences exceed seed variation. Each sector network shares one earnings response across its tickers, so the refit could represent a typical report effect but not one sized to each ticker. Across their latest reports, LLY's bias shifted about five times as much as GS's (Table~\ref{tab:mechanism_checks}).
 
 \begin{table}[H]
 \centering
